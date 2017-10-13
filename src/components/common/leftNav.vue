@@ -1,0 +1,94 @@
+<template>
+		<div  class="leftNav" v-if="showLeftNav">
+			<el-menu :default-active="$route.path" router theme="dark" class="el-menu-vertical-demo">
+				<el-menu-item v-for="item in leftMenu" :key="item.href" :index="item.href">
+					<i class="el-icon-menu"></i>
+					{{item.name}}
+			    </el-menu-item>
+			</el-menu>
+		</div>
+		
+</template>
+
+<script>
+import util from '@/util/util.js'
+import axios from 'axios'
+export default {
+  name: 'leftNav',
+  props: ['leftData'],
+  data () {
+    return {
+	  showLeftNav:true,
+	  leftMenu:this.leftData.message
+    }
+  },
+    methods: {
+	    handleOpen(key, keyPath) {
+		   console.log(key, keyPath);
+	    },
+	     handleClose(key, keyPath) {
+		   console.log(key, keyPath);
+	    },
+	    leftrouterChange(){
+		   var path =  this.$route.path;
+			if(path == '/login' || path == '/index'){
+			   this.showLeftNav=false
+			}else{
+			   this.showLeftNav=true
+			}
+			//左侧菜单的数据获取
+			switch(path){
+			    case '/message':
+				    this.leftMenu =  this.leftData.message ;
+                    break;
+			    case '/indexNotice':
+				case '/indexWork':
+				case '/reportForms':
+                case '/findSchedule':
+                    this.leftMenu =  this.leftData.office ;
+                    break;
+                case '/businessApply':
+				case '/myorder':
+				case '/indexDidi':
+				    this.leftMenu = this.leftData.travel;
+					break;
+                				
+			}
+		}
+	},
+	watch:{
+		 //检测路由变化
+		"$route": "leftrouterChange"
+	},
+	created() {
+		this.leftrouterChange();
+		console.log('------------')
+		console.log(this.leftMenu)
+	},
+  
+}
+
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.leftNav{
+    width:160px;
+	position:fixed;
+	top:70px;
+	left:0;
+	bottom:0;
+	background:#415e7a
+}
+.el-menu--dark {
+    background-color: #415e7a;
+}
+.el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active, .el-menu-item.is-active {
+    color: #20a0ff;
+	background:#E6EFF7
+}
+ 
+</style>
+
+
+
