@@ -107,7 +107,119 @@ var util={
 				Day = '0'+Day;
 			}
 			return t.getFullYear()+'-'+ Mon+ '-' + Day+ ' '+ t.getHours()+':'+ t.getMinutes()+':'+ t.getSeconds();
+		},
+		//审批流
+		getStepStatusText(steps){
+            var counts = 0
+			if (typeof steps == 'object' && steps.length > 0) {
+				for ( var i in  steps ) {
+					var statusSetting = {
+					text: '',
+					textColor: '',
+					imgSrc: ''
+					}, conclusion = steps[i].conclusion;
+					switch (conclusion) {
+					case 0:
+						if (counts == 1) {
+						statusSetting = {
+							text: '未到达',
+							textColor: '#666',
+							imgSrc:require('../assets/noshenhe.png')
+						}
+						} else {
+						statusSetting = {
+							text: '审批中',
+							textColor: '#F5A402',
+							imgSrc: require('../assets/shenghezhong-tubi.png')
+						}
+						counts = 1;
+						}
+						break;
+					case 1:
+						statusSetting = {
+						text: '通过',
+						textColor: '#7AD752',
+						imgSrc:require('../assets/ogrin.png')
+						}
+						break;
+					case 2:
+						statusSetting = {
+						text: '驳回',
+						textColor: '#EA3232',
+						imgSrc: require('../assets/jujue-tubb.png')
+						}
+						counts = 1;
+						break;
+					case 3:
+						statusSetting = {
+						text: '转批',
+						textColor: '#EA3232',
+						imgSrc: require('../assets/zhuanpi.png')
+						}
+						break;
+					case 5:
+						statusSetting = {
+						text: '待财务审批',
+						textColor: '#F5A402',
+						imgSrc: require('../assets/shenghezhong-tubi.png')
+						}
+						break;
+					case 6:
+						statusSetting = {
+						text: '财务已签收',
+						textColor: '#7AD752',
+						imgSrc:require('../assets/ogrin.png')
+						}
+						break;
+					case 7:
+						statusSetting = {
+						text: '财务审核终止',
+						textColor: '#EA3232',
+						imgSrc:require('../assets/jujue-tubb.png')
+						}
+						break;
+					case 8:
+						statusSetting = {
+						text: '待财务结算',
+						textColor: '#EA3232',
+						imgSrc: require('../assets/shenghezhong-tubi.png')
+						}
+						break;
+					case 9:
+						statusSetting = {
+						text: '财务已结算',
+						textColor: '#7AD752',
+						imgSrc:require('../assets/ogrin.png')
+						}
+						break;
+					case 10:
+						statusSetting = {
+						text: '财务审批拒绝',
+						textColor: '#EA3232',
+						imgSrc:require('../assets/jujue-tubb.png')
+						}
+						break;
+					case 11:
+						statusSetting = {
+						text: '待财务支付',
+						textColor: '#EA3232',
+						imgSrc:require('../assets/ogrin.png')
+						}
+						break;
+					case 12:
+						statusSetting = {
+						text: '财务审批成功',
+						textColor: '#7AD752',
+						imgSrc: require('../assets/ogrin.png')
+						}
+						break;
+					}
+					steps[i]['statusSetting'] = statusSetting
+				}
+			}
 		}
+		
+		
 }
 
 export default util
