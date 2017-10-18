@@ -278,7 +278,7 @@
 						<p class="title-p">财务支付信息</p>
 						<div class="financialSettlement-list zhifupichiinfo">
 							<div class="financePay-navOne">
-								<p></p>
+								<p>序号</p>
 								<p>支付方式</p>
 								<p>结算币种</p>
 								<p>最终收款人</p>
@@ -289,24 +289,24 @@
 								<p>支付人</p>
 								<p>支付状态</p>
 							</div>
-							<div class="financePay-moneyChiose batchs">
-								<div style="line-height:30px">
-									<span>支付批次号：PV8599HL92017101616391300010</span>
-									<span>支付金额：CNY 300.00</span>
+							<div class="financePay-moneyChiose batchs" v-for="item in detialData.batchs">
+								<div style="line-height:30px;text-indent:20px">
+									<span>支付批次号：{{item.batchId}}</span>
+									<span>支付金额：{{item.currency}} {{item.amounts}}</span>
 								</div>
-								<div class="financePay-ulOne" style="display:block">
+								<div class="financePay-ulOne" style="display:block" v-for="(values,index) in item.bbs">
 									<ul>
 										<li>
-											<p>1</p>
-											<p>现金支付</p>
-											<p>折合本币结算</p>
-											<p>秦守志</p>
-											<p></p>
-											<p></p>
-											<p>CNY 300.00</p>
-											<p>2017-10-16</p>
-											<p>秦守志</p>
-											<p>财务已支付</p>
+											<p>{{index+1}}</p>
+											<p>{{detialData.payType}}</p>
+											<p>{{detialData.currencySettleType == 0 ? '折合本币结算':'单据币种结算'}}</p>
+											<p>{{detialData.receiver}}</p>
+											<p>{{detialData.cashAdvanceBill ? detialData.cashAdvanceBill.bankName : ''}}</p>
+											<p>{{detialData.cashAdvanceBill ? detialData.cashAdvanceBill.bankNo : ''}}</p>
+											<p>{{values.currency}} {{values.amount}}</p>
+											<p>{{values.updatedOn}}</p>
+											<p>{{item.user.nickname}}</p>
+											<p>{{values.status == 0 ?'待财务支付':'财务已支付'}}</p>
 										</li>
 									</ul>
 								</div>
@@ -646,16 +646,18 @@ export default {
 .financePay-navOne {
     height: 30px;
     border-bottom: 1px #D2D2D2 solid;
+	text-align:center
 }
 .financePay-navOne > p, .financePay-ulOne > ul > li > p {
-    height: 30px%;
+    height: 30px;
     display: block;
     line-height: 30px;
     font-size: 12px;
     float: left;
     border-right: 1px #D2D2D2 solid;
     overflow: hidden;
-	width:9%
+	width:9%;
+	text-align:center
 }
 .financePay-moneyChiose {
 

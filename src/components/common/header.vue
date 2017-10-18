@@ -16,8 +16,8 @@
 					  <el-menu-item index="/message">消息</el-menu-item>
 					  <el-menu-item index="/findSchedule">协同办公</el-menu-item>
 					  <el-menu-item index="/businessApply">差旅管理</el-menu-item>
-					  <el-menu-item index="5">费用报销</el-menu-item>
-					  <el-menu-item index="6">审批</el-menu-item>
+					  <el-menu-item index="/billList">费用报销</el-menu-item>
+					  <el-menu-item index="/businessApprove">审批</el-menu-item>
 					  <el-menu-item index="7">系统管理</el-menu-item>
 				   </el-menu>
 				   </div>
@@ -55,6 +55,10 @@
 				  this.activeIndex ='/findSchedule'
 				}else if(path == '/businessApply' || path=='/myorder' || path == '/indexDidi'){
 				  this.activeIndex ='/businessApply'
+				}else if(path == '/billList' || path == '/dailyApply' || path == '/travelExpense' || path == '/dailyExpense' || path == '/cashAdvance' || path == '/advanceRepay' || path == '/userCost'){
+					this.activeIndex ='/billList'
+				}else if(path == '/businessApprove' ||  path == '/moneyApprove' ||  path == '/moneyBuyApprove' ||  path == '/voucherList'){
+					this.activeIndex ='/businessApprove'
 				}
 			}
 		},

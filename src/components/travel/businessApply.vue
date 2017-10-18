@@ -15,7 +15,7 @@
 					</el-select>
 					</span>
 					<span><el-button type="primary" @click="list">搜索</el-button></span>
-					<span><el-button type="primary">新增出差申请单</el-button></span>
+					<span><el-button type="primary" @click="creatBusinessApply('0')">新增出差申请单</el-button></span>
 				</div>
 				<el-table :data="listDataMessage.all" border style="width: 100%;font-size:12px;margin-bottom:20px">
 					<el-table-column prop="orderNo" label="单据编号">
@@ -42,6 +42,7 @@
 		</div>
         
 		 <mychuchaishenqingDetial  v-model="showDetial" :businessapply="thisuuid"></mychuchaishenqingDetial>
+		 <mychuchaishenqingCreat   v-model="showCreat" :businessapply="uuidedit"></mychuchaishenqingCreat>
   </div>
 </template>
 
@@ -49,11 +50,13 @@
 import util from '@/util/util.js'
 import axios from 'axios'
 import chuchaishenqingDetial from '@/components/common/chuchaishenqingDetial.vue'
+import chuchaishenqingCreat from '@/components/common/chuchaishenqingCreat.vue'
 
 export default {
   name: 'BusinessApply',
   components:{
-     mychuchaishenqingDetial:chuchaishenqingDetial
+     mychuchaishenqingDetial:chuchaishenqingDetial,
+		 mychuchaishenqingCreat:chuchaishenqingCreat
   },
   data () {
     return {
@@ -83,99 +86,110 @@ export default {
 	  ],
 	  countNum:0,
 	  showDetial:false,
-	  thisuuid:''
+		showCreat:false,
+	  thisuuid:'',
+		uuidedit:''
     }
   },
   methods:{
-     list(){
-	     var option = {
-		    type:0,
-			status:this.status,
-			page:this.currentPage,
-			orderNo:this.orderNo,
-			createTime:this.getDefaultTime(this.rangDate[0]),
-			endTime:this.getDefaultTime(this.rangDate[1])
-		 }
-		 var _this = this;
-	     util.post('bill/tripbill/listAll',option,function(res){
-			_this.listDataMessage = res.message;
-			_this.countNum = res.message.count
-		 },{format:true})
-	 },
-	 handleSizeChange(val) {
+      list(){
+	      var option = {
+		      type:0,
+					status:this.status,
+					page:this.currentPage,
+					orderNo:this.orderNo,
+					createTime:this.getDefaultTime(this.rangDate[0]),
+					endTime:this.getDefaultTime(this.rangDate[1])
+				}
+		    var _this = this;
+	      util.post('bill/tripbill/listAll',option,function(res){
+					_this.listDataMessage = res.message;
+					_this.countNum = res.message.count
+				},{format:true})
+	    },
+	    handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-		this.currentPage=val
-		this.list();
-    },
-	getDefaultTime(time){
-		var t = time ? new Date(time) : new Date();
-		var Mon = t.getMonth()+1;
-		var Day = t.getDate();
-		if(t.getMonth()+1<10){
-			Mon = '0'+Mon;
-		}
-		if(t.getDate()<10){
-			Day = '0'+Day;
-		}
-		return t.getFullYear()+'-'+ Mon+ '-' + Day+ ' '+ t.getHours()+':'+ t.getMinutes()+':'+ t.getSeconds();
-	},
-	handleClick(info){
-	  //查看详情
-	  this.showDetial=true;
-	  
-	  this.thisuuid = info.uuid
-	},
-	formatterTime(row){
-	  //列表日期处理
-	  return this.getDefaultTime(row.createOn.time).substring(0,10)
-	},
-	formatterStatus(row){
-	    //列表审批状态处理
-	    var status = row.billApprovalStatus;
-	    var text = '';
-		switch(status){			
-			case -1:
-				text = '已删除';
-				break;
-			case 0:
-				text='未提交';
-				break;
-			case 1:
-			case 2:
-				text='审批中';
-				break;
-			case 3:
-				text='审批通过';
-				break;
-			case 4:
-				text='审批拒绝';
-				break;
-			case 5:
-				text='待财务签收';
-				break;
-			case 7:
-				text='财务审核终止';
-				break;
-			case 6:
-			case 8:
-			case 10:
-				text='财务结算终止';
-				break;
-			case 9:
-			case 11:
-				text='待财务支付';
-				break;
-			case 12:
-				text='财务已支付';
-				break;
-			case 13:
-				text='财务已收款';
-				break;
-		}	
-		return text;
-	}
+      },
+      handleCurrentChange(val) {
+	      this.currentPage=val
+	     	this.list();
+      },
+			getDefaultTime(time){
+				var t = time ? new Date(time) : new Date();
+				var Mon = t.getMonth()+1;
+				var Day = t.getDate();
+				if(t.getMonth()+1<10){
+					Mon = '0'+Mon;
+				}
+				if(t.getDate()<10){
+					Day = '0'+Day;
+				}
+				return t.getFullYear()+'-'+ Mon+ '-' + Day+ ' '+ t.getHours()+':'+ t.getMinutes()+':'+ t.getSeconds();
+			},
+			handleClick(info){
+				//查看详情
+				if(info.billApprovalStatus == 0){//编辑
+             this.creatBusinessApply(info.uuid);
+				}else{ //查看详情
+            this.showDetial=true;
+			     	this.thisuuid = info.uuid
+				}
+				
+			},
+			formatterTime(row){
+				//列表日期处理
+				return this.getDefaultTime(row.createOn.time).substring(0,10)
+			},
+			formatterStatus(row){
+					//列表审批状态处理
+					var status = row.billApprovalStatus;
+					var text = '';
+				switch(status){			
+					case -1:
+						text = '已删除';
+						break;
+					case 0:
+						text='未提交';
+						break;
+					case 1:
+					case 2:
+						text='审批中';
+						break;
+					case 3:
+						text='审批通过';
+						break;
+					case 4:
+						text='审批拒绝';
+						break;
+					case 5:
+						text='待财务签收';
+						break;
+					case 7:
+						text='财务审核终止';
+						break;
+					case 6:
+					case 8:
+					case 10:
+						text='财务结算终止';
+						break;
+					case 9:
+					case 11:
+						text='待财务支付';
+						break;
+					case 12:
+						text='财务已支付';
+						break;
+					case 13:
+						text='财务已收款';
+						break;
+				}	
+				return text;
+			},
+			creatBusinessApply(id){
+          this.showCreat=true;
+					this.uuidedit = id;
+			}
+
   },
   created(){
      this.list()

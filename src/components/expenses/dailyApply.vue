@@ -1,8 +1,8 @@
 <template>
-  <div class="didi">
+  <div class="dailyApply">
 	    <div class="rightBox">
 		    <div style="padding:20px">
-				滴滴出行内容
+				日常开支申请单内容
 			</div>
 		</div>
   </div>
@@ -12,7 +12,7 @@
 import util from '@/util/util.js'
 import axios from 'axios'
 export default {
-  name: 'Didi',
+  name: 'DailyApply',
   data () {
     return {
 	  
@@ -30,6 +30,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  
+ 
   
 </style>

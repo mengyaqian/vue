@@ -52,7 +52,21 @@ export default {
 				case '/indexDidi':
 				    this.leftMenu = this.leftData.travel;
 					break;
-                				
+				case '/billList':
+				case '/dailyApply':
+				case '/travelExpense':
+				case '/dailyExpense':
+				case '/cashAdvance':
+				case '/advanceRepay':
+				case '/userCost':
+				     this.leftMenu = this.leftData.expenses;
+					 break;
+                case '/businessApprove':	
+				case '/moneyApprove':
+				case '/moneyBuyApprove':
+				case '/voucherList':
+				     this.leftMenu = this.leftData.approve;
+					 break;
 			}
 		}
 	},
