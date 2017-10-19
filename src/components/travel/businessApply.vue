@@ -42,7 +42,7 @@
 		</div>
         
 		 <mychuchaishenqingDetial  v-model="showDetial" :businessapply="thisuuid"></mychuchaishenqingDetial>
-		 <mychuchaishenqingCreat   v-model="showCreat" :businessapply="uuidedit"></mychuchaishenqingCreat>
+		 <mychuchaishenqingCreat   v-model="showCreat" :businessapply="uuidedit" v-on:Refresh="list"></mychuchaishenqingCreat>
   </div>
 </template>
 
@@ -193,7 +193,12 @@ export default {
   },
   created(){
      this.list()
-  }
+  },
+	watch:{
+		orderNo:function(a){
+			console.log('123456789')
+		}
+	}
   
 }
 </script>

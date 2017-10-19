@@ -2,7 +2,7 @@
 		<div  class="creatBusinessApply" v-show="dialogVisible">
 			<el-dialog title="出差申请单" :visible.sync="dialogVisible" @close="closed" size="large">
 					<div>
-					    <p class="title-p">申请信息</p>
+					    <p class="title-p">申请信息<el-checkbox style="float:right" v-model="detialData.ifAdvance">是否预支</el-checkbox></p>
 					    <el-row :gutter="20">
 							<el-col :span="12">
 								<el-row :gutter="20">
@@ -15,7 +15,19 @@
 								    <div class="grid-div">
 										<el-col :span="6"><div class="grid1">同行人:</div></el-col>
 										<el-col :span="18">
-										    <el-input class="grid2" placeholder="请选择同行人" icon="search" readonly v-model="handleData.passengerBeanName" :on-icon-click="handleIconClick"></el-input>
+											<el-select @change="personChange" v-model="handleData.passengerBean" multiple  filterable placeholder="请选择同行人" style="width:100%">
+												   <el-option-group
+													v-for="group in personList"
+													:key="group.id"
+													:label="group.name">
+													<el-option
+														v-for="item in group.users"
+														:key="item.id"
+														:label="item.nickname"
+														:value="item.id">
+													</el-option>
+													</el-option-group>
+											</el-select>
 										</el-col>
 									</div>
 								</el-row>
@@ -58,8 +70,8 @@
 								    <div class="grid-div">
 								        <el-col :span="6"><div class="grid1">记账部门<b>*</b>:</div></el-col>
 										<el-col :span="18">
-										    <el-select v-model="detialData.tallyDepartId" placeholder="请选择记账部门" class="grid2">
-												<el-option v-for="item in pageInfo.departList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+										    <el-select v-model="detialData.tallyDepartId"  @change="tallyDepartIdChange" placeholder="请选择记账部门" class="grid2">
+												<el-option v-for="item in pageInfo.departList" :key="item.id" :label="item.name" :value="item.id" ></el-option>
 											</el-select>
 										</el-col>
 									</div>
@@ -67,16 +79,16 @@
 							</el-col>
 							<el-col :span="12">
 							    <div class="grid-div2">
-								    <el-col :span="6"><div class="grid1">记账项目<b>*</b>:</div></el-col>
+								    <el-col :span="6"><div class="grid1">记账项目<b v-if="detialData.approvalType==2">*</b>:</div></el-col>
 									<el-col :span="18">
-									    <el-select v-model="detialData.tallyProjectId" placeholder="请选择记账项目" class="grid2">
+									    <el-select v-model="detialData.tallyProjectId == 0 ? null:detialData.tallyProjectId" placeholder="请选择记账项目" class="grid2">
 											<el-option v-for="item in pageInfo.projectList" :key="item.id" :label="item.projectName" :value="item.id"></el-option>
 										</el-select>
 									</el-col>
 								</div>
 							</el-col>
 						</el-row>
-						<p style="text-align:right;margin:10px"><el-button type="text">新增行程</el-button></p>
+						<p style="text-align:right;margin:10px"><el-button type="text" @click="addTrip">新增行程</el-button></p>
 						<div class="route-box" v-for="(item,index) in detialData.travelBookbeans">
 							<el-row :gutter="20">
 								<div class="route-div">
@@ -88,13 +100,19 @@
 									</el-col>
 									<el-col :span="5">
 									    <el-date-picker class="grid-right"  v-model="item.startTime" type="date"  placeholder="选择日期" ></el-date-picker>
-										<el-autocomplete 
-											class="inline-input grid-right"
-											v-model="item.startCity"
-											:fetch-suggestions="querySearch"
-											placeholder="请输入内容"
-											@select="handleSelect"
-										></el-autocomplete>
+										<el-select v-model="item.startCity" filterable remote @visible-change="visibles" :remote-method="remoteMethod"
+                                        :loading="loading" placeholder="请选择出发城市" class="inline-input grid-right">
+											<el-option-group
+											key="0"
+											label="热门城市">
+											<el-option
+												v-for="items in cityListSearch"
+												:key="items.code"
+												:label="items.name"
+												:value="items.name">
+											</el-option>
+											</el-option-group>
+										</el-select>
 										<el-select v-model="item.tbType" placeholder="请选择出行方式" >
 											<el-option v-for="values in myTravelBookbeans" :key="values.value" :label="values.label" :value="values.value"></el-option>
 										</el-select>										
@@ -108,37 +126,46 @@
 									</el-col>
 									<el-col :span="5">
 										<el-date-picker class="grid-right"  v-model="item.endTime" type="date"  placeholder="选择日期" ></el-date-picker>
-										<el-autocomplete
-											class="inline-input"
-											v-model="item.toCity"
-											:fetch-suggestions="querySearch"
-											placeholder="请输入内容"
-											@select="handleSelect"
-										></el-autocomplete>
+										<el-select v-model="item.toCity" filterable remote @visible-change="visibles" :remote-method="remoteMethod"
+                                        :loading="loading" placeholder="请选择到达城市" class="inline-input grid-right">
+											<el-option-group
+											key="0"
+											label="热门城市">
+											<el-option
+												v-for="items in cityListSearch"
+												:key="items.code"
+												:label="items.name"
+												:value="items.name">
+											</el-option>
+											</el-option-group>
+										</el-select>
 									</el-col>
 								</div>
 							</el-row>
 						 	<div class="needHotel">是否需要住宿：
 							    <el-switch   v-model="item.hotelBooking" on-text="是" off-text="否" ></el-switch>
 							</div>
+							<div class="deleteTrip" v-if="index != 0" @click="deleteTrip(index)">
+							    <i class="el-icon-close"></i>
+							</div>
 							<el-row>
 								<div class="grid-div">
 									<el-col :span="3">备注</el-col>
-									<el-col :span="21"><div class="grid2">{{item.remark}}</div></el-col>
+									<el-col :span="21"><el-input class="grid2 borderBottom" v-model="item.remark"></el-input></el-col>
 								</div>
 							</el-row>
 						</div>
 						
-						<p class="title-p">出差申请费用预算<el-button style="float:right" type="text">新增预算</el-button></p>
+						<p class="title-p">出差申请费用预算<el-button style="float:right" @click="addBudget" type="text">新增预算</el-button></p>
 						<div  v-for="item1 in detialData.formatCostBudgets">
-						<el-row :gutter="20"  v-for="values in item1.budgetTypes">
+						<el-row :gutter="20"  v-for="(values,index) in item1.budgetTypes">
 							<el-col :span="12">
 							     <el-row :gutter="20">
 								    <div class="grid-div">
 								        <el-col :span="6"><div class="grid1">费用项目<b>*</b>：</div></el-col>
 										<el-col :span="18">
 										   <el-select v-model="values.costBudgetId" placeholder="请选择费用项目" class="grid2">
-												<el-option v-for="item in pageInfo.costProjectList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+												<el-option v-for="items in pageInfo.costProjectList" :key="items.id" :label="items.name" :value="items.id"></el-option>
 											</el-select>
 										</el-col>
 									</div>
@@ -148,16 +175,67 @@
 							    <div class="grid-div2">
 								    <el-col :span="6"><div class="grid1">金额</div></el-col>
 									<el-col :span="18">
-									    <el-input class="" v-model="values.amount" style="width:80px"  placeholder="请输入金额"></el-input>
-									    <el-select v-model="values.currencyId" placeholder="请选择币种" class="">
-											<el-option v-for="item in currencyList" :key="item.id" :label="item.code" :value="item.id"></el-option>
+									    <el-input class="" v-model="values.amount" style="width:80px" @blur="budgetChange(values)"  placeholder="请输入金额"></el-input>
+									    <el-select v-model="values.currencyName" placeholder="请选择币种" class="" @change="budgetChange(values)">
+											<el-option v-for="items in currencyList" :key="items.id" :label="items.code" :value="items.code"></el-option>
+										</el-select>
+										<i v-if="index !=0" @click="deleteBudget(index)" class="el-icon-close"></i>
+									</el-col>
+									
+								</div>
+							</el-col>
+					    </el-row>
+						</div>
+						<p v-if="detialData.ifAdvance" class="title-p">现金预支<el-checkbox style="float:right" v-model="detialData.ifAll">全额预支</el-checkbox></p>
+					    <el-row :gutter="20" v-if="detialData.ifAdvance">
+							<el-col :span="12">
+							     <el-row :gutter="20">
+								    <div class="grid-div">
+								        <el-col :span="6"><div class="grid1">支付方式：</div></el-col>
+										<el-col :span="18">
+										   <el-select v-model="detialData.payType" placeholder="请选择支付方式" class="grid2" >
+												<el-option v-for="item in pageInfo.paymentTypeList" :key="item.encode" :label="item.name" :value="item.encode"></el-option>
+											</el-select>
+										</el-col>
+									</div>
+								</el-row>
+								<el-row :gutter="20">
+								    <div class="grid-div">
+								        <el-col :span="6"><div class="grid1">最终收款人<b>*</b>：</div></el-col>
+										<el-col :span="18"><el-input class="grid2" v-model="detialData.receiver" readonly></el-input></el-col>
+									</div>
+								</el-row>
+								<el-row :gutter="20" v-if="detialData.payType == 'PT03'">
+								    <div class="grid-div">
+								        <el-col :span="6"><div class="grid1">银行卡信息<b>*</b>：</div></el-col>
+										<el-col :span="18">
+										      <el-input class="grid2" placeholder="请选择银行卡" icon="search" readonly v-model="detialData.bankNo" :on-icon-click="handleIconClick"></el-input>
+										</el-col>
+									</div>
+								</el-row>
+							</el-col>
+							<el-col :span="12">
+							    <div class="grid-div2">
+								    <el-col :span="6"><div class="grid1">结算币种</div></el-col>
+									<el-col :span="18">
+									    <el-select v-model="detialData.currencySettleType" placeholder="请选择结算币种" class="">
+											<el-option v-for="item in currencySettleTypeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
 										</el-select>
 									</el-col>
 								</div>
 							</el-col>
 					    </el-row>
-						</div>
-					    <p class="title-p">审批人</p>
+						<ul class="yuzhiUl" v-if="detialData.ifAdvance">
+						    <li><span>序号</span><span>币种</span><span>金额</span><span>汇率</span><span>折合本币</span></li>
+							<li v-for="(item,index) in detialData.advances">
+							   <span>{{index+1}}</span>
+							   <span>{{item.currency}}</span>
+							   <span><el-input class="grid2" v-model="item.amount" v-if="detialData.ifAll" readonly></el-input><el-input class="grid2" v-model="item.amount" v-if="!detialData.ifAll" ></el-input></span>
+							   <span>{{item.exchangeRate}}</span>
+							   <span>{{item.domesticCurrencyAmount}}</span>
+							</li>
+						</ul>
+						<p class="title-p">审批人</p>
 					    <ul class="approveUl">
 						    <li v-for="item in detialData.applyUsers">
 							   <img v-bind:src="item.avatarSmall">
@@ -169,14 +247,16 @@
 						<p style="clear:both"></p>
 					</div>
 					<div style="float:right;margin-bottom:20px" class="clears">
-					    <el-button type="primary">保存并提交</el-button>
-						<el-button>仅保存</el-button>
+					    <el-button type="primary" @click="save(1)">保存并提交</el-button>
+						<el-button @click="save(0)">仅保存</el-button>
 						<el-button>删除</el-button>
 					</div>
 					
 				
 			</el-dialog>
 		</div>
+		    
+	
 </template>
 
 <script>
@@ -188,20 +268,35 @@ export default {
 	businessapply:String,
 	value:Boolean
 	},
-	
 	data () {
 		return {
 		  dialogVisible:this.value,
+		  personList:[],
+		  hotCityList:[],
+		  cityListSearch:[],
+		  loading: false,
 		  detialData:{
-			  proposer:'张三',
-			  applyDepartName:'技术部2',
-			  applyDepartId:'865',
+			  amount:0,
+			  id:"",
+			  advances:[],
+			  proposer:util.userInfo.nickname,
+			  applyUserIds:util.userInfo.id,
+			  applyDepartName:util.userInfo.department,
+			  applyDepartId:util.userInfo.departmentId,
 			  approvalType:null,
 			  remark:'',
 			  tallyDepartId:null,
 			  tallyDepartName:'',
 			  tallyProjectId:null,
 			  tallyProjectName:'',
+			  ifAdvance:false,
+			  ifAll:true,
+			  payType:"PT01",
+              receiver:util.userInfo.nickname,
+			  currencySettleType:0,
+			  bankName:'',
+			  bankNo:'',
+			  orderNo:'',
 			  formatCostBudgets:[
 				  {
 					code:'CNY',
@@ -229,15 +324,16 @@ export default {
 					startCity:'',
 					toCity:'',
 					tbTypeName:'请选择出行方式',
-					tbType:0
+					tbType:0,
+					toCityCode:'',
+					startCityCode:''
 				  }
 			  ],
 			  applyUsers:[]
 		  },
 		  handleData:{
-             passengerBeanName:'',
-			 passengerBeanId:'',
-			 passengerBeanNum:0
+			 passengerBeanNum:0,
+			 passengerBean:[]   //选择的同行人id
 		  },
 		  applyStyle:[
 			  {value: 1,label: '部门审批'},
@@ -253,16 +349,16 @@ export default {
 		  },
 		  currencyList:[],
 		  userInfo:{},
-		  //出差申请费用预算模板
-		  costBudgets:{
-			  amount:null,
-			  costBudgetId:null,
-			  costBudgetName:'',
-			  currencyId:3,
-			  currencyName:'CNY',
-			  rate:'1.0',
-			  yyzamount:0
-		  },
+		  //预算模板
+		costBudgets:{
+				costBudgetName:'',
+				currencyId:3,
+				currencyName:'CNY',
+				rate:'1.0',
+				yyzamount:0,
+				amount:null,
+				costBudgetId:null
+		   },
 		  //行程模板
 		  travelTplBookbeans:{
             startTime:'',
@@ -272,12 +368,18 @@ export default {
 			startCity:'',
 			toCity:'',
 			tbTypeName:'请选择出行方式',
-			tbType:0
+			tbType:0,
+			toCityCode:'',
+			startCityCode:''
 		  },
 		  myTravelBookbeans:[
 		    {value: 0,label: '请选择出行方式'},
 			{value: 1,label: '火车'},
 			{value: 2,label: '飞机'},
+		  ],
+		  currencySettleTypeList:[
+			{value: 0,label: '折合本币结算'},
+			{value: 1,label: '单据币种结算'}
 		  ]
 		}
 	},
@@ -291,7 +393,12 @@ export default {
 				if(_this.businessapply != '0'){//编辑
                     util.post('bill/bussiness/edit',{uuid:_this.businessapply,type:0},function(res){
 						_this.detialData = res.content[0];
-						_this.userInfo = res.content[0].user
+						_this.userInfo = res.content[0].user;
+						var arr = [];
+						for (var item of res.content[0].passengerBean) {
+                            arr.push(item.userId)
+						}
+						_this.handleData.passengerBean=arr;
 				    },{format:true})
 				}else{ //新增
 
@@ -301,7 +408,9 @@ export default {
 			
 		},
 		handleIconClick(ev){
-            console.log(ev)
+			//选择同行人
+            console.log(ev);
+			
 		},
 		initList(){
 			//默认执行
@@ -313,15 +422,171 @@ export default {
 				_this.currencyList = res.message
 				console.log(res.message)
 			})
+			util.post('web/actionChatUser',{ifAll:1},function(res){
+				_this.personList = res.content
+			})
+			util.get('book/findCityHot',{},function(res){
+				_this.hotCityList = res;
+				_this.cityListSearch = res;
+			})
 		},
-		querySearch(queryString, cb) {
-			var restaurants = this.restaurants;
-			var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-			// 调用 callback 返回建议列表的数据
-			cb(results);
+		visibles(v){
+		    this.cityListSearch =this.hotCityList;
 		},
-		handleSelect(item) {
-			console.log(item);
+		remoteMethod(query){ 
+			var re = /[^\u4e00-\u9fa5]/;  
+			var option={};
+            if(re.test(query)){
+				option={letter:query}
+			} else{
+				option={chineseCharacters:query}
+			}
+            if (query !== '') {
+				var _this=this;
+				_this.loading = true;
+				util.get('book/findCity',option,function(res){
+					_this.loading = false;
+                    _this.cityListSearch = res;
+				})
+			} else {
+				this.loading = false;
+                this.cityListSearch = this.hotCityList;
+			}
+		},
+		addTrip(){
+			//新增行程
+			let obj=JSON.stringify(this.travelTplBookbeans);
+            this.detialData.travelBookbeans.push(JSON.parse(obj));
+		},
+		deleteTrip(index){
+			//删除行程
+			this.detialData.travelBookbeans.splice(index,1)
+		},
+		addBudget(){
+			//新增预算
+			let obj = JSON.stringify(this.costBudgets);
+			this.detialData.formatCostBudgets[0].budgetTypes.push(JSON.parse(obj));
+		},
+		deleteBudget(index){
+            //删除预算
+			this.detialData.formatCostBudgets[0].budgetTypes.splice(index,1)
+		},
+		budgetChange(val){
+			/*console.log(this.detialData.formatCostBudgets)
+           var arr=[];
+			for(var item of this.detialData.formatCostBudgets){
+				let _amount = 0;
+				let _currencyId=item.budgetTypes[0].currencyId;
+				let _currency = item.budgetTypes[0].currencyName;
+				let _exchangeRate = item.budgetTypes[0].rate;
+				for(var items of item.budgetTypes){
+					_amount += Number(items.amount);
+				}
+				arr.push({
+					amount:_amount,
+					currencyId:_currencyId,
+					currency:_currency,
+					domesticCurrencyAmount:_amount*_exchangeRate,
+					exchangeRate:_exchangeRate
+				})
+			}
+			console.log(arr)
+			this.detialData.advances=arr;*/
+			
+			console.log(val)
+			var arr=[];
+			for(var item of this.detialData.formatCostBudgets){
+				for(var items of item.budgetTypes){
+                     arr.push(items)
+				}
+			}
+			
+			console.log(this.detialData.formatCostBudgets)
+			console.log(arr)
+		},
+		tallyDepartIdChange(v){
+			//记账部门选择
+			var _this = this;
+			let list = _this.pageInfo.departList;
+			list.find(function(x){
+				if(x.id==v){
+					_this.detialData.tallyDepartName=x.name
+				}
+			})
+		},
+		personChange(v){
+				this.handleData.passengerBeanNum = this.handleData.passengerBean.length
+		},
+		//保存
+		save(status){//0仅保存，1保存并提交
+			var arramountAdvances=[];
+			var arrapplicationCostCudgets=[];
+			var arrtravelBooks=[];
+			for (var item of this.detialData.advances) {
+				arramountAdvances.push(item.currencyId+'-'+item.currency+'-'+item.amount)
+			}
+			for(var item of this.detialData.formatCostBudgets){
+			    for (var item2 of item.budgetTypes){
+                   arrapplicationCostCudgets.push(item2.costBudgetId+'-'+item2.costBudgetName+'-'+item2.amount+'-'+item2.currencyId+'-'+item2.currencyName)
+				}
+			}
+			for(var item of this.detialData.travelBookbeans){
+				arrtravelBooks.push({
+					endTime:util.getDefaultTime(item.endTime).substring(0,10),
+					hotelBooking:item.hotelBooking,
+					remark:item.remark,
+					startCity:item.startCity,
+					startCityCode:'',
+					startTime:util.getDefaultTime(item.startTime).substring(0,10),
+					tbType:item.tbType,
+					toCity:item.toCity,
+					toCityCode:''
+				})
+			}
+			var bodys = {
+                amount:this.detialData.amount,
+				amountAdvances:arramountAdvances.join(','),
+				applicationCostCudgets:arrapplicationCostCudgets.join(','),
+				applyDepartId:this.detialData.applyDepartId,
+				applyUserIds:this.detialData.applyUserIds,
+				approvalType:this.detialData.approvalType,
+				bankName:this.detialData.bankName,
+				bankNo:this.detialData.bankNo,
+				billIds:'',//关联的开支流水
+				businessTripBillId:'',
+				cashAdvanceBillId:'',//关联的现金预支单
+				cashAdvanceIds:'',
+				cashPenseMoneys:'',
+				currencySettleType:this.detialData.currencySettleType,
+				dailyExpenseBillId:'',
+				id:this.detialData.id,
+				ifAdvance:this.detialData.ifAdvance,
+				ifAll:this.detialData.ifAll,
+				opentype:3,
+				orderNo:this.detialData.orderNo,
+				passengerUserIds:this.handleData.passengerBean.join(','),
+				payType:this.detialData.payType,
+				planDate:util.getDefaultTime(),
+				receiver:this.detialData.receiver,
+				remark:this.detialData.remark,
+				status:status,
+				tallyDepartId:this.detialData.tallyDepartId,
+				tallyDepartName:this.detialData.tallyDepartName,
+				tallyProjectId:this.detialData.tallyProjectId,
+				tallyProjectName:this.detialData.tallyProjectName,
+				travelbookIds:'',
+				travelBooks:arrtravelBooks,
+				type:0
+			}
+			var _this = this;
+			util.post('bill/newSaveBusinessTrip',bodys,function(res){
+               _this.closed();
+			   _this.$emit('Refresh','goRefresh')
+			   _this.$message({
+					message: '操作成功',
+					type: 'success'
+				});
+			})
 		}
 		
 	},
@@ -435,7 +700,8 @@ export default {
     border-radius: 8px 8px 0 0;
     position: relative;
 	height:150px;
-	color:#fff
+	color:#fff;
+	padding-top:40px;
 }
 .tc{
 	text-align:center;
@@ -446,9 +712,13 @@ export default {
 	line-height:30px;
 	margin-bottom:15px
 }
+.grid-left{
+	width:100%
+}
 .grid-right{
    border-bottom:1px solid #fff;
-   margin-bottom:15px
+   margin-bottom:15px;
+   width:100%
 }
 .grid-type{
    background:#fff;
@@ -502,6 +772,33 @@ export default {
 .approveName {
     font-size: 12px;
     text-align: center;
+}
+.yuzhiUl{
+	border:1px solid #ddd;
+	border-bottom:none;
+	text-align:center
+}
+.yuzhiUl li{
+   border-bottom:1px solid #ddd;
+   height:30px;
+   line-height:30px;
+}
+.yuzhiUl li span{
+   display:inline-block;
+   width:19%;
+   border-right:1px solid #ddd;
+}
+.yuzhiUl li span:last-child{
+	border-right:none
+}
+.deleteTrip{
+	position:absolute;
+	top:10px;
+	right:10px;
+	cursor:pointer
+}
+.borderBottom{
+	margin-top:5px
 }
 </style>
 

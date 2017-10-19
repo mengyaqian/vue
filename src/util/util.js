@@ -2,7 +2,8 @@
 import axios from 'axios'
 axios.defaults.timeout = 5000;                        //响应时间
 //axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';           //配置请求头
-axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+//axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+axios.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8'
 axios.defaults.baseURL = 'https://uat.feikongbao.com/yodooweb/';   //配置接口地址
 var reg_exp={
 	email: "^([a-zA-Z0-9_\\-\.])+@([a-zA-Z0-9_\-])+(\\.[a-zA-Z0-9_\-]{2,10}){1,3}$",
@@ -46,14 +47,21 @@ var util={
             }
         },
 		wHeight:document.documentElement.clientHeight, //浏览器高
+		userInfo:JSON.parse(localStorage.getItem('userInfo')),
 		get(url,params,cbk){
 			axios.get(url,{params:params}).then(function(res){
-				if(res.data.code == 200 || res.data.statusCode == 200){
+				if(res.data.code || res.data.code){
+					if(res.data.code == 200 || res.data.statusCode == 200){
+						if(cbk){
+							cbk(res.data)
+						}
+					}else{
+						alert('操作失败')
+					}
+				}else{
 					if(cbk){
 						cbk(res.data)
 					}
-				}else{
-					alert('操作失败')
 				}
                 
 			}).catch(function(error){

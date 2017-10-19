@@ -35,13 +35,54 @@ var http = {
 	}
 }*/
 
-
+localStorage.setItem('userInfo',JSON.stringify({
+	avatarSmall:'http://7xp2os.com1.z0.glb.clouddn.com/201610131518326404187.png',
+	bankName:'',
+	bankNo:'',
+	birthday:'2016-10-13 15:18:31',
+	card:"",
+	companyTaxScale:0,
+	createDate:"2016-10-13 15:18:31",
+	department:"技术部",
+	departmentId:865,
+	description:"",
+	easemobId:"chat4835",
+	email :"",
+	erpAccount: "",
+	id:4835,
+	idCard:"",
+	license:"",
+	mobile:"13599999996",
+	nickname:"秦守志",
+	orgCode:"8599HL9",
+	orgId:711,
+	orgName:"查42bug",
+	passport:"",
+	password:"E10ADC3949BA59ABBE56E057F20F883E",
+	position:513,
+	positionName:"开发工程师",
+	protectOn:false,
+	receiver:"",
+	remark:"",
+	resourceFor:0,
+	resourceMap:{},
+	sex:0,
+	status:2,
+	systemRoleIds:"1,20",
+	tag:"",
+	tel:"13599999996",
+	token:"",
+	type:2,
+	updateDate:"2016-10-13 15:18:31",
+	username:"13599999996",
+}))
 new Vue({
   el: '#app',
   router,
   template: '<App/>',
   components: { App }
 })
+
 
 //export default http
 
