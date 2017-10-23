@@ -40,9 +40,7 @@
 				</el-pagination>
 			</div>
 		</div>
-        
 		 <mychuchaishenqingDetial  v-model="showDetial" :businessapply="thisuuid"></mychuchaishenqingDetial>
-		 <mychuchaishenqingCreat   v-model="showCreat" :businessapply="uuidedit" v-on:Refresh="list"></mychuchaishenqingCreat>
   </div>
 </template>
 
@@ -50,13 +48,11 @@
 import util from '@/util/util.js'
 import axios from 'axios'
 import chuchaishenqingDetial from '@/components/common/chuchaishenqingDetial.vue'
-import chuchaishenqingCreat from '@/components/common/chuchaishenqingCreat.vue'
 
 export default {
   name: 'BusinessApply',
   components:{
-     mychuchaishenqingDetial:chuchaishenqingDetial,
-		 mychuchaishenqingCreat:chuchaishenqingCreat
+     mychuchaishenqingDetial:chuchaishenqingDetial
   },
   data () {
     return {
@@ -86,9 +82,7 @@ export default {
 	  ],
 	  countNum:0,
 	  showDetial:false,
-		showCreat:false,
-	  thisuuid:'',
-		uuidedit:''
+	  thisuuid:''
     }
   },
   methods:{
@@ -127,7 +121,6 @@ export default {
 				return t.getFullYear()+'-'+ Mon+ '-' + Day+ ' '+ t.getHours()+':'+ t.getMinutes()+':'+ t.getSeconds();
 			},
 			handleClick(info){
-				//查看详情
 				if(info.billApprovalStatus == 0){//编辑
              this.creatBusinessApply(info.uuid);
 				}else{ //查看详情
@@ -186,8 +179,11 @@ export default {
 				return text;
 			},
 			creatBusinessApply(id){
-          this.showCreat=true;
-					this.uuidedit = id;
+				 if(id == 0){
+           this.$router.push('/chuchaishenqingCreat')
+				 }else{
+           this.$router.push('/chuchaishenqingCreat/'+id)
+				 }
 			}
 
   },

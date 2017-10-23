@@ -1,7 +1,7 @@
 <template>
-		<div  class="creatBusinessApply" v-show="dialogVisible">
-			<el-dialog title="出差申请单" :visible.sync="dialogVisible" @close="closed" size="large">
-					<div>
+		<div  class="creatBusinessApply" >
+					<div class="rightBox">
+					   <div style="padding:20px 30px">
 					    <p class="title-p">申请信息<el-checkbox style="float:right" v-model="detialData.ifAdvance">是否预支</el-checkbox></p>
 					    <el-row :gutter="20">
 							<el-col :span="12">
@@ -81,7 +81,7 @@
 							    <div class="grid-div2">
 								    <el-col :span="6"><div class="grid1">记账项目<b v-if="detialData.approvalType==2">*</b>:</div></el-col>
 									<el-col :span="18">
-									    <el-select v-model="detialData.tallyProjectId == 0 ? null:detialData.tallyProjectId" placeholder="请选择记账项目" class="grid2">
+									    <el-select v-model="detialData.tallyProjectId == 0 ? null:detialData.tallyProjectId" @change="tallyProjectIdChange"  placeholder="请选择记账项目" class="grid2">
 											<el-option v-for="item in pageInfo.projectList" :key="item.id" :label="item.projectName" :value="item.id"></el-option>
 										</el-select>
 									</el-col>
@@ -101,7 +101,7 @@
 									<el-col :span="5">
 									    <el-date-picker class="grid-right"  v-model="item.startTime" type="date"  placeholder="选择日期" ></el-date-picker>
 										<el-select v-model="item.startCity" filterable remote @visible-change="visibles" :remote-method="remoteMethod"
-                                        :loading="loading" placeholder="请选择出发城市" class="inline-input grid-right">
+                                        :loading="loading"  placeholder="请选择出发城市" class="inline-input grid-right">
 											<el-option-group
 											key="0"
 											label="热门城市">
@@ -157,14 +157,14 @@
 						</div>
 						
 						<p class="title-p">出差申请费用预算<el-button style="float:right" @click="addBudget" type="text">新增预算</el-button></p>
-						<div  v-for="item1 in detialData.formatCostBudgets">
-						<el-row :gutter="20"  v-for="(values,index) in item1.budgetTypes">
+						<div  v-for="(item1,index2) in detialData.formatCostBudgets">
+						<el-row :gutter="20"  v-for="(values,index) in item1.budgetTypes" :key="values.id">
 							<el-col :span="12">
 							     <el-row :gutter="20">
 								    <div class="grid-div">
 								        <el-col :span="6"><div class="grid1">费用项目<b>*</b>：</div></el-col>
 										<el-col :span="18">
-										   <el-select v-model="values.costBudgetId" placeholder="请选择费用项目" class="grid2">
+										   <el-select v-model="values.costBudgetId" @change="costBudChange($event,index,index2)" placeholder="请选择费用项目" class="grid2">
 												<el-option v-for="items in pageInfo.costProjectList" :key="items.id" :label="items.name" :value="items.id"></el-option>
 											</el-select>
 										</el-col>
@@ -175,8 +175,8 @@
 							    <div class="grid-div2">
 								    <el-col :span="6"><div class="grid1">金额</div></el-col>
 									<el-col :span="18">
-									    <el-input class="" v-model="values.amount" style="width:80px" @blur="budgetChange(values)"  placeholder="请输入金额"></el-input>
-									    <el-select v-model="values.currencyName" placeholder="请选择币种" class="" @change="budgetChange(values)">
+									    <el-input class="" v-model="values.amount" style="width:80px"  @blur="advanceUpdate" placeholder="请输入金额"></el-input>
+									    <el-select v-model="values.currencyName" placeholder="请选择币种" class="" @change="currencyChange($event,index,index2)">
 											<el-option v-for="items in currencyList" :key="items.id" :label="items.code" :value="items.code"></el-option>
 										</el-select>
 										<i v-if="index !=0" @click="deleteBudget(index)" class="el-icon-close"></i>
@@ -209,7 +209,7 @@
 								    <div class="grid-div">
 								        <el-col :span="6"><div class="grid1">银行卡信息<b>*</b>：</div></el-col>
 										<el-col :span="18">
-										      <el-input class="grid2" placeholder="请选择银行卡" icon="search" readonly v-model="detialData.bankNo" :on-icon-click="handleIconClick"></el-input>
+										      <el-input class="grid2" placeholder="请选择银行卡" icon="search" readonly v-model="bankNoAndName" :on-icon-click="bankChoose"></el-input>
 										</el-col>
 									</div>
 								</el-row>
@@ -243,7 +243,7 @@
 							   <p class="approveName">{{item.nickname}}</p>
 							</li>
 						</ul>
-					    <p class="addApprove" id="addApprove"><img src="../../assets/addPerson.png"></p>
+					    <p @click="applyChoose" class="addApprove" id="addApprove"><img src="../../assets/addPerson.png"></p>
 						<p style="clear:both"></p>
 					</div>
 					<div style="float:right;margin-bottom:20px" class="clears">
@@ -251,9 +251,9 @@
 						<el-button @click="save(0)">仅保存</el-button>
 						<el-button>删除</el-button>
 					</div>
-					
-				
-			</el-dialog>
+			</div>
+			 <mybankCard  v-model="showBank" v-on:bankInfo="bankInfoHand"></mybankCard>
+			 <myapprover  v-model="showApprover" ></myapprover>
 		</div>
 		    
 	
@@ -262,19 +262,24 @@
 <script>
 import util from '@/util/util.js'
 import axios from 'axios'
+import bankCard from '@/components/common/bankCard.vue'
+import approver from '@/components/common/approver.vue'
 export default {
 	name: 'creatBusinessApply',
-	props: {
-	businessapply:String,
-	value:Boolean
-	},
+	components:{
+      mybankCard:bankCard,
+	  myapprover:approver
+    },
 	data () {
 		return {
-		  dialogVisible:this.value,
 		  personList:[],
 		  hotCityList:[],
 		  cityListSearch:[],
 		  loading: false,
+		  billId:0,
+		  showBank:false,
+		  showApprover:false,
+		  bankNoAndName:'',
 		  detialData:{
 			  amount:0,
 			  id:"",
@@ -384,33 +389,30 @@ export default {
 		}
 	},
     methods: {
-		closed:function(){
-			this.$emit('input',false)
+		bankInfoHand(info){
+			this.detialData.bankNo = info.bankNo;
+			this.detialData.bankName = info.bankName;
+			this.bankNoAndName = info.bankName+info.bankNo;
 		},
 	    getDetial(){
 		    var _this=this;
-			if(_this.businessapply){
-				if(_this.businessapply != '0'){//编辑
-                    util.post('bill/bussiness/edit',{uuid:_this.businessapply,type:0},function(res){
-						_this.detialData = res.content[0];
-						_this.userInfo = res.content[0].user;
-						var arr = [];
-						for (var item of res.content[0].passengerBean) {
-                            arr.push(item.userId)
-						}
-						_this.handleData.passengerBean=arr;
-				    },{format:true})
-				}else{ //新增
-
+			util.post('bill/bussiness/edit',{uuid:_this.billId,type:0},function(res){
+				_this.detialData = res.content[0];
+				_this.userInfo = res.content[0].user;
+				var arr = [];
+				for (var item of res.content[0].passengerBean) {
+					arr.push(item.userId)
 				}
-				
-			}
-			
+				_this.handleData.passengerBean=arr;
+			},{format:true})
 		},
-		handleIconClick(ev){
-			//选择同行人
-            console.log(ev);
-			
+		bankChoose(ev){
+			//选择银行卡
+			this.showBank = true;
+		},
+		applyChoose(){
+           //选择审批人
+		   this.showApprover=true;
 		},
 		initList(){
 			//默认执行
@@ -428,6 +430,9 @@ export default {
 			util.get('book/findCityHot',{},function(res){
 				_this.hotCityList = res;
 				_this.cityListSearch = res;
+			})
+			util.get('userBankAccount/findUserBankDefault',{},function(res){
+				 _this.bankNoAndName = res.result.bankName+res.result.bankNo
 			})
 		},
 		visibles(v){
@@ -471,38 +476,32 @@ export default {
             //删除预算
 			this.detialData.formatCostBudgets[0].budgetTypes.splice(index,1)
 		},
-		budgetChange(val){
-			/*console.log(this.detialData.formatCostBudgets)
-           var arr=[];
-			for(var item of this.detialData.formatCostBudgets){
-				let _amount = 0;
-				let _currencyId=item.budgetTypes[0].currencyId;
-				let _currency = item.budgetTypes[0].currencyName;
-				let _exchangeRate = item.budgetTypes[0].rate;
-				for(var items of item.budgetTypes){
-					_amount += Number(items.amount);
+		
+		currencyChange(val,index,index2){ 
+			//币种选择val:选择的币种，index:budgetTypes的索引，index2:formatCostBudgets的索引
+			var _this = this;
+			let list = _this.currencyList;
+			list.find(function(x){
+				if(x.code==val){
+					let thisData = _this.detialData.formatCostBudgets[index2].budgetTypes[index];
+					thisData.currencyId = x.id;
+					thisData.rate = x.rate;
+					_this.detialData.formatCostBudgets[index2].code = x;
+					_this.detialData.formatCostBudgets[index2].rate = x.rate
 				}
-				arr.push({
-					amount:_amount,
-					currencyId:_currencyId,
-					currency:_currency,
-					domesticCurrencyAmount:_amount*_exchangeRate,
-					exchangeRate:_exchangeRate
-				})
-			}
-			console.log(arr)
-			this.detialData.advances=arr;*/
-			
-			console.log(val)
-			var arr=[];
-			for(var item of this.detialData.formatCostBudgets){
-				for(var items of item.budgetTypes){
-                     arr.push(items)
+			})
+			_this.advanceUpdate();
+		},
+		costBudChange(val,index,index2){
+          //费用项目选择选择 val:选择的币种，index:budgetTypes的索引，index2:formatCostBudgets的索引
+		    var _this = this;
+			let list = _this.pageInfo.costProjectList;
+			list.find(function(x){
+				if(x.id==val){
+					let thisData = _this.detialData.formatCostBudgets[index2].budgetTypes[index];
+					thisData.costBudgetName = x.name;
 				}
-			}
-			
-			console.log(this.detialData.formatCostBudgets)
-			console.log(arr)
+			})
 		},
 		tallyDepartIdChange(v){
 			//记账部门选择
@@ -514,8 +513,54 @@ export default {
 				}
 			})
 		},
+		tallyProjectIdChange(v){
+             //记账项目选择
+			var _this = this;
+			let list = _this.pageInfo.projectList;
+			list.find(function(x){
+				if(x.id==v){
+					_this.detialData.tallyProjectName=x.projectName
+				}
+			})
+		},
 		personChange(v){
 				this.handleData.passengerBeanNum = this.handleData.passengerBean.length
+		},
+		advanceUpdate(){
+            //预支信息更新同步
+            var list = this.detialData.formatCostBudgets;
+			var arr = [];
+			var map={};
+			var arr2=[];
+			for(let value of list){
+				for(let item of value.budgetTypes){
+                    arr.push({
+						amount:item.amount,
+						exchangeRate:item.rate,
+						currency:item.currencyName,
+						currencyId:item.currencyId,
+						domesticCurrencyAmount:item.amount*item.rate
+					})	
+				}
+			}
+
+			for(let item of arr){
+				if(item.currency in map){
+					  map[item.currency].amount = Number(map[item.currency].amount)+Number(item.amount)
+				}else{
+                    map[item.currency]={
+						amount:item.amount,
+						exchangeRate:item.exchangeRate,
+						currency:item.currency,
+						currencyId:item.currencyId,
+						domesticCurrencyAmount:item.amount*item.exchangeRate
+					}
+				}      
+			}
+			for(let key in map){     
+				arr2.push(map[key])   
+			}  
+			this.detialData.advances = arr2
 		},
 		//保存
 		save(status){//0仅保存，1保存并提交
@@ -580,27 +625,20 @@ export default {
 			}
 			var _this = this;
 			util.post('bill/newSaveBusinessTrip',bodys,function(res){
-               _this.closed();
-			   _this.$emit('Refresh','goRefresh')
 			   _this.$message({
 					message: '操作成功',
 					type: 'success'
 				});
+				_this.$router.push('/businessApply')
 			})
 		}
 		
 	},
-	watch:{
-		value:function(val){
-		    console.log(val)
-			this.dialogVisible=val;
-		},
-		businessapply:function(val){
-		    console.log(val);
-			this.getDetial();
-		}
-	},
 	created(){
+	  this.billId = this.$route.params.id;
+	  if(this.billId){
+         this.getDetial();
+	  }
       this.initList();
 	},
 	filters: {

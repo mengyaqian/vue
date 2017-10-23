@@ -23,6 +23,7 @@ import BusinessApprove from '@/components/approve/businessApprove'
 import MoneyApprove from '@/components/approve/moneyApprove'
 import MoneyBuyApprove from '@/components/approve/moneyBuyApprove'
 import VoucherList from '@/components/approve/voucherList'
+import chuchaishenqingCreat from '@/components/common/chuchaishenqingCreat'
 Vue.use(Router)
 
 export default new Router({
@@ -147,6 +148,16 @@ export default new Router({
     path: '/voucherList',
     meta:{title:'审批-财务凭证'},
     component: VoucherList
+  },
+  {
+    path:'/chuchaishenqingCreat',
+    meta:{title:'创建出差申请单'},
+    component:chuchaishenqingCreat
+  },
+  {
+    path:'/chuchaishenqingCreat/:id',
+    meta:{title:'修改出差申请单'},
+    component:chuchaishenqingCreat
   }
   ]
 })

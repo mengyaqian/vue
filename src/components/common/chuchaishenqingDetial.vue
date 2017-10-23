@@ -138,7 +138,7 @@
 							</el-row>
 						</div>
 						<p class="title-p">出差申请费用预算</p>
-						<el-row :gutter="20" v-for="item in detialData.formatCostBudgets">
+						<el-row :gutter="20" v-for="item in detialData.formatCostBudgets" :key="item.id">
 							<el-col :span="12">
 								<el-row :gutter="20">
 									<div class="grid-div">
