@@ -570,79 +570,6 @@ export default {
 			}  
 			this.detialData.advances = arr2
 		},
-		//验证
-		register(){
-           if(this.detialData.approvalType == null){
-			    this.$message({message: '请选择审批方式',type: 'error'});
-				return false
-		   }
-		   if(util.trim(this.detialData.remark) == ''){
-			    this.$message({message: '请输入事由',type: 'error'});
-				return false
-		   }
-		   if(this.detialData.tallyDepartId == null){
-			    this.$message({message: '请选择记账部门',type: 'error'});
-				return false
-		   }
-		   if(this.detialData.approvalType ==2 && this.detialData.approvalType.tallyProjectId == null ){
-			    this.$message({message: '请选择记账项目',type: 'error'});
-				return false
-		   }
-		   if(this.detialData.tallyDepartId == null){
-			    this.$message({message: '请选择记账部门',type: 'error'});
-				return false
-		   }
-		   for(var item  of this.detialData.travelBookbeans){
-			   if(item.startTime == ''){
-                  this.$message({message: '请选择出发日期',type: 'error'});
-				  return false
-			   }
-			   if(item.endTime == ''){
-                   this.$message({message: '请选择到达日期',type: 'error'});
-				   return false
-			   }
-			   if(item.startCity == ''){
-                   this.$message({message: '请选择出发城市',type: 'error'});
-				   return false
-			   }
-			   if(item.toCity == ''){
-                   this.$message({message: '请选择到达城市',type: 'error'});
-				   return false
-			   }
-			   if(item.remark == ''){
-                   this.$message({message: '请输入行程备注',type: 'error'});
-				   return false
-			   }
-		   }
-	
-		   for(var item of this.detialData.formatCostBudgets){
-			   for (var item2 of item.budgetTypes){
-                    if(item2.costBudgetId == null){
-						this.$message({message: '请选择费用项目',type: 'error'});
-						return false
-					}
-					if(item2.amount == '' || item2.amount == null || item2.amount <=0){
-						this.$message({message: '请输入大于0的费用项目金额',type: 'error'});
-						return false
-					}
-			   }
-		   }
-		   if(this.detialData.ifAdvance){
-			   if(util.trim(this.detialData.receiver == '')){
-				   this.$message({message: '最终收款人不能为空',type: 'error'});
-				   return false
-			   }
-			   if(this.detialData.payType == 'PT03' && this.bankNoAndName == ''){
-				   this.$message({message: '银行卡信息不能为空',type: 'error'});
-				   return false
-			   }
-		   }
-		   if(this.detialData.applyUsers.length == 0){
-			   this.$message({message: '请选择审批人',type: 'error'});
-			   return false
-		   }
-		   return true
-		},
 		//保存
 		save(status){//0仅保存，1保存并提交
 		    if(this.register()){
@@ -718,6 +645,79 @@ export default {
 					_this.$router.push('/businessApply')
 				})
             }
+		},
+		//验证
+		register(){
+           if(this.detialData.approvalType == null){
+			    this.$message({message: '请选择审批方式',type: 'error'});
+				return false
+		   }
+		   if(util.trim(this.detialData.remark) == ''){
+			    this.$message({message: '请输入事由',type: 'error'});
+				return false
+		   }
+		   if(this.detialData.tallyDepartId == null){
+			    this.$message({message: '请选择记账部门',type: 'error'});
+				return false
+		   }
+		   if(this.detialData.approvalType ==2 && this.detialData.approvalType.tallyProjectId == null ){
+			    this.$message({message: '请选择记账项目',type: 'error'});
+				return false
+		   }
+		   if(this.detialData.tallyDepartId == null){
+			    this.$message({message: '请选择记账部门',type: 'error'});
+				return false
+		   }
+		   for(var item  of this.detialData.travelBookbeans){
+			   if(item.startTime == ''){
+                  this.$message({message: '请选择出发日期',type: 'error'});
+				  return false
+			   }
+			   if(item.endTime == ''){
+                   this.$message({message: '请选择到达日期',type: 'error'});
+				   return false
+			   }
+			   if(item.startCity == ''){
+                   this.$message({message: '请选择出发城市',type: 'error'});
+				   return false
+			   }
+			   if(item.toCity == ''){
+                   this.$message({message: '请选择到达城市',type: 'error'});
+				   return false
+			   }
+			   if(item.remark == ''){
+                   this.$message({message: '请输入行程备注',type: 'error'});
+				   return false
+			   }
+		   }
+	
+		   for(var item of this.detialData.formatCostBudgets){
+			   for (var item2 of item.budgetTypes){
+                    if(item2.costBudgetId == null){
+						this.$message({message: '请选择费用项目',type: 'error'});
+						return false
+					}
+					if(item2.amount == '' || item2.amount == null || item2.amount <=0){
+						this.$message({message: '请输入大于0的费用项目金额',type: 'error'});
+						return false
+					}
+			   }
+		   }
+		   if(this.detialData.ifAdvance){
+			   if(this.detialData.receiver == ''){
+				   this.$message({message: '最终收款人不能为空',type: 'error'});
+				   return false
+			   }
+			   if(this.detialData.payType == 'PT03' && this.bankNoAndName == ''){
+				   this.$message({message: '银行卡信息不能为空',type: 'error'});
+				   return false
+			   }
+		   }
+		   if(this.detialData.applyUsers.length == 0){
+			   this.$message({message: '请选择审批人',type: 'error'});
+			   return false
+		   }
+		   return true
 		}
 		
 	},
