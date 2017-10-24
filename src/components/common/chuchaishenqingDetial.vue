@@ -384,33 +384,34 @@ import util from '@/util/util.js'
 import axios from 'axios'
 export default {
 	name: 'detial',
-	props: {
-	businessapply:String,
-	value:Boolean
-	},
-	
 	data () {
 		return {
-		  dialogVisible:this.value,
+		  dialogVisible:false,
 		  activeName2: 'first',
 		  detialData:{},
 		  userInfo:{}
 		}
 	},
+	computed:{
+        getbillId(){
+			return this.$store.getters.travelApplicationsDetial.id;
+		},
+		isShowDetial(){
+			return this.$store.getters.travelApplicationsDetial.showDetial;
+		}
+	},
+
     methods: {
 		closed:function(){
-			this.$emit('input',false)
+			this.$store.commit('detialBusinessapplyShow',false);
 		},
 	    getDetial(){
 		    var _this=this;
-			if(this.businessapply){
-				util.get('bill/new/newGetBusinessTrip',{uuId:_this.businessapply},function(res){
-					util.getStepStatusText(res.content[0].appover);
-			        _this.detialData = res.content[0];
-					_this.userInfo = res.content[0].user
-				})
-			}
-			
+			util.get('bill/new/newGetBusinessTrip',{uuId:_this.$store.getters.travelApplicationsDetial.id},function(res){
+				util.getStepStatusText(res.content[0].appover);
+				_this.detialData = res.content[0];
+				_this.userInfo = res.content[0].user
+			})
 		},
 		handleClick(tab, event) {
 			console.log(tab, event);
@@ -418,14 +419,14 @@ export default {
 		
 	},
 	watch:{
-		value:function(val){
-		    console.log(val)
-			this.dialogVisible=val;
-			this.activeName2= 'first'
+		getbillId:function(val){
+			if(val){
+				this.activeName2= 'first';
+                this.getDetial()
+			}
 		},
-		businessapply:function(val){
-		    console.log(val);
-			this.getDetial();
+		isShowDetial(val){
+			this.dialogVisible=val
 		}
 	},
 	filters: {

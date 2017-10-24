@@ -51,12 +51,9 @@ import util from '@/util/util.js'
 import axios from 'axios'
 export default {
 	name: 'bankCard',
-	props: {
-	  value:Boolean
-	},
 	data () {
 		return {
-		  dialogVisible:this.value,
+		  dialogVisible:false,
           bankName:'',
 		  bankNo:'',
 		  ifDefaultAccountNo:true,
@@ -64,9 +61,14 @@ export default {
 		  
 		}
 	},
+	computed:{
+       isshowbank(){
+		   return this.$store.getters.bank.isShow;
+	   }
+	},
     methods: {
 		closed:function(){
-			this.$emit('input',false)
+			this.$store.commit('showBank',false)
 		},
 		add(){
 			var _this=this;
@@ -117,8 +119,8 @@ export default {
 		   })
 		},
 		chooseCard(data){
-             this.closed();
-			 this.$emit('bankInfo',data);
+			 this.$store.commit('chooseBankInfo',data)
+             this.closed();	
 		},
 		getList(){
 			var _this = this;
@@ -128,12 +130,11 @@ export default {
 		}
 	},
 	watch:{
-		value:function(val){
-			this.dialogVisible=val;
-			if(val){
+		isshowbank(val){
+		   this.dialogVisible=val;
+           if(val){
               this.getList()
-			}
-			
+		   }
 		}
 	}
   

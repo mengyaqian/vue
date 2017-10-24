@@ -59,7 +59,7 @@
 						</el-row>
 						<el-row>
 						    <div class="grid-div">
-								<el-col :span="3">事由</el-col>
+								<el-col :span="3">事由<b style="color:red">*</b>:</el-col>
 								<el-col :span="21"><el-input class="grid2" type="textarea" :autosize="{ minRows: 2, maxRows: 3}" placeholder="请输入事由" v-model="detialData.remark"></el-input></el-col>
 							</div>
 						</el-row>
@@ -150,7 +150,7 @@
 							</div>
 							<el-row>
 								<div class="grid-div">
-									<el-col :span="3">备注</el-col>
+									<el-col :span="3">备注<b style="color:red">*</b>:</el-col>
 									<el-col :span="21"><el-input class="grid2 borderBottom" v-model="item.remark"></el-input></el-col>
 								</div>
 							</el-row>
@@ -173,9 +173,9 @@
 							</el-col>
 							<el-col :span="12">
 							    <div class="grid-div2">
-								    <el-col :span="6"><div class="grid1">金额</div></el-col>
+								    <el-col :span="6"><div class="grid1">金额<b>*</b>:</div></el-col>
 									<el-col :span="18">
-									    <el-input class="" v-model="values.amount" style="width:80px"  @blur="advanceUpdate" placeholder="请输入金额"></el-input>
+									    <el-input class="" type="number" v-model="values.amount" style="width:80px"  @blur="advanceUpdate" placeholder="请输入金额"></el-input>
 									    <el-select v-model="values.currencyName" placeholder="请选择币种" class="" @change="currencyChange($event,index,index2)">
 											<el-option v-for="items in currencyList" :key="items.id" :label="items.code" :value="items.code"></el-option>
 										</el-select>
@@ -202,7 +202,7 @@
 								<el-row :gutter="20">
 								    <div class="grid-div">
 								        <el-col :span="6"><div class="grid1">最终收款人<b>*</b>：</div></el-col>
-										<el-col :span="18"><el-input class="grid2" v-model="detialData.receiver" readonly></el-input></el-col>
+										<el-col :span="18"><el-input class="grid2" v-model="detialData.receiver" ></el-input></el-col>
 									</div>
 								</el-row>
 								<el-row :gutter="20" v-if="detialData.payType == 'PT03'">
@@ -252,8 +252,8 @@
 						<el-button>删除</el-button>
 					</div>
 			</div>
-			 <mybankCard  v-model="showBank" v-on:bankInfo="bankInfoHand"></mybankCard>
-			 <myapprover  v-model="showApprover" ></myapprover>
+			 <bank-card></bank-card>
+			 <person></person>
 		</div>
 		    
 	
@@ -263,13 +263,10 @@
 import util from '@/util/util.js'
 import axios from 'axios'
 import bankCard from '@/components/common/bankCard.vue'
-import approver from '@/components/common/approver.vue'
+import person from '@/components/common/person.vue'
 export default {
 	name: 'creatBusinessApply',
-	components:{
-      mybankCard:bankCard,
-	  myapprover:approver
-    },
+	components:{bankCard,person},
 	data () {
 		return {
 		  personList:[],
@@ -277,15 +274,12 @@ export default {
 		  cityListSearch:[],
 		  loading: false,
 		  billId:0,
-		  showBank:false,
-		  showApprover:false,
 		  bankNoAndName:'',
 		  detialData:{
 			  amount:0,
 			  id:"",
 			  advances:[],
 			  proposer:util.userInfo.nickname,
-			  applyUserIds:util.userInfo.id,
 			  applyDepartName:util.userInfo.department,
 			  applyDepartId:util.userInfo.departmentId,
 			  approvalType:null,
@@ -388,12 +382,25 @@ export default {
 		  ]
 		}
 	},
-    methods: {
+	computed:{
+        bankInfoHand(){
+			return this.$store.getters.bank.chooseInfo;
+		},
+		choosePersonHand(){
+			return this.$store.getters.person.exportList;
+		}
+	},
+	watch:{
 		bankInfoHand(info){
-			this.detialData.bankNo = info.bankNo;
+            this.detialData.bankNo = info.bankNo;
 			this.detialData.bankName = info.bankName;
 			this.bankNoAndName = info.bankName+info.bankNo;
 		},
+		choosePersonHand(data){
+			this.detialData.applyUsers=data
+		}
+	},
+    methods: {
 	    getDetial(){
 		    var _this=this;
 			util.post('bill/bussiness/edit',{uuid:_this.billId,type:0},function(res){
@@ -407,12 +414,13 @@ export default {
 			},{format:true})
 		},
 		bankChoose(ev){
-			//选择银行卡
-			this.showBank = true;
+			//选择银行卡弹框
+			this.$store.commit('showBank',true)
 		},
 		applyChoose(){
            //选择审批人
-		   this.showApprover=true;
+		   this.$store.commit('showPerson',true);
+		   this.$store.commit('getimportList',this.detialData.applyUsers)
 		},
 		initList(){
 			//默认执行
@@ -562,75 +570,154 @@ export default {
 			}  
 			this.detialData.advances = arr2
 		},
+		//验证
+		register(){
+           if(this.detialData.approvalType == null){
+			    this.$message({message: '请选择审批方式',type: 'error'});
+				return false
+		   }
+		   if(util.trim(this.detialData.remark) == ''){
+			    this.$message({message: '请输入事由',type: 'error'});
+				return false
+		   }
+		   if(this.detialData.tallyDepartId == null){
+			    this.$message({message: '请选择记账部门',type: 'error'});
+				return false
+		   }
+		   if(this.detialData.approvalType ==2 && this.detialData.approvalType.tallyProjectId == null ){
+			    this.$message({message: '请选择记账项目',type: 'error'});
+				return false
+		   }
+		   if(this.detialData.tallyDepartId == null){
+			    this.$message({message: '请选择记账部门',type: 'error'});
+				return false
+		   }
+		   for(var item  of this.detialData.travelBookbeans){
+			   if(item.startTime == ''){
+                  this.$message({message: '请选择出发日期',type: 'error'});
+				  return false
+			   }
+			   if(item.endTime == ''){
+                   this.$message({message: '请选择到达日期',type: 'error'});
+				   return false
+			   }
+			   if(item.startCity == ''){
+                   this.$message({message: '请选择出发城市',type: 'error'});
+				   return false
+			   }
+			   if(item.toCity == ''){
+                   this.$message({message: '请选择到达城市',type: 'error'});
+				   return false
+			   }
+			   if(item.remark == ''){
+                   this.$message({message: '请输入行程备注',type: 'error'});
+				   return false
+			   }
+		   }
+	
+		   for(var item of this.detialData.formatCostBudgets){
+			   for (var item2 of item.budgetTypes){
+                    if(item2.costBudgetId == null){
+						this.$message({message: '请选择费用项目',type: 'error'});
+						return false
+					}
+					if(item2.amount == '' || item2.amount == null || item2.amount <=0){
+						this.$message({message: '请输入大于0的费用项目金额',type: 'error'});
+						return false
+					}
+			   }
+		   }
+		   if(this.detialData.ifAdvance){
+			   if(util.trim(this.detialData.receiver == '')){
+				   this.$message({message: '最终收款人不能为空',type: 'error'});
+				   return false
+			   }
+			   if(this.detialData.payType == 'PT03' && this.bankNoAndName == ''){
+				   this.$message({message: '银行卡信息不能为空',type: 'error'});
+				   return false
+			   }
+		   }
+		   if(this.detialData.applyUsers.length == 0){
+			   this.$message({message: '请选择审批人',type: 'error'});
+			   return false
+		   }
+		   return true
+		},
 		//保存
 		save(status){//0仅保存，1保存并提交
-			var arramountAdvances=[];
-			var arrapplicationCostCudgets=[];
-			var arrtravelBooks=[];
-			for (var item of this.detialData.advances) {
-				arramountAdvances.push(item.currencyId+'-'+item.currency+'-'+item.amount)
-			}
-			for(var item of this.detialData.formatCostBudgets){
-			    for (var item2 of item.budgetTypes){
-                   arrapplicationCostCudgets.push(item2.costBudgetId+'-'+item2.costBudgetName+'-'+item2.amount+'-'+item2.currencyId+'-'+item2.currencyName)
+		    if(this.register()){
+				var arramountAdvances=[];
+				var arrapplicationCostCudgets=[];
+				var arrtravelBooks=[];
+				var arrapplyUserIds = [];
+				for (var item of this.detialData.advances) {
+					arramountAdvances.push(item.currencyId+'-'+item.currency+'-'+item.amount)
 				}
-			}
-			for(var item of this.detialData.travelBookbeans){
-				arrtravelBooks.push({
-					endTime:util.getDefaultTime(item.endTime).substring(0,10),
-					hotelBooking:item.hotelBooking,
-					remark:item.remark,
-					startCity:item.startCity,
-					startCityCode:'',
-					startTime:util.getDefaultTime(item.startTime).substring(0,10),
-					tbType:item.tbType,
-					toCity:item.toCity,
-					toCityCode:''
+				for(var item of this.detialData.formatCostBudgets){
+					for (var item2 of item.budgetTypes){
+					arrapplicationCostCudgets.push(item2.costBudgetId+'-'+item2.costBudgetName+'-'+item2.amount+'-'+item2.currencyId+'-'+item2.currencyName)
+					}
+				}
+				for(var item of this.detialData.travelBookbeans){
+					arrtravelBooks.push({
+						endTime:util.getDefaultTime(item.endTime).substring(0,10),
+						hotelBooking:item.hotelBooking,
+						remark:item.remark,
+						startCity:item.startCity,
+						startCityCode:'',
+						startTime:util.getDefaultTime(item.startTime).substring(0,10),
+						tbType:item.tbType,
+						toCity:item.toCity,
+						toCityCode:''
+					})
+				}
+				for(var item of this.detialData.applyUsers){
+					arrapplyUserIds.push(item.id)
+				}
+				var bodys = {
+					amount:this.detialData.amount,
+					amountAdvances:arramountAdvances.join(','),
+					applicationCostCudgets:arrapplicationCostCudgets.join(','),
+					applyDepartId:this.detialData.applyDepartId,
+					applyUserIds:arrapplyUserIds.join(','),
+					approvalType:this.detialData.approvalType,
+					bankName:this.detialData.bankName,
+					bankNo:this.detialData.bankNo,
+					billIds:'',//关联的开支流水
+					businessTripBillId:'',
+					cashAdvanceBillId:'',//关联的现金预支单
+					cashAdvanceIds:'',
+					cashPenseMoneys:'',
+					currencySettleType:this.detialData.currencySettleType,
+					dailyExpenseBillId:'',
+					id:this.detialData.id,
+					ifAdvance:this.detialData.ifAdvance,
+					ifAll:this.detialData.ifAll,
+					opentype:3,
+					orderNo:this.detialData.orderNo,
+					passengerUserIds:this.handleData.passengerBean.join(','),
+					payType:this.detialData.payType,
+					planDate:util.getDefaultTime(),
+					receiver:this.detialData.receiver,
+					remark:this.detialData.remark,
+					status:status,
+					tallyDepartId:this.detialData.tallyDepartId,
+					tallyDepartName:this.detialData.tallyDepartName,
+					tallyProjectId:this.detialData.tallyProjectId,
+					tallyProjectName:this.detialData.tallyProjectName,
+					travelbookIds:'',
+					travelBooks:arrtravelBooks,
+					type:0
+				}
+				var _this = this;
+				util.post('bill/newSaveBusinessTrip',bodys,function(res){
+				    _this.$message({
+						message: '操作成功',
+						type: 'success'
+					});
+					_this.$router.push('/businessApply')
 				})
-			}
-			var bodys = {
-                amount:this.detialData.amount,
-				amountAdvances:arramountAdvances.join(','),
-				applicationCostCudgets:arrapplicationCostCudgets.join(','),
-				applyDepartId:this.detialData.applyDepartId,
-				applyUserIds:this.detialData.applyUserIds,
-				approvalType:this.detialData.approvalType,
-				bankName:this.detialData.bankName,
-				bankNo:this.detialData.bankNo,
-				billIds:'',//关联的开支流水
-				businessTripBillId:'',
-				cashAdvanceBillId:'',//关联的现金预支单
-				cashAdvanceIds:'',
-				cashPenseMoneys:'',
-				currencySettleType:this.detialData.currencySettleType,
-				dailyExpenseBillId:'',
-				id:this.detialData.id,
-				ifAdvance:this.detialData.ifAdvance,
-				ifAll:this.detialData.ifAll,
-				opentype:3,
-				orderNo:this.detialData.orderNo,
-				passengerUserIds:this.handleData.passengerBean.join(','),
-				payType:this.detialData.payType,
-				planDate:util.getDefaultTime(),
-				receiver:this.detialData.receiver,
-				remark:this.detialData.remark,
-				status:status,
-				tallyDepartId:this.detialData.tallyDepartId,
-				tallyDepartName:this.detialData.tallyDepartName,
-				tallyProjectId:this.detialData.tallyProjectId,
-				tallyProjectName:this.detialData.tallyProjectName,
-				travelbookIds:'',
-				travelBooks:arrtravelBooks,
-				type:0
-			}
-			var _this = this;
-			util.post('bill/newSaveBusinessTrip',bodys,function(res){
-			   _this.$message({
-					message: '操作成功',
-					type: 'success'
-				});
-				_this.$router.push('/businessApply')
-			})
+            }
 		}
 		
 	},

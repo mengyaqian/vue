@@ -37,7 +37,7 @@ var util={
         testInt(str) {
             var strmatch = /^[0-9]+$/;
             return util.test(str, strmatch);
-        },
+		},
         test(str, strmatch) {
             var _regobj = RegExp(strmatch);
             if (_regobj.test(str)) {
@@ -45,7 +45,10 @@ var util={
             } else {
                 return false;
             }
-        },
+		},
+		trim(str){ 
+			return str.replace(/(^\s*)|(\s*$)/g, ""); 
+		},
 		wHeight:document.documentElement.clientHeight, //浏览器高
 		userInfo:JSON.parse(localStorage.getItem('userInfo')),
 		get(url,params,cbk){

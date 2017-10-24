@@ -3,12 +3,15 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
 import 'element-ui/lib/theme-default/index.css'
 import Element from 'element-ui'
 import util from '@/util/util.js'
+import Vuex from 'vuex'
 //import axios from 'axios'
 
 Vue.use(Element)
+Vue.use(Vuex)
 //axios.defaults.timeout = 5000;                        //响应时间
 //axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';           //配置请求头
 //axios.defaults.baseURL = 'https://uat.feikongbao.com/yodooweb/';   //配置接口地址
@@ -79,6 +82,7 @@ localStorage.setItem('userInfo',JSON.stringify({
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
 })

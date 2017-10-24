@@ -40,7 +40,7 @@
 				</el-pagination>
 			</div>
 		</div>
-		 <mychuchaishenqingDetial  v-model="showDetial" :businessapply="thisuuid"></mychuchaishenqingDetial>
+		 <chuchaishenqing-detial></chuchaishenqing-detial>
   </div>
 </template>
 
@@ -49,11 +49,10 @@ import util from '@/util/util.js'
 import axios from 'axios'
 import chuchaishenqingDetial from '@/components/common/chuchaishenqingDetial.vue'
 
+
 export default {
   name: 'BusinessApply',
-  components:{
-     mychuchaishenqingDetial:chuchaishenqingDetial
-  },
+  components:{chuchaishenqingDetial},
   data () {
     return {
 	  listDataMessage:{},
@@ -80,9 +79,7 @@ export default {
 			{name:'财务已支付',status:'12'},
 			{name:'已出行',status:'14'}
 	  ],
-	  countNum:0,
-	  showDetial:false,
-	  thisuuid:''
+	  countNum:0
     }
   },
   methods:{
@@ -124,8 +121,8 @@ export default {
 				if(info.billApprovalStatus == 0){//编辑
              this.creatBusinessApply(info.uuid);
 				}else{ //查看详情
-            this.showDetial=true;
-			     	this.thisuuid = info.uuid
+						this.$store.commit('detialBusinessapplyId',info.uuid);
+						this.$store.commit('detialBusinessapplyShow',true);
 				}
 				
 			},
