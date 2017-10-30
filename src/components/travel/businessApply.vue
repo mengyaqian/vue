@@ -89,8 +89,8 @@ export default {
 					status:this.status,
 					page:this.currentPage,
 					orderNo:this.orderNo,
-					createTime:this.getDefaultTime(this.rangDate[0]),
-					endTime:this.getDefaultTime(this.rangDate[1])
+					createTime:util.getDefaultTime(this.rangDate[0]),
+					endTime:util.getDefaultTime(this.rangDate[1])
 				}
 		    var _this = this;
 	      util.post('bill/tripbill/listAll',option,function(res){
@@ -105,18 +105,7 @@ export default {
 	      this.currentPage=val
 	     	this.list();
       },
-			getDefaultTime(time){
-				var t = time ? new Date(time) : new Date();
-				var Mon = t.getMonth()+1;
-				var Day = t.getDate();
-				if(t.getMonth()+1<10){
-					Mon = '0'+Mon;
-				}
-				if(t.getDate()<10){
-					Day = '0'+Day;
-				}
-				return t.getFullYear()+'-'+ Mon+ '-' + Day+ ' '+ t.getHours()+':'+ t.getMinutes()+':'+ t.getSeconds();
-			},
+
 			handleClick(info){
 				if(info.billApprovalStatus == 0){//编辑
              this.creatBusinessApply(info.uuid);
@@ -128,7 +117,7 @@ export default {
 			},
 			formatterTime(row){
 				//列表日期处理
-				return this.getDefaultTime(row.createOn.time).substring(0,10)
+				return util.getDefaultTime(row.createOn.time).substring(0,10)
 			},
 			formatterStatus(row){
 					//列表审批状态处理
