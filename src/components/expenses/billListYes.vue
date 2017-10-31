@@ -1,5 +1,5 @@
 <template>
-    <div class="billList">
+    <div class="billListYes">
         <div class="leftTwoNav">
             <el-button class="addBill" type="primary"><router-link to="/billListAdd">记一笔</router-link></el-button>
             <el-menu mode="vertical" :default-active="$route.path" router class="el-menu-vertical-demo" @select="handleSelect">
@@ -12,13 +12,16 @@
                 <div style="padding:20px; text-align:left;">
                     <div class="expenditure-water-totel" style="display: block;">
                         <div class="expenditure-water-top">
-                            <div class="not-top"><router-link to="/billListNot">未报销</router-link></div>
-                            <div class="have-top"><router-link to="/billListYes">已报销</router-link></div>
+                            <img src="../../assets/not-pay.png" style="width:20px;height:20px">
+                            <el-date-picker @change="selectChange" class="left10" v-model="month" type="month" placeholder="选择月"></el-date-picker>
+                            <el-select v-model="currencyId" placeholder="请选择币种"   class="left10" @change="selectChange">
+                               <el-option v-for="item in currencyData" :key="item.id" :label="item.code" :value="item.id"></el-option>
+                            </el-select>
                         </div>
-                        <div style="height:38px"></div>
+                        <div style="height:12px"></div>
                         <ul id="billall">
                             <li v-for="item in listdata">
-                                <div v-if="item.status == 1" class="have-pay" >
+                                <div  class="have-pay" >
                                     <div class="TreeLineR"></div>
                                     <p class="branch-icon"><img src="../../assets/have-icon.png"></p>
                                     <p class="branch-line"></p>
@@ -29,25 +32,14 @@
                                         <span class="branch-kind-money">{{item.amount}} {{item.currencyCode}}</span>
                                     </div>
                                 </div>
-                                <div class="not-pay" v-else>
-                                    <div class="TreeLineL"></div>
-                                    <p class="branch-icon-1"><img src="../../assets/not-icon.png"></p>
-                                    <p class="branch-line-1"></p>
-                                    <p class="branch-kind-1"><img :src="imgfun(item.tempType)"></p>
-                                    <div class="hover-background-left">
-                                            <span class="branch-kind-text-1">{{item.createdOn}}<br>{{item.tempName}}</span>
-                                            <span class="branch-kind-money-1">{{item.amount}} {{item.currencyCode}}</span>
-                                            <div class="edit-and-delete">
-                                                <!-- <i class="el-icon-edit" style="margin-right:10px"></i>-->
-                                                <i class="el-icon-delete"></i>
-                                            </div>
-                                        </div>
-                                </div>
                             </li>
                         </ul>
                 
                     </div>
-            
+                     <!--饼图-->
+                     <div style="width:40%;height:500px;float:right;margin-top:30px">
+                         <div class="canvanpic" id="myChart"></div>
+                     </div>
                 </div>
             </div>
     </div>
@@ -57,25 +49,35 @@
 import util from '@/util/util.js'
 import billPublic from '@/util/billPublic.js'
 import axios from 'axios'
+import echarts from 'echarts'
 export default {
-    name: 'BillList',
+    name: 'billListYes',
     data () {
         return {
             listdata:[],
             page:1,
-            load:true
+            load:true,
+            month:'',
+            currencyData:[],
+            currencyId:-1,
+            checked:false
         }
     },
     methods:{
         handleSelect(key, keyPath){
             console.log(key)
         },
+        selectChange(){
+           this.listdata=[];
+           this.page=1;
+           this.getList()
+        },
         getList(){
             var _this = this; 
             var option={
-                date:0,
-                currency:-1,
-                status:-1,
+                date:_this.month == ''?'':util.getDefaultTime(_this.month).substring(0,7),
+                currency:_this.currencyId,
+                status:1,
                 page:_this.page,
             }
             if(_this.load == true){
@@ -84,15 +86,109 @@ export default {
                     _this.listdata.push(...res.content);
                     _this.page +=1;
                     _this.load=true;
+                    _this.pieData(res);
                 },{format:true})
             }  
         },
+        pieData(result){
+              //饼图数据处理
+              var arrList = result.content;
+              var listJson = {}; //单币种统计数据
+              var currJson = {}; //多币种统计数据
+              var rateJson={};
+              var legendData=[];
+              for(var i = 0; i < arrList.length; i++){
+                var _item = arrList[i];
+                //生成单币种统计数据
+                if(listJson[_item.tempName]){
+                  listJson[_item.tempName] += _item.amount;
+                }else{
+                  listJson[_item.tempName] = _item.amount;
+                }
+                //生成多币种统计数据
+                if(currJson[_item.currencyCode]){
+                  currJson[_item.currencyCode] += _item.amount;
+                }else{
+                  currJson[_item.currencyCode] = _item.amount;
+                }
+                rateJson[_item.currencyCode] = _item.rate;
+              }
+              var data = [];
+              if(this.currencyId == -1){//多币种
+                  for(var key in currJson){
+                    var _amount = currJson[key];
+                    var binAmount = (_amount * rateJson[key]).toFixed(2);
+                    data.push({
+                      name:key+' '+_amount.toFixed(2),
+                      value:binAmount,
+                      binAmount:_amount,
+                    });
+                    legendData.push(key+' '+_amount.toFixed(2));
+                  }
+              }else{
+                 for(var key in listJson){
+                  var _amount = listJson[key];            
+                  data.push({
+                    name:key+' '+_amount.toFixed(2),
+                    value:(_amount*_item.rate).toFixed(2)
+                  });	
+                   legendData.push(key+' '+_amount.toFixed(2));
+                }	
+              }
+              this.doChart('myChart',data,legendData)
+             
+        },
+        currencyList(){
+           let _this=this;
+           util.get('book/currency',{},function(res){
+                var add=[{id:-1,code:'全部'}]
+                _this.currencyData = add;
+                _this.currencyData.push(...res)
+           })
+        },
         imgfun(type){
-           return  billPublic.billListImg(type)
+            return billPublic.billListImg(type)
+        },
+        doChart(id,data,legendData){
+             let myChart = echarts.init(document.getElementById(id));
+             let colors = [ '#f7bb3e', '#f3b0e2', '#33d396', '#24c3cd','#f48a4a', '#38b9e9', '#f7bb3e', '#f3b0e2', '#33d396', '#24c3cd','#f48a4a', '#38b9e9', '#f7bb3e', '#f3b0e2', '#33d396', '#24c3cd','#f48a4a', '#38b9e9', '#f7bb3e', '#f3b0e2', '#33d396', '#24c3cd','#f48a4a', '#38b9e9'];
+              var option = {
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)",
+                        formatter : "{b} ({d}%)<br>折合人民币:{c}"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: legendData
+                    },
+                    series : [
+                        {
+                            name: '币种',
+                            type: 'pie',
+                            radius : '55%',
+                            radius : [ '30%', '70%' ],
+                            center : [ '50%', '60%' ],
+                            color:colors,
+                            data:data,
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+              };
+              myChart.setOption(option);
         }
+        
     },
   created(){
-     this.getList()
+     this.getList();
+     this.currencyList();
 
   },
   mounted(){
@@ -102,6 +198,7 @@ export default {
                 _this.getList();
             }
        })
+      
   }
   
 }
@@ -110,18 +207,16 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
  .expenditure-water-totel {
-    margin: 45px auto;
-    width: 725px;
+    margin: 45px auto 45px 10px;
+    width: 400px;
     position: relative;
-    text-align:left
+    text-align:left;
+    float:left
 }
 .expenditure-water-top {
-    width: 400px;
-    height: 29px;
-    margin: auto;
-    border: 1px solid #00ABEC;
+
+    margin-left: 28px;
     border-radius: 4px;
-    overflow: hidden;
 }
 .not-top {
     float: left;
@@ -307,6 +402,12 @@ export default {
 .hover-background-left:hover .edit-and-delete{
     display:block
 }
+.left10{
+  margin-left:10px;
+  width:110px
+}
+.checks{margin-left:102%;margin-top:20px;}
+.canvanpic{width:400px;height:400px;margin-top:30px;}
 .addBill{
     margin-top:16px;
 }

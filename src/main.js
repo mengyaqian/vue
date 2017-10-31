@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-default/index.css'
 import Element from 'element-ui'
 import util from '@/util/util.js'
 import Vuex from 'vuex'
+
 //import axios from 'axios'
 
 Vue.use(Element)

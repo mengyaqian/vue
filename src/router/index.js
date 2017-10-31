@@ -24,6 +24,9 @@ import MoneyApprove from '@/components/approve/moneyApprove'
 import MoneyBuyApprove from '@/components/approve/moneyBuyApprove'
 import VoucherList from '@/components/approve/voucherList'
 import chuchaishenqingCreat from '@/components/common/chuchaishenqingCreat'
+import billListNot from '@/components/expenses/billListNot'
+import billListYes from '@/components/expenses/billListYes'
+import billListAdd from '@/components/expenses/billListAdd'
 Vue.use(Router)
 
 export default new Router({
@@ -96,8 +99,23 @@ export default new Router({
   },
   {
     path: '/billList',
-    meta:{title:'费用报销-日常开支随手记'},
+    meta:{title:'费用报销-日常开支随手记-开支流水汇总'},
     component: BillList
+  },
+  {
+    path: '/billListNot',
+    meta:{title:'费用报销-日常开支随手记-未报销'},
+    component: billListNot
+  },
+  {
+    path: '/billListYes',
+    meta:{title:'费用报销-日常开支随手记-已报销'},
+    component: billListYes
+  },
+  {
+    path: '/billListAdd',
+    meta:{title:'费用报销-日常开支随手记-记一笔'},
+    component: billListAdd
   },
 	{
     path: '/dailyApply',

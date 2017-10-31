@@ -44,6 +44,14 @@ const mutations={
 	},
 	getimportList(state,importList){
 		state.person.importList = importList
+	},
+	changeLeftActive(state,path){
+		state.leftActive = path
+	},
+	waterInfo(state,data){
+		state.water.waterShow=data.waterShow;
+		state.water.item = data.item;
+		state.water.id = data.id
 	}
 	
 }

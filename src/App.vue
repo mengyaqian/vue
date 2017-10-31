@@ -82,7 +82,11 @@ export default {
 					{
 						 name:'日常开支随手记',
 						 href:'/billList',
-						 child:[]
+						 child:[
+							 {name:'开支流水汇总',href:'/billList'},
+							 {name:'未报销',href:'/billListNot'},
+							 {name:'已报销',href:'/billListYes'}
+						 ]
 					},
 					{
 						 name:'日常开支申请',
@@ -110,9 +114,12 @@ export default {
 						 child:[]
 					},
 					{
-						 name:'财务报表/个人报表',
+						 name:'财务报表',
 						 href:'/userCost',
-						 child:[]
+						 child:[
+							  {name:'个人报表',href:'/userCost'},
+								{name:'项目报表',href:'/projectCost'}
+						 ]
 					}
 				],
 				//审批
@@ -164,7 +171,8 @@ ul {
 }
 a {
   color: #42b983;
-  cursor: pointer
+  cursor: pointer;
+	text-decoration:none;
 }
 /*没有二级导航  右边盒子*/
 .rightBox{

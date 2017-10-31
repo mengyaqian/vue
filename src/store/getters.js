@@ -11,3 +11,5 @@ export const currentSong=(state)=>{
 export const travelApplicationsDetial = state=>state.travelApplicationsDetial
 export const bank = state =>state.bank
 export const person = state => state.person
+export const leftActive = state =>state.leftActive
+export const water = state =>state.water

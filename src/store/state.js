@@ -25,6 +25,14 @@ const state={
 		isShow:false,
 		importList:[],
 		exportList:[]
+	},
+	//左侧导航当前选中的
+	leftActive:'',
+	//开支流水
+	water:{
+		item:{},
+		waterShow:false,
+		id:0
 	}
 	
 }

@@ -1,6 +1,6 @@
 <template>
 		<div  class="leftNav" v-if="showLeftNav">
-			<el-menu :default-active="$route.path" router theme="dark" class="el-menu-vertical-demo">
+			<el-menu :default-active="defaultActive" router theme="dark" class="el-menu-vertical-demo">
 				<el-menu-item v-for="item in leftMenu" :key="item.href" :index="item.href">
 					<i class="el-icon-menu"></i>
 					{{item.name}}
@@ -19,7 +19,8 @@ export default {
   data () {
     return {
 	  showLeftNav:true,
-	  leftMenu:this.leftData.message
+	  leftMenu:this.leftData.message,
+	  defaultActive:''
     }
   },
     methods: {
@@ -36,6 +37,8 @@ export default {
 			}else{
 			   this.showLeftNav=true
 			}
+			this.defaultActive=path;
+			this.$store.commit('changeLeftActive',path)
 			//左侧菜单的数据获取
 			switch(path){
 			    case '/message':
@@ -53,6 +56,9 @@ export default {
 				    this.leftMenu = this.leftData.travel;
 					break;
 				case '/billList':
+				case '/billListNot':
+				case '/billListYes':
+				case '/billListAdd':
 				case '/dailyApply':
 				case '/travelExpense':
 				case '/dailyExpense':
@@ -70,14 +76,21 @@ export default {
 			}
 		}
 	},
+	computed:{
+        activeGet(){
+			return this.$store.getters.leftActive;
+		},
+	},
 	watch:{
 		 //检测路由变化
-		"$route": "leftrouterChange"
+		"$route": "leftrouterChange",
+		activeGet(info){
+           this.defaultActive = info
+		}
 	},
 	created() {
 		this.leftrouterChange();
 		console.log('------------')
-		console.log(this.leftMenu)
 	},
   
 }
