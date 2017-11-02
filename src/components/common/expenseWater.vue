@@ -3,23 +3,226 @@
 		<div  class="detial" v-show="show.yewuzhaodai">
 			<el-dialog title="业务招待费" :visible.sync="show.yewuzhaodai" @close="closed" >
 			   <ul class="waterUl">
-			      <li><img src="../../assets/dateA2.png">日期<el-date-picker v-model="value10" type="datetime" placeholder="选择日期" format="yyyy-MM-dd HH:mm">
-    </el-date-picker></li>
+			        <li>
+						<img src="../../assets/dateA2.png">
+						<span>日期</span>
+						<el-date-picker class="inputs" v-model="beDate" type="datetime" placeholder="选择日期" format="yyyy-MM-dd HH:mm"></el-date-picker>
+				    </li>
 			   </ul>
 			   <ul class="waterUl">
-			      <li></li>
-			      <li></li>				  
+			        <li>
+						<img src="../../assets/AllPeo.png">
+						<span>总人数<b class="error">*</b></span>
+						<el-input  class="inputs"  type="number"  v-model="bePersons" placeholder="请输入总人数"></el-input>
+				    </li>
+			        <li>
+						<img src="../../assets/whohave2.png">
+						<span>参加人员</span>
+						<el-input  class="inputs" v-model="beJoinPersons" ></el-input>
+				    </li>	
+					<li v-if="ifStandard">
+						<img src="../../assets/pay-bz.png">
+						<span>业务招待费标准</span>
+						<el-input  class="inputs" v-model="standardUnit" ></el-input>
+				    </li>				  
 			   </ul>
+			   <ul class="waterUl">
+			        <li>
+						<img src="../../assets/Allmoney.png">
+						<span>总金额<b class="error">*</b></span>
+						<el-input  class="inputs" type="number" v-model="amount" @blur="ifExceedStandard" placeholder="请输入总金额"></el-input>
+						<el-select class="inputs-small" v-model="currency" placeholder="请选择" @change="currencySelect($event)">
+							<el-option v-for="item in currencyList" :key="item.id" :label="item.code" :value="item.id"></el-option>
+						</el-select>
+						 <el-alert v-if="ifBeyondStandard" title="输入的金额已经超出您的标准"  type="warning" show-icon :closable="closable"></el-alert>
+				    </li>				  
+			   </ul>
+			    <ul class="waterUl">
+			        <li class="clears">
+						<img src="../../assets/enclosure.png">
+						<span>附件</span>
+						<el-upload
+							class="upload-demo updates"
+							action="https://feikongbaotest.oss-cn-shanghai.aliyuncs.com/"
+							:before-upload="initUpload"
+							:headers="uploadInfo.uploadHeaders"
+							:data="uploadInfo.uploadData"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:file-list="fileList2"
+							list-type="picture">
+							<el-button type="text">添加附件</el-button>
+						</el-upload>
+				    </li>
+			        <li>
+						<img src="../../assets/remarks.png">
+						<span>备注</span>
+						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
+				    </li>	
+				</ul>
+				<div style="float:right;margin-bottom:20px">
+				    <el-button type="primary" @click="saveYewuzhaodai(2)">报销</el-button>
+					<el-button type="primary" @click="saveYewuzhaodai(1)">保存再记</el-button>
+					<el-button type="primary" @click="saveYewuzhaodai(0)">保存</el-button>
+				</div>
 			</el-dialog>
 		</div>
 		<div  class="detial" v-show="show.shineijiaotong">
-			<el-dialog title="市内交通" :visible.sync="show.shineijiaotong" @close="closed" size="large">
-			   市内交通
+			<el-dialog title="市内交通" :visible.sync="show.shineijiaotong" @close="closed">
+			    <ul class="waterUl">
+			        <li>
+						<img src="../../assets/starttime2.png">
+						<span>开始时间</span>
+						<el-date-picker class="inputs" v-model="startDate" type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm"></el-date-picker>
+				    </li>
+					 <li>
+						<img src="../../assets/endtime2.png">
+						<span>结束时间</span>
+						<el-date-picker class="inputs" v-model="abortDate" type="datetime" placeholder="结束时间" format="yyyy-MM-dd HH:mm"></el-date-picker>
+				    </li>
+			   </ul>
+			   <ul class="waterUl">
+			        <li>
+						<img src="../../assets/start2.png">
+						<span>起点</span>
+						<el-input  class="inputs"   v-model="tpStartAddressId" placeholder="请输入起点"></el-input>
+				    </li>
+			        <li>
+						<img src="../../assets/end-place2.png">
+						<span>终点</span>
+						<el-input  class="inputs" v-model="tpDestinationAddressId" placeholder="请输入终点"></el-input>
+				    </li>	
+					<li>
+						<img src="../../assets/carorother.png">
+						<span>交通工具<b class="error">*</b></span>
+						<el-select class="inputs" v-model="tpTransportType" placeholder="请选择">
+							<el-option v-for="item in travelList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+						</el-select>
+				    </li>		
+					<li v-if="ifStandard">
+						<img src="../../assets/pay-bz.png">
+						<span>交通费标准</span>
+						<el-input  class="inputs" v-model="standardUnit" ></el-input>
+				    </li>				  
+			   </ul>
+			     <ul class="waterUl">
+			        <li>
+						<img src="../../assets/Allmoney.png">
+						<span>总金额<b class="error">*</b></span>
+						<el-input  class="inputs" type="number" v-model="amount" @blur="ifExceedStandard" placeholder="请输入总金额"></el-input>
+						<el-select class="inputs-small" v-model="currency" placeholder="请选择" @change="currencySelect($event)">
+							<el-option v-for="item in currencyList" :key="item.id" :label="item.code" :value="item.id"></el-option>
+						</el-select>
+						 <el-alert v-if="ifBeyondStandard" title="输入的金额已经超出您的标准"  type="warning" show-icon :closable="closable"></el-alert>
+				    </li>				  
+			   </ul>
+			    <ul class="waterUl">
+			        <li class="clears">
+						<img src="../../assets/enclosure.png">
+						<span>附件</span>
+						<el-upload
+							class="upload-demo updates"
+							action="https://feikongbaotest.oss-cn-shanghai.aliyuncs.com/"
+							:before-upload="initUpload"
+							:headers="uploadInfo.uploadHeaders"
+							:data="uploadInfo.uploadData"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:file-list="fileList2"
+							list-type="picture">
+							<el-button type="text">添加附件</el-button>
+						</el-upload>
+				    </li>
+			        <li>
+						<img src="../../assets/remarks.png">
+						<span>备注</span>
+						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
+				    </li>	
+				</ul>
+				<div style="float:right;margin-bottom:20px">
+				    <el-button type="primary" @click="saveShineiAndWaibujiaotong(2)">报销</el-button>
+					<el-button type="primary" @click="saveShineiAndWaibujiaotong(1)">保存再记</el-button>
+					<el-button type="primary" @click="saveShineiAndWaibujiaotong(0)">保存</el-button>
+				</div>
 			</el-dialog>
 		</div>
 		<div  class="detial" v-show="show.waibujiaotong">
-			<el-dialog title="外埠交通费" :visible.sync="show.waibujiaotong" @close="closed" size="large">
-			   外埠交通费
+			<el-dialog title="外埠交通费" :visible.sync="show.waibujiaotong" @close="closed">
+			   <ul class="waterUl">
+			        <li>
+						<img src="../../assets/starttime2.png">
+						<span>开始时间</span>
+						<el-date-picker class="inputs" v-model="startDate" type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm"></el-date-picker>
+				    </li>
+					 <li>
+						<img src="../../assets/endtime2.png">
+						<span>结束时间</span>
+						<el-date-picker class="inputs" v-model="abortDate" type="datetime" placeholder="结束时间" format="yyyy-MM-dd HH:mm"></el-date-picker>
+				    </li>
+			   </ul>
+			   <ul class="waterUl">
+			        <li>
+						<img src="../../assets/start2.png">
+						<span>起点</span>
+						<el-input  class="inputs"   v-model="tpStartAddressId" placeholder="请输入起点"></el-input>
+				    </li>
+			        <li>
+						<img src="../../assets/end-place2.png">
+						<span>终点</span>
+						<el-input  class="inputs" v-model="tpDestinationAddressId" placeholder="请输入终点"></el-input>
+				    </li>	
+					<li>
+						<img src="../../assets/carorother.png">
+						<span>交通工具<b class="error">*</b></span>
+						<el-select class="inputs" v-model="tpTransportType" placeholder="请选择">
+							<el-option v-for="item in travelList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+						</el-select>
+				    </li>		
+					<li v-if="ifStandard">
+						<img src="../../assets/pay-bz.png">
+						<span>外埠交通费标准</span>
+						<el-input  class="inputs" v-model="standardUnit" ></el-input>
+				    </li>				  
+			   </ul>
+			     <ul class="waterUl">
+			        <li>
+						<img src="../../assets/Allmoney.png">
+						<span>总金额<b class="error">*</b></span>
+						<el-input  class="inputs" type="number" v-model="amount" @blur="ifExceedStandard" placeholder="请输入总金额"></el-input>
+						<el-select class="inputs-small" v-model="currency" placeholder="请选择" @change="currencySelect($event)">
+							<el-option v-for="item in currencyList" :key="item.id" :label="item.code" :value="item.id"></el-option>
+						</el-select>
+						 <el-alert v-if="ifBeyondStandard" title="输入的金额已经超出您的标准"  type="warning" show-icon :closable="closable"></el-alert>
+				    </li>				  
+			   </ul>
+			    <ul class="waterUl">
+			        <li class="clears">
+						<img src="../../assets/enclosure.png">
+						<span>附件</span>
+						<el-upload
+							class="upload-demo updates"
+							action="https://feikongbaotest.oss-cn-shanghai.aliyuncs.com/"
+							:before-upload="initUpload"
+							:headers="uploadInfo.uploadHeaders"
+							:data="uploadInfo.uploadData"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:file-list="fileList2"
+							list-type="picture">
+							<el-button type="text">添加附件</el-button>
+						</el-upload>
+				    </li>
+			        <li>
+						<img src="../../assets/remarks.png">
+						<span>备注</span>
+						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
+				    </li>	
+				</ul>
+				<div style="float:right;margin-bottom:20px">
+				    <el-button type="primary" @click="saveShineiAndWaibujiaotong(2)">报销</el-button>
+					<el-button type="primary" @click="saveShineiAndWaibujiaotong(1)">保存再记</el-button>
+					<el-button type="primary" @click="saveShineiAndWaibujiaotong(0)">保存</el-button>
+				</div>
 			</el-dialog>
 		</div>
 		<div  class="detial" v-show="show.zhusu">
@@ -122,47 +325,88 @@
 			   其他费用
 			</el-dialog>
 		</div>
+		<el-dialog title="请选择报销类型" :visible.sync="ifShowReimburse"  size="tiny">
+			<div class="reimburse" style="border:1px solid #64bfab;color:#64bfab;"><img src="../../assets/chio-rav-icon.png"><p>出差费用报销单</p></div>
+			<div class="reimburse" style="border:1px solid #5f99ed;color:#5f99ed"><img src="../../assets/chio-day-icon.png"><p>日常费用报销单</p></div>			
+		</el-dialog>
 	</div>
 </template>
 
 <script>
 import util from '@/util/util.js'
 import axios from 'axios'
+import co from 'co'
+import OSS from 'ali-oss'
+
 export default {
 	name: 'detial',
 	data () {
 		return {
-		  dialogVisible:false,
-		  id:0,
-		  show:{
-			  yewuzhaodai:false,
-			  shineijiaotong:false,
-			  waibujiaotong:false,
-			  zhusu:false,
-			  shouji:false,
-			  jiaotongbutie:false,
-			  chuchaibutie:false,
-			  tuanduijianshe:false,
-			  waibulaowu:false,
-			  gongzuocanbutie:false,
-			  bangongyongpin:false,
-			  cheliangbaoxian:false,
-			  cheliangshiyong:false,
-			  cheliangweixiu:false,
-			  fangzu:false,
-			  huiyi:false,
-			  lipin:false,
-			  peixun:false,
-			  qichezulin:false,
-			  sichegongyongyou:false,
-			  tijian:false,
-			  youkachongzhi:false,
-			  qita:false
+			dialogVisible:false,
+			ifShowReimburse:false,
+			id:0,
+			show:{
+				yewuzhaodai:false,
+				shineijiaotong:false,
+				waibujiaotong:false,
+				zhusu:false,
+				shouji:false,
+				jiaotongbutie:false,
+				chuchaibutie:false,
+				tuanduijianshe:false,
+				waibulaowu:false,
+				gongzuocanbutie:false,
+				bangongyongpin:false,
+				cheliangbaoxian:false,
+				cheliangshiyong:false,
+				cheliangweixiu:false,
+				fangzu:false,
+				huiyi:false,
+				lipin:false,
+				peixun:false,
+				qichezulin:false,
+				sichegongyongyou:false,
+				tijian:false,
+				youkachongzhi:false,
+				qita:false
+			},
+			maxlength:200,
+			uploadInfo:{
+				client:null,
+                uploadHeaders:{
+				   'x-yodoo': 'yodoo'
+				},
+				fileInfo:{},//上传文件之前获取 的文件信息
+				uploadData:{},
+				authorizationInfo:{} , //授权信息
+			},
+			closable:false,
+		//	fileList2: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+			fileList2:[],
+			ifStandard:false,//是否有标准
+			beDate:'',//日期
+			bePersons:'',//总人数
+			beJoinPersons:'',//参加人员
+			amount:'',//金额
+			costProjectName:'',//费用项目名称
+			currency:3,//币种id
+			currencyCode:'CNY',//币种code
+			dealDate:"",
+			files:[],//附件
+			ifBeyondStandard:false,//是否超出标准
+			remark:'',//备注
+			supplierId:0,
+			tempType:0,//模板id
+			standardAmount:null,//费用标准金额
+			standardUnit:"无",//费用标准单位
+			currencyList:[],//币种列表
+			travelList:[],//交通工具列表
 
-		  },
-		  value10:'',
-		  detialData:{},
-		  userInfo:{}
+			abortDate:'',//结束时间
+			startDate:'',//开始时间
+			tpStartAddressId:'',//起点
+			tpDestinationAddressId:'',//终点
+			tpTransportType:null,
 		}
 	},
 	computed:{
@@ -171,12 +415,105 @@ export default {
 		},
 		billId(){
 			 return this.$store.getters.water.id;
+		},
+		getbookStandard(){
+            return this.$store.getters.water.item
 		}
 	},
 
     methods: {
 		closed:function(){
 			 this.$store.commit('waterInfo',{item:{},waterShow:false,id:0});
+		},
+		init(){
+            //默认执行
+			var _this = this;
+			util.get('book/currency',{},function(res){
+				//获取币种列表
+                _this.currencyList = res
+			})
+			util.get('book/findLocalTravel',{},function(res){
+				//交通工具列表
+				_this.travelList=res
+			})
+		},
+		standardChange(item){
+            var _this=this;
+			_this.costProjectName = item.tempName;
+			_this.tempType =item.tempCode
+			if(item.billStandards.length>0){
+				for(let v of item.billStandards){
+					if(v.currency == _this.currencyCode){
+						 _this.ifStandard=true;
+						_this.standardAmount = v.amount;
+						_this.standardUnit = v.currency + v.amount+item.unitName;
+						return false;
+					}else{
+						 _this.ifStandard=false;
+				         _this.standardAmount=null;
+				         _this.standardUnit = '无';
+					}
+				}
+			}else{
+				_this.ifStandard=false;
+				_this.standardAmount=null;
+				_this.standardUnit = '无';
+			}
+		},
+		currencySelect(val){
+            console.log(val)
+			var _this = this;
+		    let list = _this.currencyList
+			list.find(function(x){
+				if(x.id==val){
+					_this.currencyCode = x.code
+				}
+			})
+			var data = this.$store.getters.water.item
+			this.standardChange(data)
+			
+		},
+		initUpload(file){
+			var _this = this;
+			_this.uploadInfo.fileInfo = file
+			console.log(file)
+			//获取授权信息
+			var pdata={
+				bizCode:"pay",
+				fileName:_this.uploadInfo.fileInfo.name,
+                orgId:util.userInfo.orgId,
+				size:_this.uploadInfo.fileInfo.size,
+                userId:util.userInfo.id
+			}
+			util.post('oss/policy',pdata,function(res){
+				console.log(res)
+				_this.uploadInfo.authorizationInfo=res.data;
+                var client = new OSS({
+					region: 'oss-cn-shanghai',
+					accessKeyId: _this.uploadInfo.authorizationInfo.accessKeyId,
+					accessKeySecret: _this.uploadInfo.authorizationInfo.accessKeySecret
+				});
+				_this.uploadInfo.client=client
+				//return client;
+				_this.uploadFile()
+			})
+            
+		},
+		uploadFile(){
+			var _this=this;
+           co(function* () {
+				_this.uploadInfo.client.useBucket('my-bucket');//Your bucket name
+				var result = yield _this.uploadInfo.client.put('a.jpg', 'local file');//'object-key', 'local file'
+				console.log(result);
+			}).catch(function (err) {
+			    console.log(err);
+			});
+		},
+		handleRemove(file, fileList) {
+			console.log(file, fileList);
+		},
+		handlePreview(file) {
+			console.log(file);
 		},
 	    getDetial(){
 			console.log('查询开支流水详情')
@@ -189,8 +526,146 @@ export default {
 		},
 		handleClick(tab, event) {
 			console.log(tab, event);
+		},
+		ifExceedStandard(val){
+           let values = val.target._value;
+		   if(this.standardAmount != null  && values > this.standardAmount){
+			   this.ifBeyondStandard = true;
+		   }else{
+			   this.ifBeyondStandard = false;
+		   }
+		},
+		saveYewuzhaodai(type){
+			//保存业务招待费
+			var _this=this;
+			if(_this.bePersons == ''){
+				this.$message({message: '请输入总人数',type: 'error'});
+				return false
+			}
+			if(Number(_this.bePersons)<0){
+                this.$message({message: '总人数必须大于0',type: 'error'});
+				return false
+			}
+			if(_this.amount == ''){
+				this.$message({message: '请输入总金额',type: 'error'});
+				return false
+			}
+			if(Number(_this.amount)<0){
+                this.$message({message: '总金额必须大于0',type: 'error'});
+				return false
+			}
+			var options={
+				amount:_this.amount,
+				beDate:_this.beDate,
+				beJoinPersons:_this.beJoinPersons,
+				bePersons:_this.bePersons,
+				costProjectName:_this.costProjectName,
+				currency:_this.currency,
+				currencyCode:_this.currencyCode,
+				dealDate:_this.dealDate,
+				files:_this.files,
+				ifBeyondStandard:_this.ifBeyondStandard,
+				remark:_this.remark,
+				standardAmount:_this.standardAmount,
+				standardUnit:_this.standardUnit,
+				supplierId:_this.supplierId,
+				tempType:_this.tempType
+			}
+			util.post('book/saveBillBook',options,function(res){
+				_this.dataInit();
+				_this.$message({message: '已保存',type: 'success'});
+				if(type==0){//保存
+				     _this.closed();
+				     _this.show.yewuzhaodai=false;
+				}else if(type == 2){//报销
+				     _this.closed();
+                     _this.show.yewuzhaodai=false;
+					 _this.ifShowReimburse=true;
+				}
+				
+			})
+		},
+		saveShineiAndWaibujiaotong(type){
+			//保存市内交通费和外埠交通费
+			var _this=this;
+			if(_this.startDate != '' && _this.abortDate != '' && _this.startDate>=_this.abortDate){
+				this.$message({message: '结束时间必须大于开始时间',type: 'error'});
+				return false
+			}
+			if(_this.tpTransportType == null){
+                this.$message({message: '请选择交通工具',type: 'error'});
+				return false
+			}
+			if(_this.amount == ''){
+				this.$message({message: '请输入总金额',type: 'error'});
+				return false
+			}
+			if(Number(_this.amount)<0){
+                this.$message({message: '总金额必须大于0',type: 'error'});
+				return false
+			}
+			var options={
+				abortDate:_this.abortDate,
+				amount:_this.amount,
+				costProjectName:_this.costProjectName,
+				currency:_this.currency,
+				currencyCode:_this.currencyCode,
+				dealDate:_this.dealDate,
+				files:_this.files,
+				ifBeyondStandard:_this.ifBeyondStandard,
+				remark:_this.remark,
+				standardAmount:_this.standardAmount,
+				standardUnit:_this.standardUnit,
+				startDate:_this.startDate,
+				supplierId:_this.supplierId,
+				tempType:_this.tempType,
+				tpDestinationAddressId:_this.tpDestinationAddressId,
+				tpStartAddressId:_this.tpStartAddressId,
+				tpTransportType:_this.tpTransportType
+			}
+			util.post('book/saveBillBook',options,function(res){
+				_this.dataInit();
+				_this.$message({message: '已保存',type: 'success'});
+				if(type==0){//保存
+				     _this.closed();
+				     _this.show.shineijiaotong=false;
+                      _this.show.waibujiaotong=false;
+				}else if(type == 2){//报销
+				    _this.closed();
+                     _this.show.shineijiaotong=false;
+					_this.show.waibujiaotong=false;
+					 _this.ifShowReimburse=true;
+				}
+				
+			})
+		},
+		dataInit(){
+			//数据初始化
+            this.beDate='';
+			this.bePersons='';
+			this.beJoinPersons='';
+			this.amount='';
+			this.costProjectName='';
+			this.currency=3;
+			this.currencyCode='CNY',
+			this.dealDate="";
+			this.files=[];
+			this.ifBeyondStandard=false;
+			this.remark='';
+			this.supplierId=0;
+			this.tempType=0;
+			this.standardAmount=null;
+			this.standardUnit="无";
+			this.abortDate='';
+			this.startDate='';
+			this.tpStartAddressId='';
+			this.tpDestinationAddressId='';
+			this.tpTransportType=null
 		}
 		
+	},
+	created(){
+        this.init()
 	},
 	watch:{
 		isShowBill(val){
@@ -264,13 +739,17 @@ export default {
 				case 23:	 
 				    this.show.qita=true;
 					break;
-				
 			}
 		},
 		billId(val){
 			this.id=val;
 			if(id != 0){
 				this.getDetial();
+			}
+		},
+		getbookStandard(item){
+			if(item.billStandards){
+			     this.standardChange(item)
 			}
 		}
 	},
@@ -338,6 +817,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+@import '../../assets/css/expenseWater.css';
 .detial{
 	text-align:left
 }
@@ -346,8 +826,36 @@ export default {
 }
 .waterUl li{
 	border-bottom:1px dashed #ddd;
-	height:44px;
-	line-height:44px
+	min-height:44px;
+	line-height:44px;
+	padding-left:30px
+}
+.waterUl li img{
+	 vertical-align:middle;
+	 margin:0 16px
+}
+.waterUl li span{
+	display:inline-block;
+	width:20%;
+}
+.waterUl li .inputs{
+	margin:0 16px;
+	width:40%
+}
+.waterUl li .inputs-small{
+	width:16%
+}
+.error{
+	color:red
+}
+.reimburse{
+   display:inline-block;
+   width:112px;
+   height:80px;
+   padding-top:12px;
+   border-radius:6px;
+   margin-right:18px;
+   cursor:pointer
 }
 </style>
 

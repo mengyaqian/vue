@@ -93,15 +93,19 @@ var util={
 			 axios.post(url,body)
 			 .then(function (response) {
 				 console.log(response);
-				 if(response.data.code=='301' || response.data.statusCode == '301'){
-					 _this.$router.push('/login')
-				 }else if(response.data.code == '302' || response.data.statusCode == '302'){
-					alert('操作失败');
-				 }else if(response.data.code=='200' || response.data.statusCode == '200'){
-					 cbk(response.data)
-				 }else{
-					alert(response.data.message);
-				 }
+				 if(response.data.code || response.data.statusCode){
+					if(response.data.code=='301' || response.data.statusCode == '301'){
+						_this.$router.push('/login')
+					}else if(response.data.code == '302' || response.data.statusCode == '302'){
+						alert('操作失败');
+					}else if(response.data.code=='200' || response.data.statusCode == '200'){
+						cbk(response.data)
+					}else{
+						alert(response.data.message);
+					}
+				}else{
+					cbk(response.data)
+				}
 			 }).catch(function (error) {
 				console.log(error);
 				 alert(error);

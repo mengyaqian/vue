@@ -1,0 +1,16 @@
+@charset "utf-8";
+/* CSS Document */
+.inputs .el-input__inner,.inputs-small .el-input__inner,.inputs .el-textarea__inner{
+    border:none;
+}
+
+.updates{
+    float:right;
+    width:70%;
+    margin-bottom:16px
+}
+.updates ul li{
+    float:left;
+    width:100px;
+    margin-right:10px
+}
