@@ -151,7 +151,7 @@ var billPublic={
 		}
 		return imgUrl;
 	
-	},
+	}
 		
 		
 }

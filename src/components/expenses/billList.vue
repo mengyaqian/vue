@@ -29,7 +29,7 @@
                                         <span class="branch-kind-money">{{item.amount}} {{item.currencyCode}}</span>
                                     </div>
                                 </div>
-                                <div class="not-pay" v-else>
+                                <div class="not-pay" @click="seeBill(item.id,item.tempType)" v-else>
                                     <div class="TreeLineL"></div>
                                     <p class="branch-icon-1"><img src="../../assets/not-icon.png"></p>
                                     <p class="branch-line-1"></p>
@@ -50,6 +50,7 @@
             
                 </div>
             </div>
+            <expenseWater></expenseWater>
     </div>
 </template>
 
@@ -57,8 +58,10 @@
 import util from '@/util/util.js'
 import billPublic from '@/util/billPublic.js'
 import axios from 'axios'
+import expenseWater from '@/components/common/expenseWater.vue'
 export default {
     name: 'BillList',
+    components:{expenseWater},
     data () {
         return {
             listdata:[],
@@ -89,11 +92,23 @@ export default {
         },
         imgfun(type){
            return  billPublic.billListImg(type)
+        },
+        seeBill(id,tempType){
+            //查看开支流水详情 
+            var _this= this;
+            util.get('book/bookStandard',{},function(res){
+                var item = {};
+                for(let v of res){
+                    if(v.tempCode == tempType){
+                        item = v;
+                    }
+                }
+                _this.$store.commit('waterInfo',{item:item,waterShow:true,id:id});         
+            })
         }
     },
   created(){
      this.getList()
-
   },
   mounted(){
         let _this = this;  
