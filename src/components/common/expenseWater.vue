@@ -60,7 +60,8 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
+				<div style="float:right;margin-bottom:20px"  v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('yewuzhaodai')">删除</el-button>
 				    <el-button type="primary" @click="saveYewuzhaodaiAndTuanduijianshe(2)">报销</el-button>
 					<el-button type="primary" @click="saveYewuzhaodaiAndTuanduijianshe(1)">保存再记</el-button>
 					<el-button type="primary" @click="saveYewuzhaodaiAndTuanduijianshe(0)">保存</el-button>
@@ -139,7 +140,8 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('shineijiaotong')">删除</el-button>
 				    <el-button type="primary" @click="saveShineiAndWaibujiaotong(2)">报销</el-button>
 					<el-button type="primary" @click="saveShineiAndWaibujiaotong(1)">保存再记</el-button>
 					<el-button type="primary" @click="saveShineiAndWaibujiaotong(0)">保存</el-button>
@@ -175,7 +177,7 @@
 						<img src="../../assets/carorother.png">
 						<span>交通工具<b class="error">*</b></span>
 						<el-select class="inputs" v-model="tpTransportType" placeholder="请选择">
-							<el-option v-for="item in travelList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+							<el-option v-for="item in outTravellList" :key="item.id" :label="item.name" :value="item.id"></el-option>
 						</el-select>
 				    </li>		
 					<li v-if="ifStandard">
@@ -218,8 +220,9 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
-				    <el-button type="primary" @click="saveShineiAndWaibujiaotong(2)">报销</el-button>
+				<div style="float:right;margin-bottom:20px"  v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('waibujiaotong')">删除</el-button>
+					<el-button type="primary" @click="saveShineiAndWaibujiaotong(2)">报销</el-button>
 					<el-button type="primary" @click="saveShineiAndWaibujiaotong(1)">保存再记</el-button>
 					<el-button type="primary" @click="saveShineiAndWaibujiaotong(0)">保存</el-button>
 				</div>
@@ -314,8 +317,9 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
-				    <el-button type="primary" @click="savezhusu(2)">报销</el-button>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('zhusu')">删除</el-button>
+					<el-button type="primary" @click="savezhusu(2)">报销</el-button>
 					<el-button type="primary" @click="savezhusu(1)">保存再记</el-button>
 					<el-button type="primary" @click="savezhusu(0)">保存</el-button>
 				</div>
@@ -391,8 +395,9 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
-				    <el-button type="primary" @click="shouji(2)">报销</el-button>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('shouji')">删除</el-button>
+					<el-button type="primary" @click="shouji(2)">报销</el-button>
 					<el-button type="primary" @click="shouji(1)">保存再记</el-button>
 					<el-button type="primary" @click="shouji(0)">保存</el-button>
 				</div>
@@ -458,8 +463,9 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
-				    <el-button type="primary" @click="jiaotongbutie(2)">报销</el-button>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('jiaotongbutie')">删除</el-button>
+					<el-button type="primary" @click="jiaotongbutie(2)">报销</el-button>
 					<el-button type="primary" @click="jiaotongbutie(1)">保存再记</el-button>
 					<el-button type="primary" @click="jiaotongbutie(0)">保存</el-button>
 				</div>
@@ -540,8 +546,9 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
-				    <el-button type="primary" @click="chuchaibutie(2)">报销</el-button>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('chuchaibutie')">删除</el-button>
+					<el-button type="primary" @click="chuchaibutie(2)">报销</el-button>
 					<el-button type="primary" @click="chuchaibutie(1)">保存再记</el-button>
 					<el-button type="primary" @click="chuchaibutie(0)">保存</el-button>
 				</div>
@@ -607,7 +614,8 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('tuanduijianshe')">删除</el-button>
 				    <el-button type="primary" @click="saveYewuzhaodaiAndTuanduijianshe(2)">报销</el-button>
 					<el-button type="primary" @click="saveYewuzhaodaiAndTuanduijianshe(1)">保存再记</el-button>
 					<el-button type="primary" @click="saveYewuzhaodaiAndTuanduijianshe(0)">保存</el-button>
@@ -679,7 +687,8 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('waibulaowu')">删除</el-button>
 				    <el-button type="primary" @click="waibulaowu(2)">报销</el-button>
 					<el-button type="primary" @click="waibulaowu(1)">保存再记</el-button>
 					<el-button type="primary" @click="waibulaowu(0)">保存</el-button>
@@ -746,8 +755,9 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
-				    <el-button type="primary" @click="gongzuocanbutie(2)">报销</el-button>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('gongzuocanbutie')">删除</el-button>
+					<el-button type="primary" @click="gongzuocanbutie(2)">报销</el-button>
 					<el-button type="primary" @click="gongzuocanbutie(1)">保存再记</el-button>
 					<el-button type="primary" @click="gongzuocanbutie(0)">保存</el-button>
 				</div>
@@ -814,8 +824,9 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
-				    <el-button type="primary" @click="bangongyongpin(2)">报销</el-button>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('bangongyongpin')">删除</el-button>
+					<el-button type="primary" @click="bangongyongpin(2)">报销</el-button>
 					<el-button type="primary" @click="bangongyongpin(1)">保存再记</el-button>
 					<el-button type="primary" @click="bangongyongpin(0)">保存</el-button>
 				</div>
@@ -908,8 +919,9 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
-				    <el-button type="primary" @click="cheliangbaoxian(2)">报销</el-button>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('cheliangbaoxian')">删除</el-button>
+					<el-button type="primary" @click="cheliangbaoxian(2)">报销</el-button>
 					<el-button type="primary" @click="cheliangbaoxian(1)">保存再记</el-button>
 					<el-button type="primary" @click="cheliangbaoxian(0)">保存</el-button>
 				</div>
@@ -985,8 +997,9 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
-				    <el-button type="primary" @click="cheliangshiyong(2)">报销</el-button>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('cheliangshiyong')">删除</el-button>
+					<el-button type="primary" @click="cheliangshiyong(2)">报销</el-button>
 					<el-button type="primary" @click="cheliangshiyong(1)">保存再记</el-button>
 					<el-button type="primary" @click="cheliangshiyong(0)">保存</el-button>
 				</div>
@@ -1062,8 +1075,9 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
-				    <el-button type="primary" @click="cheliangweixiu(2)">报销</el-button>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('cheliangweixiu')">删除</el-button>
+					<el-button type="primary" @click="cheliangweixiu(2)">报销</el-button>
 					<el-button type="primary" @click="cheliangweixiu(1)">保存再记</el-button>
 					<el-button type="primary" @click="cheliangweixiu(0)">保存</el-button>
 				</div>
@@ -1149,8 +1163,9 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
-				    <el-button type="primary" @click="fangzu(2)">报销</el-button>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('fangzu')">删除</el-button>
+					<el-button type="primary" @click="fangzu(2)">报销</el-button>
 					<el-button type="primary" @click="fangzu(1)">保存再记</el-button>
 					<el-button type="primary" @click="fangzu(0)">保存</el-button>
 				</div>
@@ -1226,8 +1241,9 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
-				    <el-button type="primary" @click="huiyi(2)">报销</el-button>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('huiyi')">删除</el-button>
+					<el-button type="primary" @click="huiyi(2)">报销</el-button>
 					<el-button type="primary" @click="huiyi(1)">保存再记</el-button>
 					<el-button type="primary" @click="huiyi(0)">保存</el-button>
 				</div>
@@ -1293,8 +1309,9 @@
 						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
 				    </li>	
 				</ul>
-				<div style="float:right;margin-bottom:20px">
-				    <el-button type="primary" @click="lipin(2)">报销</el-button>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('lipin')">删除</el-button>
+					<el-button type="primary" @click="lipin(2)">报销</el-button>
 					<el-button type="primary" @click="lipin(1)">保存再记</el-button>
 					<el-button type="primary" @click="lipin(0)">保存</el-button>
 				</div>
@@ -1302,32 +1319,481 @@
 		</div>
 		<div  class="detial" v-show="show.peixun">
 			<el-dialog title="培训费" :visible.sync="show.peixun" @close="closed">
-			   培训费
+			     <ul class="waterUl">
+				    <li>
+						<img src="../../assets/meetMun.png">
+						<span>培训项目<b class="error">*</b></span>
+						<el-input  class="inputs" v-model="mcMeetingName" ></el-input>
+				    </li>
+					<li>
+						<img src="../../assets/haveCopany2.png">
+						<span>培训机构</span>
+						<el-input  class="inputs" v-model="csServiceCompany" ></el-input>
+				    </li>
+					<li>
+						<img src="../../assets/end-place2.png">
+						<span>培训地点</span>
+						<el-input  class="inputs" v-model="hlHouseAddressId" ></el-input>
+				    </li>
+					<li>
+						<img src="../../assets/AllPeo.png">
+						<span>参会人员/部门<b class="error">*</b></span>
+						<el-input  class="inputs" v-model="beJoinPersons" ></el-input>
+				    </li>	
+			   </ul>
+			   <ul class="waterUl">
+			       <li>
+						<img src="../../assets/starttime2.png">
+						<span>起始时间</span>
+						<el-date-picker class="inputs" v-model="startDate" type="datetime" placeholder="起始时间" format="yyyy-MM-dd HH:mm"></el-date-picker>
+				    </li>
+					 <li>
+						<img src="../../assets/endtime2.png">
+						<span>截止时间</span>
+						<el-date-picker class="inputs" v-model="abortDate" type="datetime" placeholder="截止时间" format="yyyy-MM-dd HH:mm"></el-date-picker>
+				    </li>
+					<li v-if="ifStandard">
+						<img src="../../assets/pay-bz.png">
+						<span>培训费标准</span>
+						<el-input  class="inputs" v-model="standardUnit" ></el-input>
+				    </li>				  
+			   </ul>
+			   <ul class="waterUl">
+			        <li>
+						<img src="../../assets/Allmoney.png">
+						<span>总金额<b class="error">*</b></span>
+						<el-input  class="inputs" type="number" v-model="amount" @blur="ifExceedStandard" placeholder="请输入总金额"></el-input>
+						<el-select class="inputs-small" v-model="currency" placeholder="请选择" @change="currencySelect($event)">
+							<el-option v-for="item in currencyList" :key="item.id" :label="item.code" :value="item.id"></el-option>
+						</el-select>
+						 <el-alert v-if="ifBeyondStandard" title="输入的金额已经超出您的标准"  type="warning" show-icon :closable="closable"></el-alert>
+				    </li>				  
+			   </ul>
+			    <ul class="waterUl">
+			        <li class="clears">
+						<img src="../../assets/enclosure.png">
+						<span>附件</span>
+						<el-upload
+							class="upload-demo updates"
+							action="https://feikongbaotest.oss-cn-shanghai.aliyuncs.com/"
+							:before-upload="initUpload"
+							:headers="uploadInfo.uploadHeaders"
+							:data="uploadInfo.uploadData"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:file-list="fileList2"
+							list-type="picture">
+							<el-button type="text">添加附件</el-button>
+						</el-upload>
+				    </li>
+			        <li>
+						<img src="../../assets/remarks.png">
+						<span>备注</span>
+						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
+				    </li>	
+				</ul>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('peixun')">删除</el-button>
+					<el-button type="primary" @click="peixun(2)">报销</el-button>
+					<el-button type="primary" @click="peixun(1)">保存再记</el-button>
+					<el-button type="primary" @click="peixun(0)">保存</el-button>
+				</div>
 			</el-dialog>
 		</div>
 		<div  class="detial" v-show="show.qichezulin">
 			<el-dialog title="汽车租赁费" :visible.sync="show.qichezulin" @close="closed">
-			   汽车租赁费
+			    <ul class="waterUl">
+			        <li>
+						<img src="../../assets/whoHave.png">
+						<span>租车人<b class="error">*</b></span>
+						<el-input  class="inputs" v-model="mbOwner"></el-input>
+				    </li>
+			        <li>
+						<img src="../../assets/carorother2.png">
+						<span>品牌型号</span>
+						<el-input  class="inputs"  v-model="carBrand" placeholder="请输入品牌型号"></el-input>
+				    </li>
+					 <li>
+						<img src="../../assets/buiCity2.png">
+						<span>租车城市</span>
+						<el-select v-model="htBusinessAddressCode" filterable remote @change="visibles" :remote-method="remoteMethod"
+						:loading="loading" placeholder="请选择出差城市" class="inputs">
+							<el-option-group key="0" label="热门城市">
+							<el-option
+								v-for="items in cityListSearch"
+								:key="items.code"
+								:label="items.name"
+								:value="items.code">
+							</el-option>
+							</el-option-group>
+						</el-select>
+				    </li>
+					<li>
+						<img src="../../assets/haveCopany.png">
+						<span>租车公司<b class="error">*</b></span>
+						<el-input  class="inputs" v-model="ciInsuranceType" placeholder="请输入租车公司"></el-input>
+				    </li>				  
+			   </ul>
+			    <ul class="waterUl">
+			        <li>
+						<img src="../../assets/starttime2.png">
+						<span>租车时间</span>
+						<el-date-picker class="inputs" v-model="startDate" type="datetime" placeholder="起始时间" format="yyyy-MM-dd HH:mm"></el-date-picker>
+				    </li>
+					 <li>
+						<img src="../../assets/endtime2.png">
+						<span>还车时间</span>
+						<el-date-picker class="inputs" v-model="abortDate" type="datetime" placeholder="截止时间" format="yyyy-MM-dd HH:mm"></el-date-picker>
+				    </li>
+					<li v-if="ifStandard">
+						<img src="../../assets/pay-bz.png">
+						<span>汽车租赁费标准</span>
+						<el-input  class="inputs" v-model="standardUnit" ></el-input>
+				    </li>
+			   </ul>
+			   <ul class="waterUl">
+			        <li>
+						<img src="../../assets/Allmoney.png">
+						<span>总金额<b class="error">*</b></span>
+						<el-input  class="inputs" type="number" v-model="amount" @blur="ifExceedStandard" placeholder="请输入总金额"></el-input>
+						<el-select class="inputs-small" v-model="currency" placeholder="请选择" @change="currencySelect($event)">
+							<el-option v-for="item in currencyList" :key="item.id" :label="item.code" :value="item.id"></el-option>
+						</el-select>
+						 <el-alert v-if="ifBeyondStandard" title="输入的金额已经超出您的标准"  type="warning" show-icon :closable="closable"></el-alert>
+				    </li>				  
+			   </ul>
+			    <ul class="waterUl">
+			        <li class="clears">
+						<img src="../../assets/enclosure.png">
+						<span>附件</span>
+						<el-upload
+							class="upload-demo updates"
+							action="https://feikongbaotest.oss-cn-shanghai.aliyuncs.com/"
+							:before-upload="initUpload"
+							:headers="uploadInfo.uploadHeaders"
+							:data="uploadInfo.uploadData"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:file-list="fileList2"
+							list-type="picture">
+							<el-button type="text">添加附件</el-button>
+						</el-upload>
+				    </li>
+			        <li>
+						<img src="../../assets/remarks.png">
+						<span>备注</span>
+						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
+				    </li>	
+				</ul>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('qichezulin')">删除</el-button>
+					<el-button type="primary" @click="qichezulin(2)">报销</el-button>
+					<el-button type="primary" @click="qichezulin(1)">保存再记</el-button>
+					<el-button type="primary" @click="qichezulin(0)">保存</el-button>
+				</div>
 			</el-dialog>
 		</div>
 		<div  class="detial" v-show="show.sichegongyongyou">
 			<el-dialog title="私车公用油费" :visible.sync="show.sichegongyongyou" @close="closed">
-			   私车公用油费
+			    <ul class="waterUl">
+			        <li>
+						<img src="../../assets/carNum.png">
+						<span>车牌号<b class="error">*</b></span>
+						<el-input  class="inputs" v-model="carNo" placeholder="请输入车牌号"></el-input>
+				    </li>			  
+			   </ul>
+			    <ul class="waterUl">
+			        <li>
+						<img src="../../assets/starttime2.png">
+						<span>出发时间</span>
+						<el-date-picker class="inputs" v-model="startDate" type="datetime" placeholder="出发时间" format="yyyy-MM-dd HH:mm"></el-date-picker>
+				    </li>
+					 <li>
+						<img src="../../assets/endtime2.png">
+						<span>到达时间</span>
+						<el-date-picker class="inputs" v-model="abortDate" type="datetime" placeholder="到达时间" format="yyyy-MM-dd HH:mm"></el-date-picker>
+				    </li>
+			   </ul>
+			   <ul class="waterUl">
+			        <li>
+						<img src="../../assets/start2.png">
+						<span>出发地点</span>
+						<el-input  class="inputs" v-model="tpStartAddressId" placeholder="请输入出发地点"></el-input>
+				    </li>	
+					<li>
+						<img src="../../assets/end-place2.png">
+						<span>到达地点</span>
+						<el-input  class="inputs" v-model="tpDestinationAddressId" placeholder="请输入到达地点"></el-input>
+				    </li>	
+					<li>
+						<img src="../../assets/flow.png">
+						<span>行驶公里总数<b class="error">*</b></span>
+						<el-input  class="inputs" v-model="bePersons" type="number" placeholder="行驶公里总数"></el-input>
+				    </li>	
+					<li v-if="ifStandard">
+						<img src="../../assets/pay-bz.png">
+						<span>私车公用油费标准</span>
+						<el-input  class="inputs" v-model="standardUnit" ></el-input>
+				    </li>	  
+			   </ul>
+			   <ul class="waterUl">
+			        <li>
+						<img src="../../assets/Allmoney.png">
+						<span>总金额<b class="error">*</b></span>
+						<el-input  class="inputs" type="number" v-model="amount" @blur="ifExceedStandard" placeholder="请输入总金额"></el-input>
+						<el-select class="inputs-small" v-model="currency" placeholder="请选择" @change="currencySelect($event)">
+							<el-option v-for="item in currencyList" :key="item.id" :label="item.code" :value="item.id"></el-option>
+						</el-select>
+						 <el-alert v-if="ifBeyondStandard" title="输入的金额已经超出您的标准"  type="warning" show-icon :closable="closable"></el-alert>
+				    </li>				  
+			   </ul>
+			    <ul class="waterUl">
+			        <li class="clears">
+						<img src="../../assets/enclosure.png">
+						<span>附件</span>
+						<el-upload
+							class="upload-demo updates"
+							action="https://feikongbaotest.oss-cn-shanghai.aliyuncs.com/"
+							:before-upload="initUpload"
+							:headers="uploadInfo.uploadHeaders"
+							:data="uploadInfo.uploadData"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:file-list="fileList2"
+							list-type="picture">
+							<el-button type="text">添加附件</el-button>
+						</el-upload>
+				    </li>
+			        <li>
+						<img src="../../assets/remarks.png">
+						<span>备注</span>
+						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
+				    </li>	
+				</ul>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('sichegongyongyou')">删除</el-button>
+					<el-button type="primary" @click="sichegongyongyou(2)">报销</el-button>
+					<el-button type="primary" @click="sichegongyongyou(1)">保存再记</el-button>
+					<el-button type="primary" @click="sichegongyongyou(0)">保存</el-button>
+				</div>
 			</el-dialog>
 		</div>
 		<div  class="detial" v-show="show.tijian">
 			<el-dialog title="体检费" :visible.sync="show.tijian" @close="closed">
-			   体检费
+			    <ul class="waterUl">
+			        <li>
+						<img src="../../assets/dateA2.png">
+						<span>体检日期</span>
+						<el-date-picker class="inputs" v-model="beDate" type="date" placeholder="体检日期" format="yyyy-MM-dd"></el-date-picker>
+				    </li>		
+			    </ul>
+			    <ul class="waterUl">
+			        <li>
+						<img src="../../assets/whoHave.png">
+						<span>体检人<b class="error">*</b></span>
+						<el-input  class="inputs" v-model="mbOwner"></el-input>
+				    </li>
+			        <li>
+						<img src="../../assets/add-file.png">
+						<span>体检类型<b class="error">*</b></span>
+						<el-select class="inputs" v-model="chCheckType" placeholder="请选择">
+							<el-option v-for="item in physicalExaminationList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+						</el-select>
+				    </li>
+					<li>
+						<img src="../../assets/haveCopany2.png">
+						<span>体检机构</span>
+						<el-input  class="inputs" v-model="ciInsuranceType" placeholder="请输入体检机构"></el-input>
+				    </li>	
+					<li v-if="ifStandard">
+						<img src="../../assets/pay-bz.png">
+						<span>体检费标准</span>
+						<el-input  class="inputs" v-model="standardUnit" ></el-input>
+				    </li>			  
+			   </ul>
+			   <ul class="waterUl">
+			        <li>
+						<img src="../../assets/Allmoney.png">
+						<span>总金额<b class="error">*</b></span>
+						<el-input  class="inputs" type="number" v-model="amount" @blur="ifExceedStandard" placeholder="请输入总金额"></el-input>
+						<el-select class="inputs-small" v-model="currency" placeholder="请选择" @change="currencySelect($event)">
+							<el-option v-for="item in currencyList" :key="item.id" :label="item.code" :value="item.id"></el-option>
+						</el-select>
+						 <el-alert v-if="ifBeyondStandard" title="输入的金额已经超出您的标准"  type="warning" show-icon :closable="closable"></el-alert>
+				    </li>				  
+			   </ul>
+			    <ul class="waterUl">
+			        <li class="clears">
+						<img src="../../assets/enclosure.png">
+						<span>附件</span>
+						<el-upload
+							class="upload-demo updates"
+							action="https://feikongbaotest.oss-cn-shanghai.aliyuncs.com/"
+							:before-upload="initUpload"
+							:headers="uploadInfo.uploadHeaders"
+							:data="uploadInfo.uploadData"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:file-list="fileList2"
+							list-type="picture">
+							<el-button type="text">添加附件</el-button>
+						</el-upload>
+				    </li>
+			        <li>
+						<img src="../../assets/remarks.png">
+						<span>备注</span>
+						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
+				    </li>	
+				</ul>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('tijian')">删除</el-button>
+					<el-button type="primary" @click="tijian(2)">报销</el-button>
+					<el-button type="primary" @click="tijian(1)">保存再记</el-button>
+					<el-button type="primary" @click="tijian(0)">保存</el-button>
+				</div>
 			</el-dialog>
 		</div>
 		<div  class="detial" v-show="show.youkachongzhi">
 			<el-dialog title="油卡充值费" :visible.sync="show.youkachongzhi" @close="closed">
-			   油卡充值费
+			    <ul class="waterUl">
+			        <li>
+						<img src="../../assets/dateA2.png">
+						<span>充值时间</span>
+						<el-date-picker class="inputs" v-model="beDate" type="datetime" placeholder="体检日期" format="yyyy-MM-dd HH:mm"></el-date-picker>
+				    </li>		
+			    </ul>
+			    <ul class="waterUl">
+				    <li>
+						<img src="../../assets/whoHave.png">
+						<span>充值卡号<b class="error">*</b></span>
+						<el-input  class="inputs" v-model="cardNo"></el-input>
+				    </li>
+			        <li>
+						<img src="../../assets/whoHave.png">
+						<span>持有人<b class="error">*</b></span>
+						<el-input  class="inputs" v-model="mbOwner"></el-input>
+				    </li>
+					<li>
+						<img src="../../assets/haveCopany2.png">
+						<span>绑定车牌号</span>
+						<el-input  class="inputs" v-model="carNo" placeholder="请输入体检机构"></el-input>
+				    </li>	
+					<li v-if="ifStandard">
+						<img src="../../assets/pay-bz.png">
+						<span>油卡充值费标准</span>
+						<el-input  class="inputs" v-model="standardUnit" ></el-input>
+				    </li>			  
+			   </ul>
+			   <ul class="waterUl">
+			        <li>
+						<img src="../../assets/Allmoney.png">
+						<span>总金额<b class="error">*</b></span>
+						<el-input  class="inputs" type="number" v-model="amount" @blur="ifExceedStandard" placeholder="请输入总金额"></el-input>
+						<el-select class="inputs-small" v-model="currency" placeholder="请选择" @change="currencySelect($event)">
+							<el-option v-for="item in currencyList" :key="item.id" :label="item.code" :value="item.id"></el-option>
+						</el-select>
+						 <el-alert v-if="ifBeyondStandard" title="输入的金额已经超出您的标准"  type="warning" show-icon :closable="closable"></el-alert>
+				    </li>				  
+			   </ul>
+			    <ul class="waterUl">
+			        <li class="clears">
+						<img src="../../assets/enclosure.png">
+						<span>附件</span>
+						<el-upload
+							class="upload-demo updates"
+							action="https://feikongbaotest.oss-cn-shanghai.aliyuncs.com/"
+							:before-upload="initUpload"
+							:headers="uploadInfo.uploadHeaders"
+							:data="uploadInfo.uploadData"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:file-list="fileList2"
+							list-type="picture">
+							<el-button type="text">添加附件</el-button>
+						</el-upload>
+				    </li>
+			        <li>
+						<img src="../../assets/remarks.png">
+						<span>备注</span>
+						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
+				    </li>	
+				</ul>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('youkachongzhi')">删除</el-button>
+					<el-button type="primary" @click="youkachongzhi(2)">报销</el-button>
+					<el-button type="primary" @click="youkachongzhi(1)">保存再记</el-button>
+					<el-button type="primary" @click="youkachongzhi(0)">保存</el-button>
+				</div>
 			</el-dialog>
 		</div>
 		<div  class="detial" v-show="show.qita">
 			<el-dialog title="其他费用" :visible.sync="show.qita" @close="closed">
-			   其他费用
+			    <ul class="waterUl">
+				    <li>
+						<img src="../../assets/whoHave.png">
+						<span>费用类型<b class="error">*</b></span>
+						<el-select class="inputs" v-model="chCheckType" placeholder="请选择">
+							<el-option v-for="item in costTypeList" :key="item.tempName" :label="item.tempName" :value="item.tempName"></el-option>
+						</el-select>
+				    </li>
+				</ul>
+				<ul class="waterUl">
+			         <li>
+						<img src="../../assets/starttime2.png">
+						<span>起始时间</span>
+						<el-date-picker class="inputs" v-model="startDate" type="datetime" placeholder="起始时间" format="yyyy-MM-dd HH:mm"></el-date-picker>
+				    </li>
+					 <li>
+						<img src="../../assets/endtime2.png">
+						<span>截止时间</span>
+						<el-date-picker class="inputs" v-model="abortDate" type="datetime" placeholder="截止时间" format="yyyy-MM-dd HH:mm"></el-date-picker>
+				    </li>
+					<li v-if="ifStandard">
+						<img src="../../assets/pay-bz.png">
+						<span>其他费用标准</span>
+						<el-input  class="inputs" v-model="standardUnit" ></el-input>
+				    </li>			  
+			   </ul>
+			   <ul class="waterUl">
+			        <li>
+						<img src="../../assets/Allmoney.png">
+						<span>总金额<b class="error">*</b></span>
+						<el-input  class="inputs" type="number" v-model="amount" @blur="ifExceedStandard" placeholder="请输入总金额"></el-input>
+						<el-select class="inputs-small" v-model="currency" placeholder="请选择" @change="currencySelect($event)">
+							<el-option v-for="item in currencyList" :key="item.id" :label="item.code" :value="item.id"></el-option>
+						</el-select>
+						 <el-alert v-if="ifBeyondStandard" title="输入的金额已经超出您的标准"  type="warning" show-icon :closable="closable"></el-alert>
+				    </li>				  
+			   </ul>
+			    <ul class="waterUl">
+			        <li class="clears">
+						<img src="../../assets/enclosure.png">
+						<span>附件</span>
+						<el-upload
+							class="upload-demo updates"
+							action="https://feikongbaotest.oss-cn-shanghai.aliyuncs.com/"
+							:before-upload="initUpload"
+							:headers="uploadInfo.uploadHeaders"
+							:data="uploadInfo.uploadData"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:file-list="fileList2"
+							list-type="picture">
+							<el-button type="text">添加附件</el-button>
+						</el-upload>
+				    </li>
+			        <li>
+						<img src="../../assets/remarks.png">
+						<span>备注</span>
+						<el-input  class="inputs"  type="textarea" :rows="4" placeholder="请输入备注内容(此处可以输入200字)" :maxlength="maxlength" v-model="remark" ></el-input>
+				    </li>	
+				</ul>
+				<div style="float:right;margin-bottom:20px" v-if="status==0">
+				    <el-button v-if="id !=0" type="primary" @click="deleteBill('qita')">删除</el-button>
+					<el-button type="primary" @click="qita(2)">报销</el-button>
+					<el-button type="primary" @click="qita(1)">保存再记</el-button>
+					<el-button type="primary" @click="qita(0)">保存</el-button>
+				</div>
 			</el-dialog>
 		</div>
 		<el-dialog title="请选择报销类型" :visible.sync="ifShowReimburse"  size="tiny">
@@ -1350,6 +1816,7 @@ export default {
 			dialogVisible:false,
 			ifShowReimburse:false,
 			id:0,
+			status:0,
 			show:{
 				yewuzhaodai:false,
 				shineijiaotong:false,
@@ -1386,11 +1853,13 @@ export default {
 				authorizationInfo:{} , //授权信息
 			},
 			closable:false,
+			physicalExaminationList:[],//体检类型列表
+			costTypeList:[],//费用类型列表
 		//	fileList2: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
 			fileList2:[],
 			ifStandard:false,//是否有标准
 			beDate:'',//日期，购置日期，
-			bePersons:'',//总人数，数量
+			bePersons:'',//总人数，数量，行驶公里数
 			beJoinPersons:'',//参加人员，品名，使用部门/人，出租单位/人，参与人员/部门
 			amount:'',//金额
 			costProjectName:'',//费用项目名称
@@ -1406,6 +1875,7 @@ export default {
 			standardUnit:"无",//费用标准单位
 			currencyList:[],//币种列表
 			travelList:[],//交通工具列表
+			outTravellList:[],//外部交通工具列表
 			cityList:[],//城市列表
 			cityListSearch:[],//检索出来的城市列表
 			loading:false,
@@ -1416,8 +1886,8 @@ export default {
  
 			abortDate:'',//结束时间
 			startDate:'',//开始时间
-			tpStartAddressId:'',//起点
-			tpDestinationAddressId:'',//终点
+			tpStartAddressId:'',//起点,出发地点
+			tpDestinationAddressId:'',//终点,到达地点
 			tpTransportType:null,//交通工具
             
 			htEmployee:null,//是否是公司员工
@@ -1426,26 +1896,29 @@ export default {
 			htHotelName:'',//酒店名称
 
 			mbMobile:util.userInfo.mobile,//手机号
-			mbOwner:util.userInfo.nickname,//持有人
+			mbOwner:util.userInfo.nickname,//持有人,租车人
 			mbMonths:'',//报销月数
 
 			sfServiceProvidingMan:'',//劳务提供人
 			sfServiceInCompany:'', //所在单位
 
-			carNo:'',//车牌号
+			carNo:'',//车牌号,绑定车牌号
 			carBrand:'',//品牌型号
 			carUsedYear:'', // 已使用年限，房屋承租期限
 			ciInsuranceCompany:'',//保险险种
-			ciInsuranceType:'', //保险公司
+			ciInsuranceType:'', //保险公司，租车公司，体检机构
 
-			csServiceCompany:'',//维修厂商
+			csServiceCompany:'',//维修厂商，培训机构
 
-			hlHouseAddressId:'',//租房地址，举办地点
+			hlHouseAddressId:'',//租房地址，举办地点，培训地点
 
-			mcMeetingName:'',//会议项目
+			mcMeetingName:'',//会议项目，培训项目
 
 			gcGiftNumber:'',//礼品费数量
 			gcGiftName:'',//品名
+			cardNo:'',//充值卡号
+
+			chCheckType:null,//体检类型,费用类型
 
 
 		}
@@ -1459,12 +1932,16 @@ export default {
 		},
 		getbookStandard(){
             return this.$store.getters.water.item
+		},
+		other(){
+			return this.$store.getters.otherWater
 		}
 	},
 
     methods: {
-		closed:function(){
+		closed(){
 			 this.$store.commit('waterInfo',{item:{},waterShow:false,id:0});
+			 this.dataInit();
 		},
 		init(){
             //默认执行
@@ -1477,10 +1954,18 @@ export default {
 				//交通工具列表
 				_this.travelList=res
 			})
+            util.get('book/findOutTravel',{},function(res){
+				//交通工具列表
+				_this.outTravellList=res
+			})
 			util.get('book/findCityHot',{},function(res){
 				//城市列表
 				_this.cityList = res;
 				_this.cityListSearch =res;
+			})
+			util.get('book/physicalExamination',{},function(res){
+				//体检类型
+				_this.physicalExaminationList = res;
 			})
 		},
 		standardChange(item){
@@ -1568,9 +2053,12 @@ export default {
 			})
 		},
 		setVal(pdata){
-          if(pdata.tempType == 2){//外埠交通费
-              this.abortDate=pdata.abortDate || ''
-			  this.startDate=pdata.startDate || ''
+          //if(pdata.tempType == 2){//外埠交通费
+		      this.status = pdata.status
+			  this.id = pdata.id
+		      this.beDate = pdata.beDate || ''
+			  this.bePersons = pdata.bePersons || '',
+              this.beJoinPersons = pdata.beJoinPersons || '',
 			  this.tpStartAddressId = pdata.tpStartAddressId || ''
 			  this.tpDestinationAddressId = pdata.tpDestinationAddressId || ''
 			  this.tpTransportType = pdata.tpTransportType || null
@@ -1579,8 +2067,21 @@ export default {
 			  this.standardUnit = pdata.standardUnit || '无'
 			  this.currency = pdata.currency || null
 			  this.fileList2 = pdata.files || []
-			  this.remark = pdata.remark || ''
-		  }
+	     	  this.remark = pdata.remark || ''
+			  this.htBusinessAddressCode = pdata.htBusinessAddress.code || null
+			  this.htHotelName = pdata.htHotelName
+			  this.htEmployee = pdata.htEmployee || null
+			  this.htDays = pdata.htDays || ''
+
+			  if(this.tempType == 3){//住宿费
+			      this.abortDate=pdata.htCheckOutTime ? util.getDefaultTime(pdata.htCheckOutTime) : ''
+			      this.startDate=pdata.htCheckInTime ? util.getDefaultTime(pdata.htCheckInTime) : ''
+			  }else{
+                  this.abortDate=pdata.abortDate ? util.getDefaultTime(pdata.abortDate) : ''
+			      this.startDate=pdata.startDate ?  util.getDefaultTime(pdata.startDate) : ''
+			  }
+
+		 // }
 		},
 		handleClick(tab, event) {
 			console.log(tab, event);
@@ -1594,6 +2095,7 @@ export default {
 		   }
 		},
 		visibles(v){
+			console.log(v)
 		    this.cityListSearch =this.cityList;
 		},
 		remoteMethod(query){ 
@@ -2517,7 +3019,342 @@ export default {
 				}
 			})
 		},
-		
+		peixun(type){
+			//培训费保存
+			var _this=this;
+			if(util.trim(_this.mcMeetingName) == ''){
+	            this.$message({message: '请输入培训项目',type: 'error'});
+				return false
+			}
+			if(util.trim(_this.beJoinPersons) == ''){
+	            this.$message({message: '请输入参会人员/部门',type: 'error'});
+				return false
+			}
+			if(_this.startDate != '' && _this.abortDate != ''){
+				if(_this.startDate>=_this.abortDate){
+					this.$message({message: '截止时间必须大于起始时间',type: 'error'});
+					return false
+				}
+			}
+			if(_this.amount == ''){
+				this.$message({message: '请输入总金额',type: 'error'});
+				return false
+			}
+			if(Number(_this.amount)<0){
+                this.$message({message: '总金额必须大于0',type: 'error'});
+				return false
+			}
+			var options={
+				abortDate:_this.abortDate,
+				amount:_this.amount,
+				costProjectName:_this.costProjectName,
+				currency:_this.currency,
+				currencyCode:_this.currencyCode,
+				dealDate:_this.dealDate,
+				files:_this.files,
+			    ifBeyondStandard:_this.ifBeyondStandard,
+				remark:_this.remark,
+				standardAmount:_this.standardAmount,
+				standardUnit:_this.standardUnit,
+				startDate:_this.startDate,
+				supplierId:_this.supplierId,
+				tcJoinPersons:_this.beJoinPersons,
+				tcTrainAddressId:_this.hlHouseAddressId,
+				tcTrainCompany:_this.csServiceCompany,
+				tcTrainName:_this.mcMeetingName,
+				tempType:_this.tempType
+			}
+			
+			util.post('book/saveBillBook',options,function(res){
+				_this.dataInit();
+				_this.$message({message: '已保存',type: 'success'});
+				if(type==0){//保存
+				     _this.closed();
+				     _this.show.peixun =false;
+				}else if(type == 2){//报销
+				    _this.closed();
+                     _this.show.peixun =false;
+					 _this.ifShowReimburse=true;
+				}
+			})
+		},
+		qichezulin(type){
+            //汽车租赁
+			var _this=this;
+			if(util.trim(_this.mbOwner) == ''){
+	            this.$message({message: '请输入租车人',type: 'error'});
+				return false
+			}
+			if(util.trim(_this.ciInsuranceType) == ''){
+	            this.$message({message: '请输入租车公司',type: 'error'});
+				return false
+			}
+			if(_this.startDate != '' && _this.abortDate != ''){
+				if(_this.startDate>=_this.abortDate){
+					this.$message({message: '还车时间必须大于租车时间',type: 'error'});
+					return false
+				}
+			}
+			if(_this.amount == ''){
+				this.$message({message: '请输入总金额',type: 'error'});
+				return false
+			}
+			if(Number(_this.amount)<0){
+                this.$message({message: '总金额必须大于0',type: 'error'});
+				return false
+			}
+			var options={
+				abortDate:_this.abortDate,
+				amount:_this.amount,
+				carBrand:_this.carBrand,
+				clCityCode:_this.htBusinessAddressCode,
+				clLeaseCarCompany:_this.ciInsuranceType,
+				clUsername:util.trim(_this.mbOwner),
+				costProjectName:_this.costProjectName,
+				currency:_this.currency,
+				currencyCode:_this.currencyCode,
+				dealDate:_this.dealDate,
+				files:_this.files,
+			    ifBeyondStandard:_this.ifBeyondStandard,
+				remark:_this.remark,
+				standardAmount:_this.standardAmount,
+				standardUnit:_this.standardUnit,
+				startDate:_this.startDate,
+				supplierId:_this.supplierId,
+				tempType:_this.tempType
+			}
+			
+			util.post('book/saveBillBook',options,function(res){
+				_this.dataInit();
+				_this.$message({message: '已保存',type: 'success'});
+				if(type==0){//保存
+				     _this.closed();
+				     _this.show.qichezulin =false;
+				}else if(type == 2){//报销
+				    _this.closed();
+                     _this.show.qichezulin =false;
+					 _this.ifShowReimburse=true;
+				}
+			})
+		},
+		sichegongyongyou(type){
+            //私车公用油
+			var _this=this;
+			if(util.trim(_this.carNo) == ''){
+	            this.$message({message: '请输入车牌号',type: 'error'});
+				return false
+			}
+			if(_this.startDate != '' && _this.abortDate != ''){
+				if(_this.startDate>=_this.abortDate){
+					this.$message({message: '到达时间必须大于出发时间',type: 'error'});
+					return false
+				}
+			}
+			if(_this.bePersons == ''){
+	            this.$message({message: '请输入行驶公里总数',type: 'error'});
+				return false
+			}
+			if(_this.amount == ''){
+				this.$message({message: '请输入总金额',type: 'error'});
+				return false
+			}
+			if(Number(_this.amount)<0){
+                this.$message({message: '总金额必须大于0',type: 'error'});
+				return false
+			}
+
+			var options={
+				abortDate:_this.abortDate,
+				amount:_this.amount,
+				carNo:_this.carNo,
+				cgDestinationAddressId:_this.tpDestinationAddressId,
+				cgDriveKM:_this.bePersons,
+				cgStartAddressId:_this.tpStartAddressId,
+				cgkilometreSubsidy:456,//每公里补贴
+				costProjectName:_this.costProjectName,
+				currency:_this.currency,
+				currencyCode:_this.currencyCode,
+				dealDate:_this.dealDate,
+				files:_this.files,
+			    ifBeyondStandard:_this.ifBeyondStandard,
+				remark:_this.remark,
+				standardAmount:_this.standardAmount,
+				standardUnit:_this.standardUnit,
+				startDate:_this.startDate,
+				supplierId:_this.supplierId,
+				tempType:_this.tempType
+			}
+			
+			util.post('book/saveBillBook',options,function(res){
+				_this.dataInit();
+				_this.$message({message: '已保存',type: 'success'});
+				if(type==0){//保存
+				     _this.closed();
+				     _this.show.sichegongyongyou =false;
+				}else if(type == 2){//报销
+				    _this.closed();
+                     _this.show.sichegongyongyou =false;
+					 _this.ifShowReimburse=true;
+				}
+			})
+		},
+		tijian(type){
+             //体检费
+			var _this=this;
+			if(util.trim(_this.mbOwner) == ''){
+	            this.$message({message: '请输入体检人',type: 'error'});
+				return false
+			}
+			if(_this.chCheckType == null){
+	            this.$message({message: '请选择体检类型',type: 'error'});
+				return false
+			}
+			if(_this.amount == ''){
+				this.$message({message: '请输入总金额',type: 'error'});
+				return false
+			}
+			if(Number(_this.amount)<0){
+                this.$message({message: '总金额必须大于0',type: 'error'});
+				return false
+			}
+
+			var options={
+				amount:_this.amount,
+				chCheckDate:_this.beDate,
+				chCheckType:_this.chCheckType,
+				chCheckUser:_this.mbOwner,
+				chCompany:_this.ciInsuranceType,
+				costProjectName:_this.costProjectName,
+				currency:_this.currency,
+				currencyCode:_this.currencyCode,
+				dealDate:_this.dealDate,
+				files:_this.files,
+			    ifBeyondStandard:_this.ifBeyondStandard,
+				remark:_this.remark,
+				standardAmount:_this.standardAmount,
+				standardUnit:_this.standardUnit,
+				supplierId:_this.supplierId,
+				tempType:_this.tempType
+			}
+			
+			util.post('book/saveBillBook',options,function(res){
+				_this.dataInit();
+				_this.$message({message: '已保存',type: 'success'});
+				if(type==0){//保存
+				     _this.closed();
+				     _this.show.tijian =false;
+				}else if(type == 2){//报销
+				    _this.closed();
+                     _this.show.tijian =false;
+					 _this.ifShowReimburse=true;
+				}
+			})
+		},
+		youkachongzhi(type){
+            //油卡充值保存
+			var _this=this;
+			if(util.trim(_this.cardNo) == ''){
+	            this.$message({message: '请输入充值卡号',type: 'error'});
+				return false
+			}
+			if(util.trim(_this.mbOwner == '')){
+	            this.$message({message: '请输入卡持有人',type: 'error'});
+				return false
+			}
+			if(_this.amount == ''){
+				this.$message({message: '请输入总金额',type: 'error'});
+				return false
+			}
+			if(Number(_this.amount)<0){
+                this.$message({message: '总金额必须大于0',type: 'error'});
+				return false
+			}
+
+			var options={
+				amount:_this.amount,
+				carNo:_this.carNo,
+				costProjectName:_this.costProjectName,
+				currency:_this.currency,
+				currencyCode:_this.currencyCode,
+				dealDate:_this.dealDate,
+				files:_this.files,
+				gcrCardNo:_this.cardNo,
+				gcrCardUser:_this.mbOwner,
+				gcrRechargeDate:_this.beDate,
+			    ifBeyondStandard:_this.ifBeyondStandard,
+				remark:_this.remark,
+				standardAmount:_this.standardAmount,
+				standardUnit:_this.standardUnit,
+				supplierId:_this.supplierId,
+				tempType:_this.tempType
+			}
+			
+			util.post('book/saveBillBook',options,function(res){
+				_this.dataInit();
+				_this.$message({message: '已保存',type: 'success'});
+				if(type==0){//保存
+				     _this.closed();
+				     _this.show.youkachongzhi =false;
+				}else if(type == 2){//报销
+				    _this.closed();
+                     _this.show.youkachongzhi =false;
+					 _this.ifShowReimburse=true;
+				}
+			})
+		},
+		qita(type){
+			//其他保存
+           	var _this=this;
+			if(_this.chCheckType == null){
+	            this.$message({message: '请选择费用类型',type: 'error'});
+				return false
+			}
+		    if(_this.startDate != '' && _this.abortDate != ''){
+				if(_this.startDate>=_this.abortDate){
+					this.$message({message: '截止时间必须大于起始时间',type: 'error'});
+					return false
+				}
+			}
+			if(_this.amount == ''){
+				this.$message({message: '请输入总金额',type: 'error'});
+				return false
+			}
+			if(Number(_this.amount)<0){
+                this.$message({message: '总金额必须大于0',type: 'error'});
+				return false
+			}
+
+			var options={
+				abortDate:_this.abortDate,
+				amount:_this.amount,
+				costProjectName:_this.costProjectName,
+				costType:_this.chCheckType,
+				currency:_this.currency,
+				currencyCode:_this.currencyCode,
+				dealDate:_this.dealDate,
+				files:_this.files,
+			    ifBeyondStandard:_this.ifBeyondStandard,
+				remark:_this.remark,
+				standardAmount:_this.standardAmount,
+				standardUnit:_this.standardUnit,
+				startDate:_this.startDate,
+				supplierId:_this.supplierId,
+				tempType:_this.tempType
+			}
+			
+			util.post('book/saveBillBook',options,function(res){
+				_this.dataInit();
+				_this.$message({message: '已保存',type: 'success'});
+				if(type==0){//保存
+				     _this.closed();
+				     _this.show.qita =false;
+				}else if(type == 2){//报销
+				    _this.closed();
+                     _this.show.qita =false;
+					 _this.ifShowReimburse=true;
+				}
+			})
+		},
 		dataInit(){
 			//数据初始化
 			this.closable=false;
@@ -2561,6 +3398,17 @@ export default {
 			this.mcMeetingName='';
 			this.gcGiftNumber='';
 			this.gcGiftName='';
+			this.chCheckType = null;
+			this.cardNo='';
+		},
+		deleteBill(tpl){
+			//删除开支流水
+			var _this=this;
+			util.get('book/deleteBillBook',{bookId:_this.id},function(data){
+                	_this.closed();
+					_this.$store.commit('billListActive',true);
+					_this.show[tpl] =false;
+			})
 		}
 		
 	},
@@ -2652,6 +3500,9 @@ export default {
 			if(item.billStandards){
 			     this.standardChange(item)
 			}
+		},
+		other(data){
+			this.costTypeList=data;
 		}
 	},
 	filters: {

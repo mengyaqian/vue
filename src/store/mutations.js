@@ -52,6 +52,12 @@ const mutations={
 		state.water.waterShow=data.waterShow;
 		state.water.item = data.item;
 		state.water.id = data.id
+	},
+	otherInfo(state,data){
+		state.otherWater = data;
+	},
+	billListActive(state,data){
+		state.billListRefresh=data;
 	}
 	
 }

@@ -33,7 +33,10 @@ const state={
 		item:{},
 		waterShow:false,
 		id:0
-	}
+	},
+	//开支流水  其他费用的可选列表
+	otherWater:[],
+	billListRefresh:false,
 	
 }
 export default state

@@ -13,3 +13,5 @@ export const bank = state =>state.bank
 export const person = state => state.person
 export const leftActive = state =>state.leftActive
 export const water = state =>state.water
+export const otherWater = state => state.otherWater
+export const billListRefresh = state => state.billListRefresh

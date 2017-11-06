@@ -32,7 +32,8 @@ export default {
     components:{expenseWater},
     data () {
         return {
-            listdata:[]
+            listdata:[],
+            otherList:[]
         }
     },
     methods:{
@@ -41,10 +42,25 @@ export default {
         },
         getList(){
             var _this = this; 
+            var other = [];
+            var list = []
+            var flg = 0;;
                 util.get('book/bookStandard',{},function(res){
-                    _this.listdata=res;             
+                    for(let item of res){
+                       if(item.tempCode !=23){
+                           list.push(item);
+                       }else{
+                           other.push(item)
+                           flg=1;
+                       }
+                    }
+                    if(flg == 1){
+                       list.push({tempCode:23,tempName:'其他'})
+                    }
+                    _this.listdata=list
+                    _this.$store.commit('otherInfo',other);
+                              
                 })
-            
         },
         imgfun(type){
            return  billPublic.billListImg2(type)

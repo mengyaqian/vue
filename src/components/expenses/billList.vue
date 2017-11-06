@@ -18,7 +18,7 @@
                         <div style="height:38px"></div>
                         <ul id="billall">
                             <li v-for="item in listdata">
-                                <div v-if="item.status == 1" class="have-pay" >
+                                <div v-if="item.status == 1" class="have-pay"  @click="seeBill(item.id,item.tempType)">
                                     <div class="TreeLineR"></div>
                                     <p class="branch-icon"><img src="../../assets/have-icon.png"></p>
                                     <p class="branch-line"></p>
@@ -68,6 +68,21 @@ export default {
             page:1,
             load:true
         }
+    },
+    computed:{
+		isRefresh(){
+			 return this.$store.getters.billListRefresh;
+		},
+    },
+    watch:{
+		isRefresh(data){
+           if(data == true){
+                this.page=1;
+                this.listdata=[];
+                this.getList();
+                this.$store.commit('billListActive',false);
+           }
+		},
     },
     methods:{
         handleSelect(key, keyPath){
