@@ -39,7 +39,7 @@
                                             <span class="branch-kind-money-1">{{item.amount}} {{item.currencyCode}}</span>
                                             <div class="edit-and-delete">
                                                 <!-- <i class="el-icon-edit" style="margin-right:10px"></i>-->
-                                                <i class="el-icon-delete"></i>
+                                                <i class="el-icon-delete" @click.stop="deletes(item.id)"></i>
                                             </div>
                                         </div>
                                 </div>
@@ -77,6 +77,7 @@ export default {
     watch:{
 		isRefresh(data){
            if(data == true){
+                if(this.$route.path == '/billList')
                 this.page=1;
                 this.listdata=[];
                 this.getList();
@@ -120,6 +121,31 @@ export default {
                 }
                 _this.$store.commit('waterInfo',{item:item,waterShow:true,id:id});         
             })
+        },
+        deletes(id){
+            //删除开支流水
+			var _this=this;
+              this.$confirm('确定要删除该开支流水吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    util.get('book/deleteBillBook',{bookId:id},function(data){
+                        _this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                        _this.page=1;
+                        _this.listdata=[];
+                        _this.getList();
+                    })
+                }).catch(() => {
+                    _this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });          
+                });
+			
         }
     },
   created(){

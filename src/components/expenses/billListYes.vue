@@ -1,7 +1,7 @@
 <template>
-    <div class="billListYes">
+    <div class="billListNot">
         <div class="leftTwoNav">
-            <el-button class="addBill" type="primary"><router-link to="/billListAdd">记一笔</router-link></el-button>
+              <el-button class="addBill" type="primary"><router-link to="/billListAdd">记一笔</router-link></el-button>
             <el-menu mode="vertical" :default-active="$route.path" router class="el-menu-vertical-demo" @select="handleSelect">
                 <el-menu-item  key="/billList" index="/billList"><i class="el-icon-message"></i>开支流水汇总</el-menu-item>
                 <el-menu-item key="/billListNot" index="/billListNot"><i class="el-icon-message"></i>未报销</el-menu-item>
@@ -17,11 +17,12 @@
                             <el-select v-model="currencyId" placeholder="请选择币种"   class="left10" @change="selectChange">
                                <el-option v-for="item in currencyData" :key="item.id" :label="item.code" :value="item.id"></el-option>
                             </el-select>
+                             <el-button style="margin-left:10px" type="primary">报销</el-button>
                         </div>
                         <div style="height:12px"></div>
                         <ul id="billall">
                             <li v-for="item in listdata">
-                                <div  class="have-pay" >
+                                <div  class="have-pay"  @click="seeBill(item.id,item.tempType)">
                                     <div class="TreeLineR"></div>
                                     <p class="branch-icon"><img src="../../assets/have-icon.png"></p>
                                     <p class="branch-line"></p>
@@ -34,13 +35,15 @@
                                 </div>
                             </li>
                         </ul>
-                
+      
+                        <el-button  @click="nextPage" type="text">下一页>></el-button>
                     </div>
                      <!--饼图-->
-                     <div style="width:40%;height:500px;float:right;margin-top:30px">
+                     <div style="width:40%;min-height:500px;float:right;margin:30px;overflow:auto">
                          <div class="canvanpic" id="myChart"></div>
                      </div>
                 </div>
+                 <expenseWater></expenseWater>
             </div>
     </div>
 </template>
@@ -50,8 +53,10 @@ import util from '@/util/util.js'
 import billPublic from '@/util/billPublic.js'
 import axios from 'axios'
 import echarts from 'echarts'
+import expenseWater from '@/components/common/expenseWater.vue'
 export default {
-    name: 'billListYes',
+    name: 'billListNot',
+    components:{expenseWater},
     data () {
         return {
             listdata:[],
@@ -62,6 +67,22 @@ export default {
             currencyId:-1,
             checked:false
         }
+    },
+     computed:{
+		isRefresh(){
+			 return this.$store.getters.billListRefresh;
+		},
+    },
+    watch:{
+		isRefresh(data){
+           if(data == true){
+                if(this.$route.path == '/billListNot')
+                this.page=1;
+                this.listdata=[];
+                this.getList();
+                this.$store.commit('billListActive',false);
+           }
+		},
     },
     methods:{
         handleSelect(key, keyPath){
@@ -75,7 +96,7 @@ export default {
         getList(){
             var _this = this; 
             var option={
-                date:_this.month == ''?'':util.getDefaultTime(_this.month).substring(0,7),
+                date:_this.month == ''?0:util.getDefaultTime(_this.month).substring(0,7),
                 currency:_this.currencyId,
                 status:1,
                 page:_this.page,
@@ -83,10 +104,16 @@ export default {
             if(_this.load == true){
                 _this.load=false;
                 util.post('bill/billbook/list',option,function(res){
+                   for(let v of res.content){
+                      v.check=false
+                   }
                     _this.listdata.push(...res.content);
+                    if(_this.page == 1){
+                        _this.pieData(res);
+                    }
                     _this.page +=1;
                     _this.load=true;
-                    _this.pieData(res);
+                    
                 },{format:true})
             }  
         },
@@ -159,8 +186,11 @@ export default {
                         formatter : "{b} ({d}%)<br>折合人民币:{c}"
                     },
                     legend: {
+                        x: 'left',
                         orient: 'vertical',
-                        left: 'left',
+                       // bottom: 'bottom', 
+                        width: 150,
+                        top: 300,  
                         data: legendData
                     },
                     series : [
@@ -183,7 +213,23 @@ export default {
                     ]
               };
               myChart.setOption(option);
-        }
+        },
+        nextPage(){
+             this.getList();
+        },
+         seeBill(id,tempType){
+            //查看开支流水详情 
+            var _this= this;
+            util.get('book/bookStandard',{},function(res){
+                var item = {};
+                for(let v of res){
+                    if(v.tempCode == tempType){
+                        item = v;
+                    }
+                }
+                _this.$store.commit('waterInfo',{item:item,waterShow:true,id:id});         
+            })
+        },
         
     },
   created(){
@@ -191,7 +237,7 @@ export default {
      this.currencyList();
 
   },
-  mounted(){
+ /* mounted(){
         let _this = this;  
        window.addEventListener('scroll',function(){   
             if(document.body.scrollTop + window.innerHeight >= document.body.offsetHeight) {
@@ -199,7 +245,7 @@ export default {
             }
        })
       
-  }
+  }*/
   
 }
 </script>
@@ -407,7 +453,7 @@ export default {
   width:110px
 }
 .checks{margin-left:102%;margin-top:20px;}
-.canvanpic{width:400px;height:400px;margin-top:30px;}
+.canvanpic{width:400px;height:400px;margin-top:30px;overflow:auto}
 .addBill{
     margin-top:16px;
 }

@@ -62,9 +62,9 @@
 				</ul>
 				<div style="float:right;margin-bottom:20px"  v-if="status==0">
 				    <el-button v-if="id !=0" type="primary" @click="deleteBill('yewuzhaodai')">删除</el-button>
-				    <el-button type="primary" @click="saveYewuzhaodaiAndTuanduijianshe(2)">报销</el-button>
-					<el-button type="primary" @click="saveYewuzhaodaiAndTuanduijianshe(1)">保存再记</el-button>
-					<el-button type="primary" @click="saveYewuzhaodaiAndTuanduijianshe(0)">保存</el-button>
+				    <el-button type="primary" @click="saveYewuzhaodai(2)">报销</el-button>
+					<el-button type="primary" @click="saveYewuzhaodai(1)">保存再记</el-button>
+					<el-button type="primary" @click="saveYewuzhaodai(0)">保存</el-button>
 				</div>
 			</el-dialog>
 		</div>
@@ -616,9 +616,9 @@
 				</ul>
 				<div style="float:right;margin-bottom:20px" v-if="status==0">
 				    <el-button v-if="id !=0" type="primary" @click="deleteBill('tuanduijianshe')">删除</el-button>
-				    <el-button type="primary" @click="saveYewuzhaodaiAndTuanduijianshe(2)">报销</el-button>
-					<el-button type="primary" @click="saveYewuzhaodaiAndTuanduijianshe(1)">保存再记</el-button>
-					<el-button type="primary" @click="saveYewuzhaodaiAndTuanduijianshe(0)">保存</el-button>
+				    <el-button type="primary" @click="saveTuanduijianshe(2)">报销</el-button>
+					<el-button type="primary" @click="saveTuanduijianshe(1)">保存再记</el-button>
+					<el-button type="primary" @click="saveTuanduijianshe(0)">保存</el-button>
 				</div>
 			</el-dialog>
 		</div>
@@ -713,7 +713,7 @@
 					 <li>
 						<img src="../../assets/dayNum.png">
 						<span>餐补次数<b class="error">*</b></span>
-						<el-input  class="inputs"  type="number" v-model="htDays" placeholder="请输入报销月数"></el-input>
+						<el-input  class="inputs"  type="number" v-model="wmMealSubsidyNumber" placeholder="请输入餐补次数"></el-input>
 				    </li>		
 					<li v-if="ifStandard">
 						<img src="../../assets/pay-bz.png">
@@ -776,12 +776,12 @@
 			        <li>
 						<img src="../../assets/pinName.png">
 						<span>品名<b class="error">*</b></span>
-						<el-input  class="inputs" v-model="beJoinPersons" placeholder="请输入品名"></el-input>
+						<el-input  class="inputs" v-model="osOfficeName" placeholder="请输入品名"></el-input>
 				    </li>
 			        <li>
 						<img src="../../assets/howMuch.png">
 						<span>数量<b class="error">*</b></span>
-						<el-input  class="inputs"  type="number"  v-model="bePersons" placeholder="请输入数量"></el-input>
+						<el-input  class="inputs"  type="number"  v-model="osNumber" placeholder="请输入数量"></el-input>
 				    </li>
 			        	
 					<li v-if="ifStandard">
@@ -1111,7 +1111,7 @@
 					<li>
 						<img src="../../assets/oldyear.png">
 						<span>房屋承租期限<b class="error">*</b></span>
-						<el-input  class="inputs" v-model="carUsedYear" type="number" placeholder="请输入房屋承租期限"></el-input>
+						<el-input  class="inputs" v-model="hlLeaseDeadLine" type="number" placeholder="请输入房屋承租期限"></el-input>
 				    </li>
 			        <li>
 						<img src="../../assets/starttime.png">
@@ -1528,7 +1528,7 @@
 					<li>
 						<img src="../../assets/flow.png">
 						<span>行驶公里总数<b class="error">*</b></span>
-						<el-input  class="inputs" v-model="bePersons" type="number" placeholder="行驶公里总数"></el-input>
+						<el-input  class="inputs" v-model="cgDriveKM" type="number" placeholder="行驶公里总数"></el-input>
 				    </li>	
 					<li v-if="ifStandard">
 						<img src="../../assets/pay-bz.png">
@@ -1732,7 +1732,7 @@
 				    <li>
 						<img src="../../assets/whoHave.png">
 						<span>费用类型<b class="error">*</b></span>
-						<el-select class="inputs" v-model="chCheckType" placeholder="请选择">
+						<el-select class="inputs" v-model="tempNames" placeholder="请选择">
 							<el-option v-for="item in costTypeList" :key="item.tempName" :label="item.tempName" :value="item.tempName"></el-option>
 						</el-select>
 				    </li>
@@ -1892,12 +1892,14 @@ export default {
             
 			htEmployee:null,//是否是公司员工
 			htBusinessAddressCode:null, //出差城市信息
-			htDays:'',//入住天数，出差天数,餐补次数
+			htDays:'',//入住天数，出差天数
 			htHotelName:'',//酒店名称
+
+			wmMealSubsidyNumber:'', //餐补次数
 
 			mbMobile:util.userInfo.mobile,//手机号
 			mbOwner:util.userInfo.nickname,//持有人,租车人
-			mbMonths:'',//报销月数
+			mbMonths:'',//报销月数,补贴月数
 
 			sfServiceProvidingMan:'',//劳务提供人
 			sfServiceInCompany:'', //所在单位
@@ -1919,6 +1921,11 @@ export default {
 			cardNo:'',//充值卡号
 
 			chCheckType:null,//体检类型,费用类型
+			osOfficeName:'',//办公用品品名
+			osNumber:'',//办公用品 数量
+			hlLeaseDeadLine:'',
+			cgDriveKM:'',
+			tempNames:null,
 
 
 		}
@@ -2054,24 +2061,51 @@ export default {
 		},
 		setVal(pdata){
           //if(pdata.tempType == 2){//外埠交通费
-		      this.status = pdata.status
-			  this.id = pdata.id
-		      this.beDate = pdata.beDate || ''
-			  this.bePersons = pdata.bePersons || '',
-              this.beJoinPersons = pdata.beJoinPersons || '',
-			  this.tpStartAddressId = pdata.tpStartAddressId || ''
-			  this.tpDestinationAddressId = pdata.tpDestinationAddressId || ''
-			  this.tpTransportType = pdata.tpTransportType || null
-			  this.amount = pdata.amount || ''
-			  this.ifStandard = pdata.ifBeyondStandard || false
-			  this.standardUnit = pdata.standardUnit || '无'
-			  this.currency = pdata.currency || null
-			  this.fileList2 = pdata.files || []
-	     	  this.remark = pdata.remark || ''
-			  this.htBusinessAddressCode = pdata.htBusinessAddress.code || null
-			  this.htHotelName = pdata.htHotelName
-			  this.htEmployee = pdata.htEmployee || null
-			  this.htDays = pdata.htDays || ''
+		      this.status = pdata.status;
+			  this.id = pdata.id;
+		      this.beDate = pdata.beDate || pdata.tcConstructionDate || pdata.osDate || pdata.ciInsuranceDate || pdata.csServiceEndDate || pdata.hlStartLeaseDate || pdata.gcBuyDate || pdata.chCheckDate || pdata.gcrRechargeDate || '';
+			  this.bePersons = pdata.bePersons || pdata.tcConstructionUserCount || '';
+              this.beJoinPersons = pdata.beJoinPersons || pdata.tcConstructionParticipant || pdata.cuDepOrUser || pdata.hlLeasePerson || pdata.mcJoinPersonOrDeps || pdata.tcJoinPersons || '';
+			  this.tpStartAddressId = pdata.tpStartAddressId || pdata.cgStartAddressId || '';
+			  this.tpDestinationAddressId = pdata.tpDestinationAddressId || pdata.cgDestinationAddressId || '';
+			  this.tpTransportType = pdata.tpTransportType || null;
+			  this.amount = pdata.amount || '';
+			  this.ifStandard = pdata.ifBeyondStandard || false;
+			  this.standardUnit = pdata.standardUnit || '无';
+			  this.currency = pdata.currency || null;
+			  this.fileList2 = pdata.files || [];
+	     	  this.remark = pdata.remark || '';
+			  this.htHotelName = pdata.htHotelName || '';
+			  this.htEmployee = pdata.htEmployee || null;
+			  this.htDays = pdata.htDays || pdata.bsBusinessDays || '';
+			  this.mbMonths = pdata.mbMonths || pdata.tsMonths || '';
+			  this.mbMobile = pdata.mbMobile || '';
+			  this.mbOwner = pdata.mbOwner || pdata.hlTenant || pdata.clUsername || pdata.chCheckUser || pdata.gcrCardUser  || '';
+			  this.sfServiceInCompany = pdata.sfServiceInCompany || '';
+			  this.sfServiceProvidingMan = pdata.sfServiceProvidingMan || '';
+			  this.wmMealSubsidyNumber = pdata.wmMealSubsidyNumber || '';
+			  this.osOfficeName = pdata.osOfficeName || '';
+			  this.osNumber = pdata.osNumber || '';
+			  this.carNo = pdata.carNo || '';
+			  this.carBrand = pdata.carBrand || '';
+			  this.carUsedYear = pdata.carUsedYear || '';
+			  this.ciInsuranceType = pdata.ciInsuranceType || pdata.clLeaseCarCompany || pdata.chCompany || '';
+			  this.ciInsuranceCompany = pdata.ciInsuranceCompany || '';
+			  this.csServiceCompany=pdata.csServiceCompany || pdata.tcTrainCompany || '';
+			  this.hlHouseAddressId=pdata.hlHouseAddressId || pdata.mcMeetingAddressId || pdata.tcTrainAddressId || '';
+			  this.hlLeaseDeadLine = pdata.hlLeaseDeadLine || '';
+			  this.mcMeetingName = pdata.mcMeetingName || pdata.tcTrainName || '';
+			  this.gcGiftName =pdata.gcGiftName ||'';
+			  this.gcGiftNumber =pdata.gcGiftNumber || '';
+			  this.cgDriveKM = pdata.cgDriveKM ||'';
+			  this.chCheckType = pdata.chCheckType || null;
+			  this.cardNo = pdata.gcrCardNo || '';
+			  this.tempNames = pdata.tempName || null
+
+
+
+
+
 
 			  if(this.tempType == 3){//住宿费
 			      this.abortDate=pdata.htCheckOutTime ? util.getDefaultTime(pdata.htCheckOutTime) : ''
@@ -2079,6 +2113,13 @@ export default {
 			  }else{
                   this.abortDate=pdata.abortDate ? util.getDefaultTime(pdata.abortDate) : ''
 			      this.startDate=pdata.startDate ?  util.getDefaultTime(pdata.startDate) : ''
+			  }
+			  if(this.tempType == 7){//出差补贴费 bsBusinessDays
+			     this.htBusinessAddressCode = (pdata.bsBusinessCity ? pdata.bsBusinessCity.code :null) || null;
+			  }else if (this.tempType == 19){//汽车租赁费
+                  this.htBusinessAddressCode = (pdata.clCity ? pdata.clCity.code :null) || null;
+			  }else{
+				this.htBusinessAddressCode = (pdata.htBusinessAddress ? pdata.htBusinessAddress.code :null) || null;
 			  }
 
 		 // }
@@ -2118,7 +2159,7 @@ export default {
                 this.cityListSearch = this.cityList;
 			}
 		},
-		saveYewuzhaodaiAndTuanduijianshe(type){
+		saveYewuzhaodai(type){
 			//保存业务招待费
 			var _this=this;
 			if(_this.bePersons == ''){
@@ -2160,10 +2201,58 @@ export default {
 				if(type==0){//保存
 				     _this.closed();
 				     _this.show.yewuzhaodai=false;
-					 _this.show.tuanduijianshe=false;
 				}else if(type == 2){//报销
 				     _this.closed();
                      _this.show.yewuzhaodai=false;
+					 _this.ifShowReimburse=true;
+				}
+				
+			})
+		},
+		saveTuanduijianshe(type){
+            //保存团队建设费
+			var _this=this;
+			if(_this.bePersons == ''){
+				this.$message({message: '请输入总人数',type: 'error'});
+				return false
+			}
+			if(Number(_this.bePersons)<0){
+                this.$message({message: '总人数必须大于0',type: 'error'});
+				return false
+			}
+			if(_this.amount == ''){
+				this.$message({message: '请输入总金额',type: 'error'});
+				return false
+			}
+			if(Number(_this.amount)<0){
+                this.$message({message: '总金额必须大于0',type: 'error'});
+				return false
+			}
+			var options={
+				amount:_this.amount,
+				costProjectName:_this.costProjectName,
+				currency:_this.currency,
+				currencyCode:_this.currencyCode,
+				dealDate:_this.dealDate,
+				files:_this.files,
+				ifBeyondStandard:_this.ifBeyondStandard,
+				remark:_this.remark,
+				standardAmount:_this.standardAmount,
+				standardUnit:_this.standardUnit,
+				supplierId:_this.supplierId,
+				tcConstructionDate:_this.beDate,
+				tcConstructionParticipant:_this.beJoinPersons,
+				tcConstructionUserCount:_this.bePersons,
+				tempType:_this.tempType
+			}
+			util.post('book/saveBillBook',options,function(res){
+				_this.dataInit();
+				_this.$message({message: '已保存',type: 'success'});
+				if(type==0){//保存
+				     _this.closed();
+					 _this.show.tuanduijianshe=false;
+				}else if(type == 2){//报销
+				     _this.closed();
 					 _this.show.tuanduijianshe=false;
 					 _this.ifShowReimburse=true;
 				}
@@ -2481,7 +2570,7 @@ export default {
 			var options={
 				abortDate:_this.abortDate,
 				amount:_this.amount,
-				htBusinessAddressCode:_this.htBusinessAddressCode,
+				bsBusinessCityCode:_this.htBusinessAddressCode,
 				bsBusinessDays:_this.htDays,
 				bsDeductAmount:0,
 				bsStartCityCode:'',
@@ -2576,7 +2665,7 @@ export default {
 					return false
 				}
 			}
-			if(_this.htDays == ''){
+			if(_this.wmMealSubsidyNumber == ''){
 				this.$message({message: '请输入餐补次数',type: 'error'});
 				return false
 			}
@@ -2604,7 +2693,7 @@ export default {
 				startDate:_this.startDate,
 				tempType:_this.tempType,
 				wmMealSubsidyMoney:0,
-				wmMealSubsidyNumber:_this.htDays,
+				wmMealSubsidyNumber:_this.wmMealSubsidyNumber,
 			}
 			
 			util.post('book/saveBillBook',options,function(res){
@@ -2624,11 +2713,11 @@ export default {
 		bangongyongpin(type){
 			//保存办公用品
 			var _this=this;
-            if(util.trim(_this.beJoinPersons) == ''){
+            if(util.trim(_this.osOfficeName) == ''){
 				this.$message({message: '请输入品名',type: 'error'});
 				return false
 			}
-			if(_this.bePersons == ''){
+			if(_this.osNumber == ''){
 				this.$message({message: '请输入数量',type: 'error'});
 				return false
 			}
@@ -2649,8 +2738,8 @@ export default {
 				files:_this.files,
 			    ifBeyondStandard:_this.ifBeyondStandard,
 				osDate:_this.beDate,
-				osNumber:_this.bePersons,
-				osOfficeName:_this.beJoinPersons,
+				osNumber:_this.osNumber,
+				osOfficeName:_this.osOfficeName,
 				remark:_this.remark,
 				standardAmount:_this.standardAmount,
 				standardUnit:_this.standardUnit,
@@ -2883,7 +2972,7 @@ export default {
 				dealDate:_this.dealDate,
 				files:_this.files,
 				hlHouseAddressId:_this.hlHouseAddressId,
-				hlLeaseDeadLine:_this.carUsedYear,
+				hlLeaseDeadLine:_this.hlLeaseDeadLine,
 				hlLeasePerson:_this.beJoinPersons,
 				hlStartLeaseDate:_this.beDate,
 				hlTenant:_this.mbOwner,
@@ -3150,7 +3239,7 @@ export default {
 					return false
 				}
 			}
-			if(_this.bePersons == ''){
+			if(_this.cgDriveKM == ''){
 	            this.$message({message: '请输入行驶公里总数',type: 'error'});
 				return false
 			}
@@ -3168,7 +3257,7 @@ export default {
 				amount:_this.amount,
 				carNo:_this.carNo,
 				cgDestinationAddressId:_this.tpDestinationAddressId,
-				cgDriveKM:_this.bePersons,
+				cgDriveKM:_this.cgDriveKM,
 				cgStartAddressId:_this.tpStartAddressId,
 				cgkilometreSubsidy:456,//每公里补贴
 				costProjectName:_this.costProjectName,
@@ -3257,7 +3346,7 @@ export default {
 	            this.$message({message: '请输入充值卡号',type: 'error'});
 				return false
 			}
-			if(util.trim(_this.mbOwner == '')){
+			if(util.trim(_this.mbOwner) == ''){
 	            this.$message({message: '请输入卡持有人',type: 'error'});
 				return false
 			}
@@ -3305,7 +3394,7 @@ export default {
 		qita(type){
 			//其他保存
            	var _this=this;
-			if(_this.chCheckType == null){
+			if(_this.tempNames == null){
 	            this.$message({message: '请选择费用类型',type: 'error'});
 				return false
 			}
@@ -3327,8 +3416,8 @@ export default {
 			var options={
 				abortDate:_this.abortDate,
 				amount:_this.amount,
-				costProjectName:_this.costProjectName,
-				costType:_this.chCheckType,
+				costProjectName:'其他',
+				costType:_this.tempNames,
 				currency:_this.currency,
 				currencyCode:_this.currencyCode,
 				dealDate:_this.dealDate,
@@ -3339,21 +3428,36 @@ export default {
 				standardUnit:_this.standardUnit,
 				startDate:_this.startDate,
 				supplierId:_this.supplierId,
-				tempType:_this.tempType
+				tempType:23
+			}
+			if(_this.id == 0){
+                 util.post('book/saveBillBook',options,function(res){
+					_this.dataInit();
+					_this.$message({message: '已保存',type: 'success'});
+					if(type==0){//保存
+						_this.closed();
+						_this.show.qita =false;
+					}else if(type == 2){//报销
+						_this.closed();
+						_this.show.qita =false;
+						_this.ifShowReimburse=true;
+					}
+				})
+			}else{
+				util.post('book/updateBook?bookId='+_this.id,options,function(res){
+					_this.dataInit();
+					_this.$message({message: '已保存',type: 'success'});
+					if(type==0){//保存
+						_this.closed();
+						_this.show.qita =false;
+					}else if(type == 2){//报销
+						_this.closed();
+						_this.show.qita =false;
+						_this.ifShowReimburse=true;
+					}
+				})
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
-				_this.dataInit();
-				_this.$message({message: '已保存',type: 'success'});
-				if(type==0){//保存
-				     _this.closed();
-				     _this.show.qita =false;
-				}else if(type == 2){//报销
-				    _this.closed();
-                     _this.show.qita =false;
-					 _this.ifShowReimburse=true;
-				}
-			})
 		},
 		dataInit(){
 			//数据初始化
@@ -3400,15 +3504,37 @@ export default {
 			this.gcGiftName='';
 			this.chCheckType = null;
 			this.cardNo='';
+			this.wmMealSubsidyNumber = '';
+			this.osNumber = '';
+			this.osOfficeName = '';
+			this.hlLeaseDeadLine = '';
+			this.cgDriveKM = '';
+			this.tempNames = null;
+			this.id=0;
 		},
 		deleteBill(tpl){
 			//删除开支流水
 			var _this=this;
-			util.get('book/deleteBillBook',{bookId:_this.id},function(data){
-                	_this.closed();
-					_this.$store.commit('billListActive',true);
-					_this.show[tpl] =false;
-			})
+             this.$confirm('确定要删除该开支流水吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    util.get('book/deleteBillBook',{bookId:_this.id},function(data){
+                        _this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                        _this.closed();
+						_this.$store.commit('billListActive',true);
+						_this.show[tpl] =false;
+                    })
+                }).catch(() => {
+                    _this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });          
+                });
 		}
 		
 	},
