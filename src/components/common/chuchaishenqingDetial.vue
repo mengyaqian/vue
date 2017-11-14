@@ -1,6 +1,6 @@
 <template>
 		<div  class="detial" v-show="dialogVisible">
-			<el-dialog title="出差申请单" :visible.sync="dialogVisible" @close="closed" size="large">
+			<el-dialog title="出差申请单" :visible.sync="dialogVisible" @close="closed" size="large" width="70%">
 			    <!--单据基本信息-->
 				<el-tabs v-model="activeName2" type="card" @tab-click="handleClick">
 					<el-tab-pane label="单据基本信息" name="first">

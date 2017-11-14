@@ -196,4 +196,8 @@ a {
   bottom:0;
   left:160px;
 }
+.el-table td, .el-table th.is-leaf{
+	text-align:center
+}
+
 </style>

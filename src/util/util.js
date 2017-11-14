@@ -101,7 +101,8 @@ var util={
 					}else if(response.data.code=='200' || response.data.statusCode == '200'){
 						cbk(response.data)
 					}else{
-						alert(response.data.message);
+						//alert(response.data.message);
+						cbk(response.data)
 					}
 				}else{
 					cbk(response.data)

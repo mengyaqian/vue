@@ -39,7 +39,7 @@
                         <el-button  @click="nextPage" type="text">下一页>></el-button>
                     </div>
                      <!--饼图-->
-                     <div style="width:40%;min-height:500px;float:right;margin:30px;overflow:auto">
+                     <div style="width:40%;min-height:500px;float:right;margin:30px;">
                          <div class="canvanpic" id="myChart"></div>
                      </div>
                 </div>
@@ -190,7 +190,7 @@ export default {
                         orient: 'vertical',
                        // bottom: 'bottom', 
                         width: 150,
-                        top: 300,  
+                        top: 30,  
                         data: legendData
                     },
                     series : [
@@ -208,7 +208,8 @@ export default {
                                     shadowOffsetX: 0,
                                     shadowColor: 'rgba(0, 0, 0, 0.5)'
                                 }
-                            }
+                            },
+                            center:[400,'50%']
                         }
                     ]
               };
@@ -453,7 +454,7 @@ export default {
   width:110px
 }
 .checks{margin-left:102%;margin-top:20px;}
-.canvanpic{width:400px;height:400px;margin-top:30px;overflow:auto}
+.canvanpic{width:600px;height:400px;margin-top:30px;overflow:auto}
 .addBill{
     margin-top:16px;
 }

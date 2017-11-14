@@ -17,7 +17,7 @@
 					<span><el-button type="primary" @click="list">搜索</el-button></span>
 					<span><el-button type="primary" @click="creatBusinessApply('0')">新增出差申请单</el-button></span>
 				</div>
-				<el-table :data="listDataMessage.all" border style="width: 100%;font-size:12px;margin-bottom:20px;">
+				<el-table :data="listDataMessage.all" border style="width: 100%;font-size:12px;margin-bottom:20px;text-align:center">
 					<el-table-column prop="orderNo" label="单据编号">
 					   <template scope="scope">
 						  <el-button @click="handleClick(scope.row)" type="text" size="small">{{scope.row.orderNo}}</el-button>
@@ -219,5 +219,5 @@ export default {
   .pointer{
     color:red
   }
-  
+
 </style>

@@ -22,7 +22,7 @@
                         <div style="height:12px"></div>
                         <ul id="billall">
                             <li v-for="item in listdata">
-                                <div  class="have-pay"  @click="seeBill(item.id,item.tempType)">
+                                <div  class="have-pay"  @click.stop="seeBill(item.id,item.tempType)">
                                     <div class="TreeLineR"></div>
                                     <p class="branch-icon"><img src="../../assets/not-icon.png"></p>
                                     <p class="branch-line"></p>
@@ -31,16 +31,16 @@
                                     <div class="hover-background-right">
                                         <span class="branch-kind-text">{{item.createdOn}}<br>{{item.tempName}}</span>
                                         <span class="branch-kind-money">{{item.amount}} {{item.currencyCode}}</span>
-                                        <el-checkbox class="checks" v-model="item.check"></el-checkbox>
                                     </div>
                                 </div>
+                                <el-checkbox class="checks" v-model="item.check" @change="checkboxHand($event,item)"></el-checkbox>
                             </li>
                         </ul>
       
                         <el-button  @click="nextPage" type="text">下一页>></el-button>
                     </div>
                      <!--饼图-->
-                     <div style="width:40%;min-height:500px;float:right;margin:30px;overflow:auto">
+                     <div style="width:45%;min-height:500px;float:right;margin:30px auto;overflow:auto">
                          <div class="canvanpic" id="myChart"></div>
                      </div>
                 </div>
@@ -191,7 +191,7 @@ export default {
                         orient: 'vertical',
                        // bottom: 'bottom', 
                         width: 150,
-                        top: 300,  
+                        top: 30,
                         data: legendData
                     },
                     series : [
@@ -209,7 +209,8 @@ export default {
                                     shadowOffsetX: 0,
                                     shadowColor: 'rgba(0, 0, 0, 0.5)'
                                 }
-                            }
+                            },
+                            center:[400,'50%']
                         }
                     ]
               };
@@ -231,7 +232,10 @@ export default {
                 _this.$store.commit('waterInfo',{item:item,waterShow:true,id:id});         
             })
         },
-        
+        checkboxHand(val,item){
+            console.log(val.target.checked)
+            console.log(item)
+        }
     },
   created(){
      this.getList();
@@ -453,8 +457,8 @@ export default {
   margin-left:10px;
   width:110px
 }
-.checks{margin-left:102%;margin-top:20px;}
-.canvanpic{width:400px;height:400px;margin-top:30px;overflow:auto}
+.checks{position:absolute;right:-50px;top:40px}
+.canvanpic{width:600px;height:400px;margin-top:30px;overflow:auto}
 .addBill{
     margin-top:16px;
 }
