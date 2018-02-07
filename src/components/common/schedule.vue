@@ -400,9 +400,9 @@ export default {
 				ids:'',
 				type:''
 			}
-			util.post('schedule/findSchedule',pdata,function(res){
-                var dataList = res.dataList
-				var dateInfoList = res.dateInfoList
+			util.post('schedules/getSchedule',pdata,function(res){
+                var dataList = res.data.dataList
+				var dateInfoList = res.data.dateInfoList
 				var newData = []
 				for(let item of dataList){
                     newData[item.day] = item
@@ -703,7 +703,9 @@ export default {
 		this.getData();
 		var path =  this.$route.path;
 		if(path == '/index'){
-             this.spanHeight = (util.wHeight-680)/5+'px'
+             this.spanHeight = (util.wHeight-630)/6+'px'
+		}else if(path == '/findSchedule'){
+			 this.spanHeight = (util.wHeight-220)/6+'px'
 		}
 	},
 	watch:{

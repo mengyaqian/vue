@@ -100,8 +100,8 @@ export default {
 			for(let value of importList){
                 personId.push(value.id)
 			}
-			util.post('web/actionChatUser',{ifAll:1},function(res){
-			   for(let item of res.content){
+			util.post('chatgroups/chatUserInfo',{ifAll:1},function(res){
+			   for(let item of res.data.data){
 					item.checked=false;
 					for(let items of item.users){
 						if(personId.indexOf(items.id)>-1){
@@ -112,9 +112,9 @@ export default {
                         
 					}
 				}
-               _this.personList = res.content
+               _this.personList = res.data.data
 			   _this.ifAllChoose()
-			},{format:true})
+			})
 		},
 		departChoose(pdata){
 			//选择一个部门的人

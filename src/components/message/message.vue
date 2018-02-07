@@ -4,13 +4,13 @@
 		    <div style="padding:20px">
 				<el-row>
 				    <el-col :span="24">
-				       <div class="msg"  v-for="item in listData.message">
+				       <div class="msg"  v-for="item in listData.data">
 					       <el-row :gutter="20">
 							    <el-col :span="16">
 								  <p class="ptxt1">{{item.createNickname}}<br/>{{item.content}}</p>
 								</el-col>
 							    <el-col :span="8">
-								   <p class="ptxt2">2016-02-02 12：25</p>
+								   <p class="ptxt2">{{item.createdOn | getTime}}</p>
 								</el-col>
 							</el-row>
 					   </div>
@@ -37,7 +37,7 @@ export default {
   name: 'Message',
   data () {
     return {
-	  listData:[],
+	  listData:{},
       currentPage: 1
     }
   },
@@ -51,9 +51,8 @@ export default {
 		   }
 		 }
 		 var _this = this;
-	     util.post('group/work-message',option,function(res){
-		    console.log(res)
-			_this.listData = res;
+	     util.post('chatgroups/workMessage',option,function(res){
+			_this.listData = res.data;
 		 })
 	 },
 	 handleSizeChange(val) {
@@ -66,6 +65,11 @@ export default {
   },
   created(){
      this.list()
+  },
+  filters: {
+    getTime(time){
+		   return util.getDefaultTime(time);
+		}
   }
   
 }

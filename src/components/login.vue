@@ -57,10 +57,20 @@ export default {
 			});
 		}else{
 		  var _this=this;
-		  util.post('user/newlogin',{mobile:_this.mobile,password:_this.pwd},function(res){
-				//location.href = res.url;
+		  util.post('token',{mobile:_this.mobile,password:_this.pwd},function(data){
+			if(data.statusCode == 200){
+				var _setting = data.data;
+				_setting.easemob = data.easemobSetting || '0';
+				localStorage.setItem('settings', JSON.stringify(_setting));
+				//getOrgan();
 				_this.$router.push('/index')
-		  },{format:true});
+			}else if(data.statusCode == 1019){
+				//location.href = '../front/index-register.jsp?register=1&&tel='+mobile+'&&password='+pwd;
+			}else{
+				console.log(data.msg)
+			}
+				
+		  },{noToken:true});
 		 
 		}
 		

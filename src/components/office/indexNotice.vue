@@ -91,7 +91,7 @@ export default {
   },
   data () {
     return {
-	  listData:[],
+	  listData:{},
       currentPage: 1,
 	  active:'3',
 	  noticeType:'3',
@@ -113,10 +113,9 @@ export default {
 		   type:this.noticeType
 		 }
 		 var _this = this;
-	     util.post('notice/queryList',option,function(res){
-		    console.log(res)
-			_this.listData = res;
-		 },{format:true})
+	     util.post('users/notices/queryList',option,function(res){
+			_this.listData = res.data;
+		 })
 	 },
 	handleSelect(key, keyPath){
 		 this.noticeType=key;
@@ -146,25 +145,25 @@ export default {
 	
 	readPerson(noticeId){
 	    var _this=this;
-	    util.post('notice/findUnreadColleague',{id:noticeId},function(res){
+	    util.post('users/notices/findUnreadColleague',{noticeId:noticeId},function(res){
 		    _this.dialogVisible = true;
-			_this.readPersonList=res.result;
-		},{format:true})
+			_this.readPersonList=res.data;
+		})
 		
 	},
 	detail(noticeId){
 	    var _this=this;
-	    util.post('notice/findNoticeDetails',{id:noticeId},function(res){
+	    util.post('users/notices/findNoticeDetails',{noticeId:noticeId},function(res){
 		    if(_this.noticeType == '2'){
 			    _this.dialogVisible3=true;
 			}else{
 			    _this.dialogVisible2=true;
 			}
-			_this.reportDetailContent=res.content[0];
-			_this.reportDetailResult = res.result[0];
+			_this.reportDetailContent=res.data.content[0];
+			_this.reportDetailResult = res.data.result[0];
 		   
 		   
-		},{format:true})
+		})
 	},
 	saveReport(type){//1保存，2发布
 	   var pdata ={
@@ -176,9 +175,10 @@ export default {
 			files:''
 	   }
 	   if(type == 1){
-	      util.post('notice/updateNorice',pdata,function(res){
-		     this.dialogVisible3 =false
-		  },{format:true})
+	      var _this = this;
+	      util.post('users/notices/addNotice',pdata,function(res){
+		     _this.dialogVisible3 =false
+		  })
 	   }
 	   
 	},

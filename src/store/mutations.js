@@ -59,7 +59,6 @@ const mutations={
 	billListActive(state,data){
 		state.billListRefresh=data;
 	}
-	
 }
 
 export default mutations

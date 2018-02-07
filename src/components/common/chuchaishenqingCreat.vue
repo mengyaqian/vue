@@ -403,15 +403,15 @@ export default {
     methods: {
 	    getDetial(){
 		    var _this=this;
-			util.post('bill/bussiness/edit',{uuid:_this.billId,type:0},function(res){
-				_this.detialData = res.content[0];
-				_this.userInfo = res.content[0].user;
+			util.post('business/editBill',{uuId:_this.billId,type:0},function(res){
+				_this.detialData = res.data.billInfo;
+				_this.userInfo = res.data.billInfo.user;
 				var arr = [];
-				for (var item of res.content[0].passengerBean) {
+				for (var item of res.data.billInfo.passengerBean) {
 					arr.push(item.userId)
 				}
 				_this.handleData.passengerBean=arr;
-			},{format:true})
+			})
 		},
 		bankChoose(ev){
 			//选择银行卡弹框
@@ -425,22 +425,21 @@ export default {
 		initList(){
 			//默认执行
 			var _this=this;
-            util.get('bill/staticdata',{},function(res){
+            util.post('bills/staticData',{},function(res){
 				 _this.pageInfo = res.data;
 			})
-			util.post('fnconfig/currency/list',{},function(res){
-				_this.currencyList = res.message
-				console.log(res.message)
+			util.post('webconfig/currency/list',{},function(res){
+				_this.currencyList = res.data
 			})
-			util.post('web/actionChatUser',{ifAll:1},function(res){
-				_this.personList = res.content
+			util.post('chatgroups/chatUserInfo',{ifAll:1},function(res){
+				_this.personList = res.data.data
 			})
-			util.get('book/findCityHot',{},function(res){
-				_this.hotCityList = res;
-				_this.cityListSearch = res;
+			util.post('cities/findCityHot',{},function(res){
+				_this.hotCityList = res.data;
+				_this.cityListSearch = res.data;
 			})
-			util.get('userBankAccount/findUserBankDefault',{},function(res){
-				 _this.bankNoAndName = res.result.bankName+res.result.bankNo
+			util.post('userBank/findUserBankDft',{},function(res){
+				 _this.bankNoAndName = res.data.bankName+res.data.bankNo
 			})
 		},
 		visibles(v){
@@ -457,9 +456,9 @@ export default {
             if (query !== '') {
 				var _this=this;
 				_this.loading = true;
-				util.get('book/findCity',option,function(res){
+				util.post('cities/findCity',option,function(res){
 					_this.loading = false;
-                    _this.cityListSearch = res;
+                    _this.cityListSearch = res.data;
 				})
 			} else {
 				this.loading = false;
@@ -637,7 +636,7 @@ export default {
 					type:0
 				}
 				var _this = this;
-				util.post('bill/newSaveBusinessTrip',bodys,function(res){
+				util.post('business/newSaveBusinessTripWeb',bodys,function(res){
 				    _this.$message({
 						message: '操作成功',
 						type: 'success'

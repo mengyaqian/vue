@@ -27,6 +27,7 @@ import chuchaishenqingCreat from '@/components/common/chuchaishenqingCreat'
 import billListNot from '@/components/expenses/billListNot'
 import billListYes from '@/components/expenses/billListYes'
 import billListAdd from '@/components/expenses/billListAdd'
+import test from '@/components/test/test'
 Vue.use(Router)
 
 export default new Router({
@@ -176,6 +177,11 @@ export default new Router({
     path:'/chuchaishenqingCreat/:id',
     meta:{title:'修改出差申请单'},
     component:chuchaishenqingCreat
+  },
+  {
+    path:'/test',
+    meta:{title:'测试模块'},
+    component:test
   }
   ]
 })

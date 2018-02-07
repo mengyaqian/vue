@@ -3,8 +3,12 @@ import axios from 'axios'
 axios.defaults.timeout = 5000;                        //响应时间
 //axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';           //配置请求头
 //axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
-axios.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8'
-axios.defaults.baseURL = 'https://uat.feikongbao.com/yodooweb/';   //配置接口地址
+axios.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8';
+axios.defaults.headers.appType = 'Web';
+axios.defaults.headers.lang='zh';
+axios.defaults.headers.token=(localStorage.getItem('settings') ? JSON.parse(localStorage.getItem('settings')).token:'');
+//axios.defaults.baseURL = 'https://uat.feikongbao.com/yodooweb/';   //配置接口地址
+axios.defaults.baseURL = 'https://uat.feikongbao.com/api/';   //配置接口地址
 var reg_exp={
 	email: "^([a-zA-Z0-9_\\-\.])+@([a-zA-Z0-9_\-])+(\\.[a-zA-Z0-9_\-]{2,10}){1,3}$",
 	phone: "^(0{0,1}1[3-9]{1}[0-9]{9})$",
@@ -73,44 +77,28 @@ var util={
 		},
 		_this:this,
 		post(url,params,cbk,setting){
-			var index=0;
-			var body='';
-			 if(setting){
-				if(setting.format){
-					axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-					for(let p in params){
-						if(index!=0)
-						  body+='&'
-						body+=p+'='+params[p]
-						index++;
-					}
-				}else{
-					body=params;
-				}
-			 }else{
-				body=params;
-			 }
-			 axios.post(url,body)
-			 .then(function (response) {
-				 console.log(response);
-				 if(response.data.code || response.data.statusCode){
-					if(response.data.code=='301' || response.data.statusCode == '301'){
-						_this.$router.push('/login')
-					}else if(response.data.code == '302' || response.data.statusCode == '302'){
-						alert('操作失败');
-					}else if(response.data.code=='200' || response.data.statusCode == '200'){
-						cbk(response.data)
+			if(localStorage.getItem('settings') != null || setting.noToken == true ){
+				axios.post(url,params).then(function(response){
+					if(response.data.statusCode){
+						if(response.data.statusCode == 301){
+							_this.$router.push('/login');
+						}else if(response.data.statusCode == 302){
+							alert('操作失败');
+						}else if(response.data.statusCode == 200){
+							cbk(response.data)
+						}else{
+							cbk(response.data)
+						}
 					}else{
-						//alert(response.data.message);
 						cbk(response.data)
 					}
-				}else{
-					cbk(response.data)
-				}
-			 }).catch(function (error) {
-				console.log(error);
-				 alert(error);
-			 });
+				}).catch(function (error) {
+					console.log(error);
+					 alert(error);
+				});
+			}else{
+				_this.$router.push('/login');
+			}
 		},
 		getDefaultTime(time){
 			var t = time ? new Date(time) : new Date();

@@ -93,10 +93,10 @@ export default {
 					endTime:util.getDefaultTime(this.rangDate[1])
 				}
 		    var _this = this;
-	      util.post('bill/tripbill/listAll',option,function(res){
-					_this.listDataMessage = res.message;
-					_this.countNum = res.message.count
-				},{format:true})
+	      util.post('business/listAllTripBill',option,function(res){
+					_this.listDataMessage = res.data.pageModel;
+					_this.countNum = res.data.pageModel.count
+				})
 	    },
 	    handleSizeChange(val) {
         console.log(`每页 ${val} 条`);

@@ -1,10 +1,10 @@
 <template>
   <div class="home">
-	    <div style="margin:90px 20px 10px">
+	    <div style="margin:90px 20px 10px;">
 			<el-row :gutter="20">
 				<el-col :span="6">
 				  <div class="grid-content bg-purple">最新消息</div>
-				  <div class="border" v-bind:style="{height:boxHeight}">
+				  <div class="border" v-bind:style="{height:boxHeight,overflow:'auto'}" >
               <ul class="msgUl">
                   <li v-for="item in newMessageList">
                     <router-link to="/indexNotice"> 
@@ -24,7 +24,7 @@
                     <router-link to="/message"> 
                      <img src="../../assets/toDoBusiness.png">
                      <div class="div1">
-                        <p class="p1">待办<span v-if="msgOne" style="float:right;color:#666">{{msgOne.createdOn.time | getTime}}</span></p>
+                        <p class="p1">待办<span v-if="msgOne" style="float:right;color:#666">{{msgOne.createdOn | getTime}}</span></p>
                         <p style="color:#666"  v-if="msgOne">{{msgOne.content}}</p>
                         <p style="color:#666" v-else>暂无消息</p>
                      </div>
@@ -35,7 +35,7 @@
                      <router-link to="/remind"> 
                      <img src="../../assets/approveResult.png">
                      <div class="div1">
-                        <p class="p1">提醒<span  v-if="msgTwo"  style="float:right;color:#666">{{msgTwo.createdOn.time | getTime}}</span></p>
+                        <p class="p1">提醒<span  v-if="msgTwo"  style="float:right;color:#666">{{msgTwo.createdOn | getTime}}</span></p>
                         <p style="color:#666"  v-if="msgTwo">{{msgTwo.content}}</p>
                         <p style="color:#666" v-else>暂无消息</p>
                      </div>
@@ -45,7 +45,7 @@
                       <router-link to="/waring"> 
                      <img src="../../assets/early-warning.png">
                      <div class="div1">
-                        <p class="p1">预警<span  v-if="msgThree" style="float:right;color:#666">{{msgThree.createdOn.time | getTime}}</span></p>
+                        <p class="p1">预警<span  v-if="msgThree" style="float:right;color:#666">{{msgThree.createdOn | getTime}}</span></p>
                         <p style="color:#666"  v-if="msgThree">{{msgThree.content}}</p>
                         <p style="color:#666" v-else>暂无消息</p>
                      </div>
@@ -137,18 +137,18 @@ export default {
   methods:{
       newMessage(){
          var _this = this;
-         util.post('notice/queryList',{type:0},function(res){
-             _this.newMessageList = res.content
-             _this.size = res.count
-         },{format:true})
+         util.post('users/notices/noticeList',{type:0},function(res){
+             _this.newMessageList = res.data;
+             _this.size = res.data.length;
+         })
       },
       businessMsg(){
         var _this = this;
-         util.post('group/home-message',{},function(res){
-            _this.msgOne = res.msgOne
-            _this.msgTwo = res.msgTwo
-            _this.msgThree = res.msgThree
-         },{format:true})
+         util.post('messages/home',{},function(res){
+            _this.msgOne = res.data.msgOne
+            _this.msgTwo = res.data.msgTwo
+            _this.msgThree = res.data.msgThree
+         })
       },
       handleClick(tab, event){
           console.log(tab, event);
@@ -170,18 +170,18 @@ export default {
             }
         }
         
-        util.post('bill/findBillBook',pdata,function(res){
-           _this.billData = res.message;
+        util.post('bills/findBillBook',pdata,function(res){
+           _this.billData = res.data;
            var arrdata = [];
            if(_this.activeName == 'first'){//饼图
-              for(var i=0; i<res.message.length;i++){
-                 arrdata[i] = {"value":res.message[i].amount,"name":res.message[i].tempName};
+              for(var i=0; i<res.data.length;i++){
+                 arrdata[i] = {"value":res.data[i].amount,"name":res.data[i].tempName};
                  var num = i<backcolor.length?i:i%backcolor.length;
                  _this.billData[i].color = backcolor[num]
               }
               _this.doBillChart(arrdata,backcolor)
            }else{//折线图
-              var bm = res.message;
+              var bm = res.data;
               var arrdata = [];//折线图数据
               var dateNum = [];//日期数据
               for(var i=1; i<=31; i++){
@@ -192,7 +192,7 @@ export default {
               }
               _this.dochartTwo(dateNum,arrdata);
            }
-        },{format:true})
+        })
       },
       doBillChart(data,color){
           let myChart = echarts.init(document.getElementById('main'));
