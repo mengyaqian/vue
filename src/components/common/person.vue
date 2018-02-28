@@ -109,7 +109,6 @@ export default {
 						}else{
                            items.checked=false;
 						}
-                        
 					}
 				}
                _this.personList = res.data.data
