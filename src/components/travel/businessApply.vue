@@ -166,9 +166,9 @@ export default {
 			},
 			creatBusinessApply(id){
 				 if(id == 0){
-           this.$router.push('/chuchaishenqingCreat')
+           this.$router.push('/common/chuchaishenqingCreat')
 				 }else{
-           this.$router.push('/chuchaishenqingCreat/'+id)
+           this.$router.push('/common/chuchaishenqingCreat/'+id)
 				 }
 			}
 

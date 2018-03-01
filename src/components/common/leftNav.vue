@@ -41,36 +41,36 @@ export default {
 			this.$store.commit('changeLeftActive',paths)
 			//左侧菜单的数据获取
 			switch(paths){
-			    case '/message':
+			    case '/message/message':
 				    this.leftMenu =  this.leftData.message ;
                     break;
-			    case '/indexNotice':
-				case '/indexWork':
-				case '/reportForms':
-                case '/findSchedule':
+			    case '/office/indexNotice':
+				case '/office/indexWork':
+				case '/office/reportForms':
+                case '/office/findSchedule':
                     this.leftMenu =  this.leftData.office ;
                     break;
-                case '/businessApply':
-				case '/myorder':
-				case '/indexDidi':
+                case '/travel/businessApply':
+				case '/travel/myorder':
+				case '/travel/indexDidi':
 				    this.leftMenu = this.leftData.travel;
 					break;
-				case '/billList':
-				case '/billListNot':
-				case '/billListYes':
-				case '/billListAdd':
-				case '/dailyApply':
-				case '/travelExpense':
-				case '/dailyExpense':
-				case '/cashAdvance':
-				case '/advanceRepay':
-				case '/userCost':
+				case '/expenses/billList':
+				case '/expenses/billListNot':
+				case '/expenses/billListYes':
+				case '/expenses/billListAdd':
+				case '/expenses/dailyApply':
+				case '/expenses/travelExpense':
+				case '/expenses/dailyExpense':
+				case '/expenses/cashAdvance':
+				case '/expenses/advanceRepay':
+				case '/expenses/userCost':
 				     this.leftMenu = this.leftData.expenses;
 					 break;
-                case '/businessApprove':	
-				case '/moneyApprove':
-				case '/moneyBuyApprove':
-				case '/voucherList':
+                case '/approve/businessApprove':	
+				case '/approve/moneyApprove':
+				case '/approve/moneyBuyApprove':
+				case '/approve/voucherList':
 				     this.leftMenu = this.leftData.approve;
 					 break;
 			}

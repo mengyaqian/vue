@@ -641,7 +641,7 @@ export default {
 						message: '操作成功',
 						type: 'success'
 					});
-					_this.$router.push('/businessApply')
+					_this.$router.push('/travel/businessApply')
 				})
             }
 		},

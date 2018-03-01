@@ -1,19 +1,19 @@
 <template>
     <div class="billList">
         <div class="leftTwoNav">
-            <el-button class="addBill" type="primary"><router-link to="/billListAdd">记一笔</router-link></el-button>
+            <el-button class="addBill" type="primary"><router-link to="/expenses/billListAdd">记一笔</router-link></el-button>
             <el-menu mode="vertical" :default-active="$route.path" router class="el-menu-vertical-demo" @select="handleSelect">
-                <el-menu-item  key="/billList" index="/billList"><i class="el-icon-message"></i>开支流水汇总</el-menu-item>
-                <el-menu-item key="/billListNot" index="/billListNot"><i class="el-icon-message"></i>未报销</el-menu-item>
-                <el-menu-item key="/billListYes" index="/billListYes"><i class="el-icon-message"></i>已报销</el-menu-item>
+                <el-menu-item  key="/expenses/billList" index="/expenses/billList"><i class="el-icon-message"></i>开支流水汇总</el-menu-item>
+                <el-menu-item key="/expenses/billListNot" index="/expenses/billListNot"><i class="el-icon-message"></i>未报销</el-menu-item>
+                <el-menu-item key="/expenses/billListYes" index="/expenses/billListYes"><i class="el-icon-message"></i>已报销</el-menu-item>
             </el-menu>
         </div>
             <div class="rightBox2">
                 <div style="padding:20px; text-align:left;">
                     <div class="expenditure-water-totel" style="display: block;">
                         <div class="expenditure-water-top">
-                            <div class="not-top"><router-link to="/billListNot">未报销</router-link></div>
-                            <div class="have-top"><router-link to="/billListYes">已报销</router-link></div>
+                            <div class="not-top"><router-link to="/expenses/billListNot">未报销</router-link></div>
+                            <div class="have-top"><router-link to="/expenses/billListYes">已报销</router-link></div>
                         </div>
                         <div style="height:38px"></div>
                         <ul id="billall">
@@ -77,7 +77,7 @@ export default {
     watch:{
 		isRefresh(data){
            if(data == true){
-                if(this.$route.path == '/billList')
+                if(this.$route.path == '/expenses/billList')
                 this.page=1;
                 this.listdata=[];
                 this.getList();

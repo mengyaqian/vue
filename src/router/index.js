@@ -49,132 +49,132 @@ export default new Router({
       component: Index
   },
 	{
-      path: '/message',
+      path: '/message/message',
       meta:{title:'消息-待办'},
       component: Message
   },
 	{
-      path: '/remind',
+      path: '/message/remind',
       meta:{title:'消息-提醒'},
       component: Remind
   },
 	{
-      path: '/waring',
+      path: '/message/waring',
       meta:{title:'消息-预警'},
       component: Waring
   },
 	{
-      path: '/findSchedule',
+      path: '/office/findSchedule',
       meta:{title:'协同办公-日程管理'},
       component: FindSchedule
   },
 	{
-      path: '/indexNotice',
+      path: '/office/indexNotice',
       meta:{title:'协同办公-公告'},
       component: IndexNotice
   },
 	{
-      path: '/indexWork',
+      path: '/office/indexWork',
       meta:{title:'协同办公-工作报告'},
       component: IndexWork
   },
 	{
-      path: '/reportForms',
+      path: '/office/reportForms',
       meta:{title:'协同办公-考勤报表'},
       component: ReportForms
   },
 	{
-      path: '/businessApply',
+      path: '/travel/businessApply',
       meta:{title:'差旅管理-出差申请单'},
       component: BusinessApply
   },
 	{
-      path: '/myorder',
+      path: '/travel/myorder',
       meta:{title:'差旅管理-我的订单'},
       component: Myorder
   },
 	{
-      path: '/indexDidi',
+      path: '/travel/indexDidi',
       meta:{title:'差旅管理-出行用车'},
       component: IndexDidi
   },
   {
-    path: '/billList',
+    path: '/expenses/billList',
     meta:{title:'费用报销-日常开支随手记-开支流水汇总'},
     component: BillList
   },
   {
-    path: '/billListNot',
+    path: '/expenses/billListNot',
     meta:{title:'费用报销-日常开支随手记-未报销'},
     component: billListNot
   },
   {
-    path: '/billListYes',
+    path: '/expenses/billListYes',
     meta:{title:'费用报销-日常开支随手记-已报销'},
     component: billListYes
   },
   {
-    path: '/billListAdd',
+    path: '/expenses/billListAdd',
     meta:{title:'费用报销-日常开支随手记-记一笔'},
     component: billListAdd
   },
 	{
-    path: '/dailyApply',
+    path: '/expenses/dailyApply',
     meta:{title:'费用报销-日常开支申请'},
     component: DailyApply
   },
   {
-    path: '/travelExpense',
+    path: '/expenses/travelExpense',
     meta:{title:'费用报销-出差费用报销'},
     component: TravelExpense
   },
 	{
-    path: '/dailyExpense',
+    path: '/expenses/dailyExpense',
     meta:{title:'费用报销-日常费用报销'},
     component: DailyExpense
   },
   {
-    path: '/cashAdvance',
+    path: '/expenses/cashAdvance',
     meta:{title:'费用报销-现金预支'},
     component: CashAdvance
   },
 	{
-    path: '/advanceRepay',
+    path: '/expenses/advanceRepay',
     meta:{title:'费用报销-预支还款'},
     component: AdvanceRepay
   },
   {
-    path: '/userCost',
+    path: '/expenses/userCost',
     meta:{title:'费用报销-财务报表/个人报表'},
     component: UserCost
   },
   {
-    path: '/businessApprove',
+    path: '/approve/businessApprove',
     meta:{title:'审批-业务审批'},
     component: BusinessApprove
   },
   {
-    path: '/moneyApprove',
+    path: '/approve/moneyApprove',
     meta:{title:'审批-财务审批'},
     component: MoneyApprove
   },
   {
-    path: '/moneyBuyApprove',
+    path: '/approve/moneyBuyApprove',
     meta:{title:'审批-结算及支付'},
     component: MoneyBuyApprove
   },
   {
-    path: '/voucherList',
+    path: '/approve/voucherList',
     meta:{title:'审批-财务凭证'},
     component: VoucherList
   },
   {
-    path:'/chuchaishenqingCreat',
+    path:'/common/chuchaishenqingCreat',
     meta:{title:'创建出差申请单'},
     component:chuchaishenqingCreat
   },
   {
-    path:'/chuchaishenqingCreat/:id',
+    path:'/common/chuchaishenqingCreat/:id',
     meta:{title:'修改出差申请单'},
     component:chuchaishenqingCreat
   },

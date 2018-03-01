@@ -22,17 +22,17 @@ export default {
 	      message:[
 					{
 						name:'待办',
-						href:'/message',
+						href:'/message/message',
 						child:[]
 					},
 					{
 						name:'提醒',
-						href:'/remind',
+						href:'/message/remind',
 						child:[]
 					},
 					{
 						name:'预警',
-						href:'/waring',
+						href:'/message/waring',
 						child:[]
 					}
 		    ],
@@ -40,22 +40,22 @@ export default {
 		    office:[
 		      {
 			      name:'日程管理',
-						href:'/findSchedule',
+						href:'/office/findSchedule',
 						child:[]
 			    },
 					{
 						name:'公告',
-						href:'/indexNotice',
+						href:'/office/indexNotice',
 						hasChild:[]
 					},
 					{
 						name:'工作报告',
-						href:'/indexWork',
+						href:'/office/indexWork',
 						hasChild:[]
 					},
 					{
 						name:'考勤报表',
-						href:'/reportForms',
+						href:'/office/reportForms',
 						hasChild:[]
 					}
 		    ],
@@ -63,17 +63,17 @@ export default {
 				travel:[
 					{
 						name:'出差申请',
-						href:'/businessApply',
+						href:'/travel/businessApply',
 						child:[]
 					},
 					{
 						name:'我的订单',
-						href:'/myorder',
+						href:'/travel/myorder',
 						child:[]
 					},
 					{
 						name:'出行用车',
-						href:'/indexDidi',
+						href:'/travel/indexDidi',
 						child:[]
 					}
 				],
@@ -81,41 +81,41 @@ export default {
 				expenses:[
 					{
 						 name:'日常开支随手记',
-						 href:'/billList',
+						 href:'/expenses/billList',
 						 child:[
-							 {name:'开支流水汇总',href:'/billList'},
-							 {name:'未报销',href:'/billListNot'},
-							 {name:'已报销',href:'/billListYes'}
+							 {name:'开支流水汇总',href:'/expenses/billList'},
+							 {name:'未报销',href:'/expenses/billListNot'},
+							 {name:'已报销',href:'/expenses/billListYes'}
 						 ]
 					},
 					{
 						 name:'日常开支申请',
-						 href:'/dailyApply',
+						 href:'/expenses/dailyApply',
 						 child:[]
 					},
 					{
 						 name:'出差费用报销',
-						 href:'/travelExpense',
+						 href:'/expenses/travelExpense',
 						 child:[]
 					},
 					{
 						 name:'日常费用报销',
-						 href:'/dailyExpense',
+						 href:'/expenses/dailyExpense',
 						 child:[]
 					},
 					{
 						 name:'现金预支',
-						 href:'/cashAdvance',
+						 href:'/expenses/cashAdvance',
 						 child:[]
 					},
 					{
 						 name:'预支还款',
-						 href:'/advanceRepay',
+						 href:'/expenses/advanceRepay',
 						 child:[]
 					},
 					{
 						 name:'财务报表',
-						 href:'/userCost',
+						 href:'/expenses/userCost',
 						 child:[
 							  {name:'个人报表',href:'/userCost'},
 								{name:'项目报表',href:'/projectCost'}
@@ -126,22 +126,22 @@ export default {
 				approve:[
 					{
 						 name:'业务审批',
-						 href:'/businessApprove',
+						 href:'/approve/businessApprove',
 						 child:[]
 					},
 					{
 						 name:'财务审批',
-						 href:'/moneyApprove',
+						 href:'/approve/moneyApprove',
 						 child:[]
 					},
 					{
 						 name:'结算及支付',
-						 href:'/moneyBuyApprove',
+						 href:'/approve/moneyBuyApprove',
 						 child:[]
 					},
 					{
 						 name:'财务凭证',
-						 href:'/voucherList',
+						 href:'/approve/voucherList',
 						 child:[]
 					}
 				]

@@ -1,11 +1,11 @@
 <template>
     <div class="billListNot">
         <div class="leftTwoNav">
-              <el-button class="addBill" type="primary"><router-link to="/billListAdd">记一笔</router-link></el-button>
+              <el-button class="addBill" type="primary"><router-link to="/expenses/billListAdd">记一笔</router-link></el-button>
             <el-menu mode="vertical" :default-active="$route.path" router class="el-menu-vertical-demo" @select="handleSelect">
-                <el-menu-item  key="/billList" index="/billList"><i class="el-icon-message"></i>开支流水汇总</el-menu-item>
-                <el-menu-item key="/billListNot" index="/billListNot"><i class="el-icon-message"></i>未报销</el-menu-item>
-                <el-menu-item key="/billListYes" index="/billListYes"><i class="el-icon-message"></i>已报销</el-menu-item>
+                <el-menu-item  key="/expenses/billList" index="/expenses/billList"><i class="el-icon-message"></i>开支流水汇总</el-menu-item>
+                <el-menu-item key="/expenses/billListNot" index="/expenses/billListNot"><i class="el-icon-message"></i>未报销</el-menu-item>
+                <el-menu-item key="/expenses/billListYes" index="/expenses/billListYes"><i class="el-icon-message"></i>已报销</el-menu-item>
             </el-menu>
         </div>
             <div class="rightBox2">
@@ -76,7 +76,7 @@ export default {
     watch:{
 		isRefresh(data){
            if(data == true){
-                if(this.$route.path == '/billListNot')
+                if(this.$route.path == '/expenses/billListNot')
                 this.page=1;
                 this.listdata=[];
                 this.getList();

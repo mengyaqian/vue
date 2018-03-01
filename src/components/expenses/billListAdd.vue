@@ -3,9 +3,9 @@
         <div class="leftTwoNav">
             <el-button class="addBill" type="primary">记一笔</el-button>
             <el-menu mode="vertical" :default-active="$route.path" router class="el-menu-vertical-demo" @select="handleSelect">
-                <el-menu-item  key="/billList" index="/billList"><i class="el-icon-message"></i>开支流水汇总</el-menu-item>
-                <el-menu-item key="/billListNot" index="/billListNot"><i class="el-icon-message"></i>未报销</el-menu-item>
-                <el-menu-item key="/billListYes" index="/billListYes"><i class="el-icon-message"></i>已报销</el-menu-item>
+                <el-menu-item  key="/expenses/billList" index="/expenses/billList"><i class="el-icon-message"></i>开支流水汇总</el-menu-item>
+                <el-menu-item key="/expenses/billListNot" index="/expenses/billListNot"><i class="el-icon-message"></i>未报销</el-menu-item>
+                <el-menu-item key="/expenses/billListYes" index="/expenses/billListYes"><i class="el-icon-message"></i>已报销</el-menu-item>
             </el-menu>
         </div>
         <div class="rightBox2">

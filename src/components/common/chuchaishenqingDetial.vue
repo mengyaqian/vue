@@ -493,11 +493,11 @@ export default {
 }
 
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 .detial{
-	text-align:left
+	text-align:left;
 }
 .grid-div,.grid-div2{
     height:35px;

@@ -10,7 +10,7 @@ const state={
 	
 }*/
 const state={
-	//出差申请单详情
+	//申请单详情
 	travelApplicationsDetial:{
 		id:'',
 		showDetial:false

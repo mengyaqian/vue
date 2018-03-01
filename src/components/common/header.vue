@@ -13,11 +13,11 @@
 				   <div class="grid-content bg-purple">
 				   <el-menu theme="dark"  :default-active="activeIndex" router class="el-menu-demo" mode="horizontal" @select="handleSelect">
 					  <el-menu-item index="/index">首页</el-menu-item>
-					  <el-menu-item index="/message">消息</el-menu-item>
-					  <el-menu-item index="/findSchedule">协同办公</el-menu-item>
-					  <el-menu-item index="/businessApply">差旅管理</el-menu-item>
-					  <el-menu-item index="/billList">费用报销</el-menu-item>
-					  <el-menu-item index="/businessApprove">审批</el-menu-item>
+					  <el-menu-item index="/message/message">消息</el-menu-item>
+					  <el-menu-item index="/office/findSchedule">协同办公</el-menu-item>
+					  <el-menu-item index="/travel/businessApply">差旅管理</el-menu-item>
+					  <el-menu-item index="/expenses/billList">费用报销</el-menu-item>
+					  <el-menu-item index="/approve/businessApprove">审批</el-menu-item>
 					  <el-menu-item index="7">系统管理</el-menu-item>
 				   </el-menu>
 				   </div>
@@ -49,16 +49,16 @@
 				}
 				if(path == '/index'){
 				  this.activeIndex='/index';
-				}else if(path == '/message' || path == '/remind' || path=='waring'){
+				}else if(path == '/message/message' || path == '/message/remind' || path=='/message/waring'){
 				  this.activeIndex='/message';
-				}else if(path == '/findSchedule' || path == '/indexNotice' || path == '/indexWork' || path == '/reportForms'){
-				  this.activeIndex ='/findSchedule'
-				}else if(path == '/businessApply' || path=='/myorder' || path == '/indexDidi'){
-				  this.activeIndex ='/businessApply'
-				}else if(path == '/billList' || path == '/dailyApply' || path == '/travelExpense' || path == '/dailyExpense' || path == '/cashAdvance' || path == '/advanceRepay' || path == '/userCost'){
-					this.activeIndex ='/billList'
-				}else if(path == '/businessApprove' ||  path == '/moneyApprove' ||  path == '/moneyBuyApprove' ||  path == '/voucherList'){
-					this.activeIndex ='/businessApprove'
+				}else if(path == '/office/findSchedule' || path == '/office/indexNotice' || path == '/office/indexWork' || path == '/office/reportForms'){
+				  this.activeIndex ='/office/findSchedule'
+				}else if(path == '/travel/businessApply' || path=='/travel/myorder' || path == '/travel/indexDidi'){
+				  this.activeIndex ='/travel/businessApply'
+				}else if(path == '/expenses/billList' || path == '/expenses/dailyApply' || path == '/expenses/travelExpense' || path == '/expenses/dailyExpense' || path == '/expenses/cashAdvance' || path == '/expenses/advanceRepay' || path == '/expenses/userCost'){
+					this.activeIndex ='/expenses/billList'
+				}else if(path == '/approve/businessApprove' ||  path == '/approve/moneyApprove' ||  path == '/approve/moneyBuyApprove' ||  path == '/approve/voucherList'){
+					this.activeIndex ='/approve/businessApprove'
 				}
 			}
 		},
@@ -72,7 +72,11 @@
 	}
 
 </script>
-
+<style>
+.el-dialog--large{
+  width:900px !important;
+}
+</style>
 <style scoped>
 .header{
     height: 70px;
