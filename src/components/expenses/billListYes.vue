@@ -29,7 +29,7 @@
                                     <p class="branch-kind"><img :src="imgfun(item.tempType)"></p>
                                     
                                     <div class="hover-background-right">
-                                        <span class="branch-kind-text">{{item.createdOn}}<br>{{item.tempName}}</span>
+                                        <span class="branch-kind-text">{{item.createdOn | getTime}}<br>{{item.tempName}}</span>
                                         <span class="branch-kind-money">{{item.amount}} {{item.currencyCode}}</span>
                                     </div>
                                 </div>
@@ -103,13 +103,13 @@ export default {
             }
             if(_this.load == true){
                 _this.load=false;
-                util.post('bill/billbook/list',option,function(res){
-                   for(let v of res.content){
+                util.post('bills/listAllBillBook',option,function(res){
+                   for(let v of res.data.billBooks){
                       v.check=false
                    }
-                    _this.listdata.push(...res.content);
+                    _this.listdata.push(...res.data.billBooks);
                     if(_this.page == 1){
-                        _this.pieData(res);
+                        _this.pieData(res.data.billBooks);
                     }
                     _this.page +=1;
                     _this.load=true;
@@ -119,7 +119,7 @@ export default {
         },
         pieData(result){
               //饼图数据处理
-              var arrList = result.content;
+              var arrList = result;
               var listJson = {}; //单币种统计数据
               var currJson = {}; //多币种统计数据
               var rateJson={};
@@ -167,10 +167,10 @@ export default {
         },
         currencyList(){
            let _this=this;
-           util.get('book/currency',{},function(res){
+           util.post('webconfig/currency',{},function(res){
                 var add=[{id:-1,code:'全部'}]
                 _this.currencyData = add;
-                _this.currencyData.push(...res)
+                _this.currencyData.push(...res.data)
            })
         },
         imgfun(type){
@@ -221,9 +221,9 @@ export default {
          seeBill(id,tempType){
             //查看开支流水详情 
             var _this= this;
-            util.get('book/bookStandard',{},function(res){
+            util.post('basebills/bookStandard',{},function(res){
                 var item = {};
-                for(let v of res){
+                for(let v of res.data){
                     if(v.tempCode == tempType){
                         item = v;
                     }
@@ -237,6 +237,11 @@ export default {
      this.getList();
      this.currencyList();
 
+  },
+  filters: {
+    getTime(time){
+		   return util.getDefaultTime(time).substring(0,10);
+		},
   },
  /* mounted(){
         let _this = this;  

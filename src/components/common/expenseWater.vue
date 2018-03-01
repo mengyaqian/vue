@@ -1953,26 +1953,26 @@ export default {
 		init(){
             //默认执行
 			var _this = this;
-			util.get('book/currency',{},function(res){
+			util.post('webconfig/currency',{},function(res){
 				//获取币种列表
-                _this.currencyList = res
+                _this.currencyList = res.data
 			})
-			util.get('book/findLocalTravel',{},function(res){
+			util.post('bills/findLocalTravel',{},function(res){
 				//交通工具列表
-				_this.travelList=res
+				_this.travelList=res.data
 			})
-            util.get('book/findOutTravel',{},function(res){
+            util.post('bills/findOutTravel',{},function(res){
 				//交通工具列表
-				_this.outTravellList=res
+				_this.outTravellList=res.data
 			})
-			util.get('book/findCityHot',{},function(res){
+			util.post('cities/findCityHot',{},function(res){
 				//城市列表
-				_this.cityList = res;
-				_this.cityListSearch =res;
+				_this.cityList = res.data;
+				_this.cityListSearch =res.data;
 			})
-			util.get('book/physicalExamination',{},function(res){
+			util.post('bills/physicalExamination',{},function(res){
 				//体检类型
-				_this.physicalExaminationList = res;
+				_this.physicalExaminationList = res.data;
 			})
 		},
 		standardChange(item){
@@ -2055,8 +2055,8 @@ export default {
 		},
 	    getDetial(){
 		    var _this=this;
-			util.get('book/findBook',{bookId:_this.id},function(res){
-				_this.setVal(res);
+			util.post('bills/findBookDetail',{bookId:_this.id},function(res){
+				_this.setVal(res.data);
 			})
 		},
 		setVal(pdata){
@@ -2150,9 +2150,9 @@ export default {
             if (query !== '') {
 				var _this=this;
 				_this.loading = true;
-				util.get('book/findCity',option,function(res){
+				util.post('cities/findCityHot',option,function(res){
 					_this.loading = false;
-                    _this.cityListSearch = res;
+                    _this.cityListSearch = res.data;
 				})
 			} else {
 				this.loading = false;
@@ -2195,7 +2195,7 @@ export default {
 				supplierId:_this.supplierId,
 				tempType:_this.tempType
 			}
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -2245,7 +2245,7 @@ export default {
 				tcConstructionUserCount:_this.bePersons,
 				tempType:_this.tempType
 			}
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -2297,7 +2297,7 @@ export default {
 				tpStartAddressId:_this.tpStartAddressId,
 				tpTransportType:_this.tpTransportType
 			}
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -2374,7 +2374,7 @@ export default {
 				tempType:_this.tempType
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -2452,7 +2452,7 @@ export default {
 				tempType:_this.tempType
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -2517,7 +2517,7 @@ export default {
 				tempType:_this.tempType
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -2588,7 +2588,7 @@ export default {
 				tempType:_this.tempType
 			}
 		
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -2642,7 +2642,7 @@ export default {
 				tempType:_this.tempType
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -2696,7 +2696,7 @@ export default {
 				wmMealSubsidyNumber:_this.wmMealSubsidyNumber,
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -2747,7 +2747,7 @@ export default {
 				tempType:_this.tempType
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -2813,7 +2813,7 @@ export default {
 				tempType:_this.tempType
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -2867,7 +2867,7 @@ export default {
 				tempType:_this.tempType
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -2919,7 +2919,7 @@ export default {
 				tempType:_this.tempType
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -2985,7 +2985,7 @@ export default {
 				tempType:_this.tempType
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -3043,7 +3043,7 @@ export default {
 				tempType:_this.tempType
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -3095,7 +3095,7 @@ export default {
 				tempType:_this.tempType
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -3154,7 +3154,7 @@ export default {
 				tempType:_this.tempType
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -3213,7 +3213,7 @@ export default {
 				tempType:_this.tempType
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -3274,7 +3274,7 @@ export default {
 				tempType:_this.tempType
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -3326,7 +3326,7 @@ export default {
 				tempType:_this.tempType
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -3378,7 +3378,7 @@ export default {
 				tempType:_this.tempType
 			}
 			
-			util.post('book/saveBillBook',options,function(res){
+			util.post('bills/saveBillBookNew',options,function(res){
 				_this.dataInit();
 				_this.$message({message: '已保存',type: 'success'});
 				if(type==0){//保存
@@ -3431,7 +3431,7 @@ export default {
 				tempType:23
 			}
 			if(_this.id == 0){
-                 util.post('book/saveBillBook',options,function(res){
+                 util.post('bills/saveBillBookNew',options,function(res){
 					_this.dataInit();
 					_this.$message({message: '已保存',type: 'success'});
 					if(type==0){//保存
@@ -3520,7 +3520,7 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    util.get('book/deleteBillBook',{bookId:_this.id},function(data){
+                    util.post('bills/deleteBillBook',{bookId:_this.id},function(data){
                         _this.$message({
                             type: 'success',
                             message: '删除成功!'

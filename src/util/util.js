@@ -7,6 +7,7 @@ axios.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8'
 axios.defaults.headers.appType = 'Web';
 axios.defaults.headers.lang='zh';
 axios.defaults.headers.token=(localStorage.getItem('settings') ? JSON.parse(localStorage.getItem('settings')).token:'');
+//axios.defaults.headers.token=JSON.parse(localStorage.getItem('settings')).token || '';
 //axios.defaults.baseURL = 'https://uat.feikongbao.com/yodooweb/';   //配置接口地址
 axios.defaults.baseURL = 'https://uat.feikongbao.com/api/';   //配置接口地址
 var reg_exp={
@@ -54,7 +55,7 @@ var util={
 			return str.replace(/(^\s*)|(\s*$)/g, ""); 
 		},
 		wHeight:document.documentElement.clientHeight, //浏览器高
-		userInfo:JSON.parse(localStorage.getItem('userInfo')),
+		userInfo:JSON.parse(localStorage.getItem('settings')) || {},
 		get(url,params,cbk){
 			axios.get(url,{params:params}).then(function(res){
 				if(res.data.code || res.data.code){

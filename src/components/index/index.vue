@@ -284,7 +284,7 @@ export default {
      this.newMessage();
      this.businessMsg();
      this.findBillByDate();
-     setInterval(this.getNow,1000)
+     setInterval(this.getNow,1000);
   },
   filters: {
     getTime(time){

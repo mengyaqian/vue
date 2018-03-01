@@ -31,16 +31,16 @@ export default {
 		   console.log(key, keyPath);
 	    },
 	    leftrouterChange(){
-		   var path =  this.$route.path;
-			if(path == '/login' || path == '/index'){
+		   var paths =  this.$route.path;
+			if(paths == '/login' || paths == '/index'){
 			   this.showLeftNav=false
 			}else{
 			   this.showLeftNav=true
 			}
-			this.defaultActive=path;
-			this.$store.commit('changeLeftActive',path)
+			this.defaultActive=paths;
+			this.$store.commit('changeLeftActive',paths)
 			//左侧菜单的数据获取
-			switch(path){
+			switch(paths){
 			    case '/message':
 				    this.leftMenu =  this.leftData.message ;
                     break;

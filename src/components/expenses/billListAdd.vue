@@ -45,8 +45,8 @@ export default {
             var other = [];
             var list = []
             var flg = 0;;
-                util.get('book/bookStandard',{},function(res){
-                    for(let item of res){
+                util.post('basebills/bookStandard',{},function(res){
+                    for(let item of res.data){
                        if(item.tempCode !=23){
                            list.push(item);
                        }else{

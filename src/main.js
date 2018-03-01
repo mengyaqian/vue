@@ -38,7 +38,7 @@ var http = {
 		});
 	}
 }*/
-
+/*
 localStorage.setItem('userInfo',JSON.stringify({
 	avatarSmall:'http://7xp2os.com1.z0.glb.clouddn.com/201610131518326404187.png',
 	bankName:'',
@@ -79,7 +79,7 @@ localStorage.setItem('userInfo',JSON.stringify({
 	type:2,
 	updateDate:"2016-10-13 15:18:31",
 	username:"13599999996",
-}))
+}))*/
 new Vue({
   el: '#app',
   router,

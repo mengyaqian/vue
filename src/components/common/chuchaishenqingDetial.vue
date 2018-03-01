@@ -112,7 +112,7 @@
 									    <div class="grid-left">出行方式</div>
 									</el-col>
 									<el-col :span="5">
-									    <div class="grid-right">{{item.startTime.substring(0,10)}}</div>
+									    <div class="grid-right">{{item.startTime | getTime}}</div>
 									    <div class="grid-right">{{item.startCity}}</div>
 									    <div class="grid-type">{{item.tbTypeName}}</div>										
 									</el-col>
@@ -124,7 +124,7 @@
 									    <div class="grid-left">到达城市</div>	
 									</el-col>
 									<el-col :span="5">
-									    <div class="grid-right">{{item.endTime.substring(0,10)}}</div>
+									    <div class="grid-right">{{item.endTime | getTime}}</div>
 										<div class="grid-right">{{item.toCity}}</div>
 									</el-col>
 								</div>
@@ -407,10 +407,10 @@ export default {
 		},
 	    getDetial(){
 		    var _this=this;
-			util.get('bill/new/newGetBusinessTrip',{uuId:_this.$store.getters.travelApplicationsDetial.id},function(res){
-				util.getStepStatusText(res.content[0].appover);
-				_this.detialData = res.content[0];
-				_this.userInfo = res.content[0].user
+			util.post('business/newQueryBusinessTrip',{uuId:_this.$store.getters.travelApplicationsDetial.id},function(res){
+				util.getStepStatusText(res.data.appover);
+				_this.detialData = res.data;
+				_this.userInfo = res.data.user
 			})
 		},
 		handleClick(tab, event) {
@@ -483,6 +483,9 @@ export default {
 				}
 				
 			}
+		},
+		getTime(time){
+		   return util.getDefaultTime(time).substring(0,10);
 		},
 		
 	}

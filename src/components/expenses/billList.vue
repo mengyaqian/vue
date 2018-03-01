@@ -25,7 +25,7 @@
                                     <p class="branch-kind"><img :src="imgfun(item.tempType)"></p>
                                     
                                     <div class="hover-background-right">
-                                        <span class="branch-kind-text">{{item.createdOn}}<br>{{item.tempName}}</span>
+                                        <span class="branch-kind-text">{{item.createdOn | getTime}}<br>{{item.tempName}}</span>
                                         <span class="branch-kind-money">{{item.amount}} {{item.currencyCode}}</span>
                                     </div>
                                 </div>
@@ -99,8 +99,8 @@ export default {
             }
             if(_this.load == true){
                 _this.load=false;
-                util.post('bill/billbook/list',option,function(res){
-                    _this.listdata.push(...res.content);
+                util.post('bills/listAllBillBook',option,function(res){
+                    _this.listdata.push(...res.data.billBooks);
                     _this.page +=1;
                     _this.load=true;
                 },{format:true})
@@ -112,9 +112,9 @@ export default {
         seeBill(id,tempType){
             //查看开支流水详情 
             var _this= this;
-            util.get('book/bookStandard',{},function(res){
+            util.post('basebills/bookStandard',{},function(res){
                 var item = {};
-                for(let v of res){
+                for(let v of res.data){
                     if(v.tempCode == tempType){
                         item = v;
                     }
@@ -130,7 +130,7 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    util.get('book/deleteBillBook',{bookId:id},function(data){
+                    util.post('bills/deleteBillBook',{bookId:id},function(data){
                         _this.$message({
                             type: 'success',
                             message: '删除成功!'
@@ -158,7 +158,12 @@ export default {
                 _this.getList();
             }
        })
-  }
+  },
+  filters: {
+    getTime(time){
+		   return util.getDefaultTime(time).substring(0,10);
+		},
+  },
   
 }
 </script>
