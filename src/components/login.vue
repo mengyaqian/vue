@@ -3,7 +3,7 @@
     <div class="header"></div>
 	<div class="loginCenter">
 	    <div class="login-top">
-			<p>676扫码登dfdf录333</p>
+			<p>6扫码登dfdf录333</p>
 			<p class="border-bottom">密码登录</p>
 		</div>
 		<div class="pwd-box clears">
