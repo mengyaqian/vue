@@ -3,7 +3,7 @@
     <div class="header"></div>
 	<div class="loginCenter">
 	    <div class="login-top">
-			<p>扫码登录</p>
+			<p>扫码登录333</p>
 			<p class="border-bottom">密码登录</p>
 		</div>
 		<div class="pwd-box clears">
